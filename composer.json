@@ -1,0 +1,10 @@
+{
+  "name": "mosparo/wp-plugin-cf7",
+  "homepage": "https://mosparo.io/plugins/wordpress/contact-form-7/",
+  "require": {
+    "mosparo/php-api-client": "dev-master"
+  },
+  "repositories": [
+    { "type": "vcs", "url": "https://github.com/mosparo/php-api-client.git" }
+  ]
+}
