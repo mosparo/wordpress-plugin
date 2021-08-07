@@ -64,15 +64,17 @@ class FrontendHelper
             $this->registerResources();
         }
 
+        $options = apply_filters('mosparo_wp_filter_frontend_options', []);
+
         $instanceId = uniqid();
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
             <script>
                 window.onload = function(){
-                    new mosparo("mosparo-box-%s", "%s", "%s", {});
+                    new mosparo("mosparo-box-%s", "%s", "%s", %s);
                 };
             </script>
-        ', $instanceId, $instanceId, $configHelper->getHost(), $configHelper->getPublicKey());
+        ', $instanceId, $instanceId, $configHelper->getHost(), $configHelper->getPublicKey(), json_encode($options));
 
         return $html;
     }

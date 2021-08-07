@@ -3,6 +3,7 @@
 namespace MosparoWp\Module\Comments;
 
 use MosparoWp\Module\AbstractModule;
+use MosparoWp\Module\Comments\CommentForm;
 
 class CommentsModule extends AbstractModule
 {
@@ -17,11 +18,7 @@ class CommentsModule extends AbstractModule
 
     public function initializeModule()
     {
-        /*if (!function_exists('wpcf7_add_form_tag')) {
-            return;
-        }
-        
-        $mosparoWpCf7Field = MosparoWpField::getInstance();
-        $mosparoWpCf7Field->registerHooks();*/
+        $commentForm = CommentForm::getInstance();
+        $commentForm->registerHooks();
     }
 }
