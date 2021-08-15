@@ -27,7 +27,7 @@ function mosparoWpInitialize()
     $configHelper = ConfigHelper::getInstance();
 
     $moduleHelper = ModuleHelper::getInstance();
-    $moduleHelper->initializeActiveModules();
+    $moduleHelper->initializeActiveModules(plugin_dir_path(__FILE__), plugin_dir_url(__FILE__));
 
     if (!is_admin()) {
         $frontendHelper = FrontendHelper::getInstance();
@@ -40,5 +40,5 @@ function mosparoWpInitialize()
     $adminHelper = AdminHelper::getInstance();
     $adminHelper->initializeAdmin(__DIR__);
 }
-add_action('init', 'mosparoWpInitialize', 1);
+add_action('plugins_loaded', 'mosparoWpInitialize', 1);
 

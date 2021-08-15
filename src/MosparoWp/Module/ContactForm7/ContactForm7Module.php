@@ -17,7 +17,7 @@ class ContactForm7Module extends AbstractModule
         ];
     }
 
-    public function initializeModule()
+    public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         if (!function_exists('wpcf7_add_form_tag')) {
             return;

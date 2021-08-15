@@ -57,14 +57,19 @@ class FrontendHelper
         return $configHelper->getHost() . '/build/mosparo-frontend.js';
     }
 
-    public function generateField()
+    public function getFrontendOptions($options)
+    {
+        return apply_filters('mosparo_wp_filter_frontend_options', $options);
+    }
+
+    public function generateField($options)
     {
         $configHelper = ConfigHelper::getInstance();
         if (!$configHelper->getLoadResourcesAlways()) {
             $this->registerResources();
         }
 
-        $options = apply_filters('mosparo_wp_filter_frontend_options', []);
+        $options = $this->getFrontendOptions($options);
 
         $instanceId = uniqid();
         $html = sprintf('

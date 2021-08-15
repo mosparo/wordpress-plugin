@@ -16,7 +16,7 @@ class CommentsModule extends AbstractModule
         $this->dependencies = [];
     }
 
-    public function initializeModule()
+    public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         $commentForm = CommentForm::getInstance();
         $commentForm->registerHooks();

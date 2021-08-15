@@ -4,6 +4,8 @@ namespace MosparoWp\Helper;
 
 use MosparoWp\Module\Comments\CommentsModule;
 use MosparoWp\Module\ContactForm7\ContactForm7Module;
+use MosparoWp\Module\NinjaForms\NinjaFormsModule;
+use MosparoWp\Module\WPForms\WPFormsModule;
 
 class ModuleHelper
 {
@@ -11,6 +13,8 @@ class ModuleHelper
     protected static $availableModules = [
         CommentsModule::class,
         ContactForm7Module::class,
+        NinjaFormsModule::class,
+        WPFormsModule::class,
     ];
     protected $activeModules = [];
 
@@ -28,14 +32,14 @@ class ModuleHelper
 
     }
 
-    public function initializeActiveModules()
+    public function initializeActiveModules($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         $configHelper = ConfigHelper::getInstance();
         foreach (self::getAvailableModules() as $moduleClass) {
             $module = new $moduleClass();
 
             if ($configHelper->isModuleActive($module->getKey())) {
-                $module->initializeModule();
+                $module->initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
                 $this->activeModules[$module->getKey()] = $module;
             }
         }

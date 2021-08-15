@@ -29,5 +29,5 @@ abstract class AbstractModule
         return $this->dependencies;
     }
 
-    abstract public function initializeModule();
+    abstract public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
 }
