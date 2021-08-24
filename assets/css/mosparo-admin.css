@@ -1,0 +1,12 @@
+h1.mosparo-header {
+    display: flex;
+    justify-content: space-between;
+
+    padding-top: 15px;
+    padding-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.mosparo-header h1 {
+    padding: 0;
+}

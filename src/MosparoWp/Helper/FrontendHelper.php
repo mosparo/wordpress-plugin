@@ -22,6 +22,11 @@ class FrontendHelper
 
     }
 
+    public function initializeResourceRegistration()
+    {
+        add_action('wp_enqueue_scripts', [$this, 'registerResources']);
+    }
+
     public function registerResources()
     {
         $configHelper = ConfigHelper::getInstance();

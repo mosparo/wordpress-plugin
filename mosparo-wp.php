@@ -29,16 +29,13 @@ function mosparoWpInitialize()
     $moduleHelper = ModuleHelper::getInstance();
     $moduleHelper->initializeActiveModules(plugin_dir_path(__FILE__), plugin_dir_url(__FILE__));
 
-    if (!is_admin()) {
+    if (!is_admin() && $configHelper->getLoadResourcesAlways()) {
         $frontendHelper = FrontendHelper::getInstance();
-
-        if ($configHelper->getLoadResourcesAlways()) {
-            $frontendHelper->registerResources();
-        }
+        $frontendHelper->initializeResourceRegistration();
     }
 
     $adminHelper = AdminHelper::getInstance();
-    $adminHelper->initializeAdmin(__DIR__);
+    $adminHelper->initializeAdmin(__DIR__, plugin_dir_url(__FILE__));
 }
 add_action('plugins_loaded', 'mosparoWpInitialize', 1);
 

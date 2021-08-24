@@ -1,6 +1,8 @@
 <div class="wrap">
-
-    <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+    <h1 class="mosparo-header">
+        <?php echo esc_html(get_admin_page_title()); ?>
+        <img src="<?php echo $this->pluginUrl; ?>assets/images/mosparo.svg" height="44" alt="<?php _e('mosparo', 'mosparo-wp'); ?>">
+    </h1>
 
     <?php $this->displayAdminNotice(); ?>
 

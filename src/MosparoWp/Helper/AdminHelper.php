@@ -8,6 +8,8 @@ class AdminHelper
 
     protected $pluginPath;
 
+    protected $pluginUrl;
+
     public static function getInstance()
     {
         if (empty(self::$instance)) {
@@ -21,11 +23,13 @@ class AdminHelper
     {
     }
 
-    public function initializeAdmin($pluginPath)
+    public function initializeAdmin($pluginPath, $pluginUrl)
     {
         $this->pluginPath = $pluginPath;
+        $this->pluginUrl = $pluginUrl;
 
         add_action('admin_menu', [$this, 'registerSubmenu']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueStyles']);
         add_action('admin_post', [$this, 'saveSettings']);
         add_action('admin_init', [$this, 'executeAction']);
     }
@@ -39,6 +43,16 @@ class AdminHelper
             'manage_options',
             'mosparo-configuration',
             array($this, 'displayConfiguration')
+        );
+    }
+
+    public function enqueueStyles()
+    {
+        wp_enqueue_style(
+            'mosparo-wp-admin-css',
+            $this->pluginUrl . '/assets/css/mosparo-admin.css',
+            [],
+            '1.0'
         );
     }
 
