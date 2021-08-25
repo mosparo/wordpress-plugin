@@ -65,6 +65,11 @@ class MosparoWpField
 
             return true;
         }
+        
+        // Remove the mosparo fields from the form data
+        $formData = array_filter($formData, function($key) {
+            return strpos($key, '_mosparo_') === false;
+        }, ARRAY_FILTER_USE_KEY);
 
         // If the submission is valid, the submission is no spam.
         $verificationHelper = VerificationHelper::getInstance();
