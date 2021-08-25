@@ -67,7 +67,7 @@ class FrontendHelper
         return apply_filters('mosparo_wp_filter_frontend_options', $options);
     }
 
-    public function generateField($options)
+    public function generateField($options = [])
     {
         $configHelper = ConfigHelper::getInstance();
         if (!$configHelper->getLoadResourcesAlways()) {
