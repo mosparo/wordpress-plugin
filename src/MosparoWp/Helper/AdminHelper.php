@@ -133,7 +133,7 @@ class AdminHelper
 
         $configHelper = ConfigHelper::getInstance();
         if (!$configHelper->isActive()) {
-            $host = sanitize_text_field($_POST['host']);
+            $host = trim(sanitize_text_field($_POST['host']), '/');
             $configHelper->setHost($host);
 
             $publicKey = sanitize_text_field($_POST['publicKey']);

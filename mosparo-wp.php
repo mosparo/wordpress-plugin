@@ -1,6 +1,6 @@
 <?php
 /**
- * Mosparo for WordPress
+ * mosparo for WordPress
  *
  * @package           MosparoWp
  * @author            mosparo
@@ -8,10 +8,12 @@
  * @license           MIT
  *
  * @wordpress-plugin
- * Plugin Name:       Mosparo for WordPress
+ * Plugin Name:       mosparo for WordPress
  * Plugin URI:        https://mosparo.io/integrations/wordpress/
  * Description:       Adds the ability to protect forms in WordPress with mosparo.
  * Version:           1.0.0
+ * Text Domain:       mosparo-wp
+ * Domain Path:       /languages
  */
 
 use MosparoWp\Helper\AdminHelper;
@@ -39,3 +41,8 @@ function mosparoWpInitialize()
 }
 add_action('plugins_loaded', 'mosparoWpInitialize', 1);
 
+function mosparoWpInitializeTextDomain()
+{
+    load_plugin_textdomain('mosparo-wp', false, dirname(plugin_basename(__FILE__)) . '/languages');
+}
+add_action('init', 'mosparoWpInitializeTextDomain');

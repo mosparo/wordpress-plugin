@@ -17,7 +17,7 @@ class NinjaFormsModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Ninja Forms', 'mosparo-wp');
-        $this->description = __('Protects WPForms forms with mosparo.', 'mosparo-wp');
+        $this->description = __('Protects Ninja Forms forms with mosparo.', 'mosparo-wp');
         $this->dependencies = [
             'ninja-forms' => ['name' => __('Ninja Forms', 'mosparo-wp'), 'url' => 'https://wordpress.org/plugins/ninja-forms/']
         ];
