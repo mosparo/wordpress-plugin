@@ -3,10 +3,16 @@
 namespace MosparoWp\Helper;
 
 use Mosparo\ApiClient\Client;
+use Mosparo\ApiClient\Exception;
 
 class VerificationHelper
 {
     private static $instance;
+
+    /**
+     * @var \Mosparo\ApiClient\Exception;
+     */
+    protected $lastException;
 
     public static function getInstance()
     {
@@ -36,7 +42,12 @@ class VerificationHelper
             ]
         );
 
-        $result = $client->validateSubmission($formData, $submitToken, $validationToken);
+        try {
+            $result = $client->validateSubmission($formData, $submitToken, $validationToken);
+        } catch (Exception $e) {
+            $this->lastException = $e;
+            $result = false;
+        }
 
         return $result;
     }
