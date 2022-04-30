@@ -4,7 +4,7 @@
  *
  * @package           MosparoWp
  * @author            mosparo
- * @copyright         2021 mosparo and contributors
+ * @copyright         2021-2022 mosparo
  * @license           MIT
  *
  * @wordpress-plugin
