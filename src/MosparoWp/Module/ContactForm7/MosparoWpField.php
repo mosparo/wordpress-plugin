@@ -33,11 +33,19 @@ class MosparoWpField
 
         add_action('wpcf7_init', [$this, 'addFormTag'], 10, 0);
         add_filter('wpcf7_spam', [$this, 'verifyResponse'], 9, 2);
+        add_action('wpcf7_admin_init', [$this, 'addFormTagGenerator'], 100);
     }
 
     public function addFormTag()
     {
-        wpcf7_add_form_tag('mosparo', [$this, 'displayFormField'], true);
+        wpcf7_add_form_tag('mosparo', [$this, 'displayFormField'], [
+            'name-attr' => true,
+        ]);
+    }
+
+    public function addFormTagGenerator()
+    {
+        wpcf7_add_tag_generator('mosparo', 'mosparo', '', [$this, 'getTagGeneratorContent'], ['nameless' => 1]);
     }
 
     public function displayFormField()
@@ -118,5 +126,45 @@ class MosparoWpField
         $formData = apply_filters('mosparo_wp_cf7_form_data', $formData);
 
         return $formData;
+    }
+
+    public function getTagGeneratorContent($contactForm, $args = '')
+    {
+        $args = wp_parse_args($args, []);
+        ?>
+        <div class="control-box">
+            <fieldset>
+                <legend>
+                    <?php echo sprintf(
+                            __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-wp'),
+                            '<a href="' . get_admin_url(null, 'options-general.php?page=mosparo-configuration') . '">',
+                            '</a>'
+                        );
+                    ?>
+                </legend>
+
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row"><label for="<?php echo esc_attr($args['content'] . '-id'); ?>"><?php echo esc_html(__('Id attribute', 'contact-form-7')); ?></label></th>
+                            <td><input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr($args['content'] . '-id'); ?>" /></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="<?php echo esc_attr($args['content'] . '-class'); ?>"><?php echo esc_html(__('Class attribute', 'contact-form-7')); ?></label></th>
+                            <td><input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr($args['content'] . '-class'); ?>" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+
+        <div class="insert-box">
+            <input type="text" name="mosparo" class="tag code" readonly="readonly" onfocus="this.select()" />
+
+            <div class="submitbox">
+                <input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr(__('Insert Tag', 'contact-form-7')); ?>" />
+            </div>
+        </div>
+        <?php
     }
 }

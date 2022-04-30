@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Mosparo for WordPress\n"
-"POT-Creation-Date: 2022-04-17 13:57+0200\n"
-"PO-Revision-Date: 2022-04-17 13:58+0200\n"
+"POT-Creation-Date: 2022-04-30 13:41+0200\n"
+"PO-Revision-Date: 2022-04-30 13:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -117,15 +117,36 @@ msgstr "Contact Form 7"
 msgid "Protects Contact Form 7 forms with mosparo."
 msgstr "Schützt die Contact Form 7-Formulare mit mosparo."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:63
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:71
 msgid "Submit or validation token is empty."
 msgstr "Sende- oder Validierungstoken ist leer."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:83
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:91
 msgid "Verification failed which means the form contains spam."
 msgstr ""
 "Die Überprüfung ist fehlgeschlagen, was bedeutet, dass das Formular Spam "
 "enthält."
+
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:139
+#, php-format
+msgid ""
+"Adds a mosparo field to your form. Please configure the connection to "
+"mosparo in the %ssettings%s."
+msgstr ""
+"Fügt ein mosparo-Feld in Ihrem Formular ein. Bitte konfigurieren Sie die "
+"Verbindung zu mosparo in den %sEinstellungen%s."
+
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:149
+msgid "Id attribute"
+msgstr ""
+
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:153
+msgid "Class attribute"
+msgstr ""
+
+#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:165
+msgid "Insert Tag"
+msgstr ""
 
 #: src/MosparoWp/Module/NinjaForms/MosparoAction.php:72
 #: src/MosparoWp/Module/NinjaForms/MosparoAction.php:82
