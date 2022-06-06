@@ -14,10 +14,12 @@
                 $configHelper = \MosparoWp\Helper\ConfigHelper::getInstance();
 
                 $host = $configHelper->isActive() ? $configHelper->getHost() : 'https://';
+                $uuid = $configHelper->isActive() ? $configHelper->getUuid() : '';
                 $publicKey = $configHelper->isActive() ? $configHelper->getPublicKey() : '';
                 $privateKey = $configHelper->isActive() ? $configHelper->getPrivateKey() : '';
                 $verifySsl = $configHelper->getVerifySsl();
                 $loadResourcesAlways = $configHelper->getLoadResourcesAlways();
+                $loadCssResourceOnInitialization = $configHelper->getLoadCssResourceOnInitialization();
             ?>
 
             <table class="form-table" role="presentation">
@@ -28,6 +30,14 @@
                         </th>
                         <td>
                             <input name="host" type="url" id="host" value="<?php echo $host; ?>" class="regular-text code" <?php if ($configHelper->isActive()): ?>readonly<?php endif; ?>>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <label for="uuid"><?php _e('Unique identification number', 'mosparo-wp'); ?></label>
+                        </th>
+                        <td>
+                            <input name="uuid" type="text" id="uuid" value="<?php echo $uuid; ?>" class="regular-text code" <?php if ($configHelper->isActive()): ?>readonly<?php endif; ?>>
                         </td>
                     </tr>
                     <tr>
@@ -61,6 +71,15 @@
                             <label for="loadResourcesAlways">
                                 <input name="loadResourcesAlways" type="checkbox" id="loadResourcesAlways" value="1" <?php echo $loadResourcesAlways ? 'checked' : ''; ?>>
                                 <?php _e('Load the mosparo resources on all pages.', 'mosparo-wp'); ?>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td>
+                            <label for="loadCssResourceOnInitialization">
+                                <input name="loadCssResourceOnInitialization" type="checkbox" id="loadCssResourceOnInitialization" value="1" <?php echo $loadCssResourceOnInitialization ? 'checked' : ''; ?>>
+                                <?php _e('Load the CSS resource on initialization.', 'mosparo-wp'); ?>
                             </label>
                         </td>
                     </tr>

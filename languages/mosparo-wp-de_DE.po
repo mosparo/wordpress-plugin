@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Mosparo for WordPress\n"
-"POT-Creation-Date: 2022-04-30 13:41+0200\n"
-"PO-Revision-Date: 2022-04-30 13:43+0200\n"
+"POT-Creation-Date: 2022-06-06 14:25+0200\n"
+"PO-Revision-Date: 2022-06-06 14:26+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -72,31 +72,31 @@ msgstr "mosparo"
 msgid "No access."
 msgstr "Kein Zugriff."
 
-#: src/MosparoWp/Helper/AdminHelper.php:215
+#: src/MosparoWp/Helper/AdminHelper.php:225
 msgid "Error"
 msgstr "Fehler"
 
-#: src/MosparoWp/Helper/AdminHelper.php:215
+#: src/MosparoWp/Helper/AdminHelper.php:225
 msgid "Invalid connection data."
 msgstr "Ungültige Verbindungsdaten."
 
-#: src/MosparoWp/Helper/AdminHelper.php:217
+#: src/MosparoWp/Helper/AdminHelper.php:227
 msgid "The settings were successfully saved."
 msgstr "Die Einstellungen wurden erfolgreich gespeichert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:219
+#: src/MosparoWp/Helper/AdminHelper.php:229
 msgid "The modules were successfully enabled."
 msgstr "Die Module wurden erfolgreich aktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:221
+#: src/MosparoWp/Helper/AdminHelper.php:231
 msgid "The modules were successfully disabled."
 msgstr "Die Module wurden erfolgreich deaktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:223
+#: src/MosparoWp/Helper/AdminHelper.php:233
 msgid "The module was successfully enabled."
 msgstr "Das Modul wurde erfolgreich aktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:225
+#: src/MosparoWp/Helper/AdminHelper.php:235
 msgid "The module was successfully disabled."
 msgstr "Das Modul wurde erfolgreich deaktiviert."
 
@@ -138,15 +138,15 @@ msgstr ""
 
 #: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:149
 msgid "Id attribute"
-msgstr ""
+msgstr "ID Attribut"
 
 #: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:153
 msgid "Class attribute"
-msgstr ""
+msgstr "Klassen-Attribut"
 
 #: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:165
 msgid "Insert Tag"
-msgstr ""
+msgstr "Tag einfügen"
 
 #: src/MosparoWp/Module/NinjaForms/MosparoAction.php:72
 #: src/MosparoWp/Module/NinjaForms/MosparoAction.php:82
@@ -181,31 +181,39 @@ msgstr "Schützt WPForms-Formulare mit mosparo."
 msgid "Connection"
 msgstr "Verbindung"
 
-#: views/admin/settings.php:27
+#: views/admin/settings.php:29
 msgid "Host"
 msgstr "Host"
 
-#: views/admin/settings.php:35
+#: views/admin/settings.php:37
+msgid "Unique identification number"
+msgstr "Eindeutige Identifikationsnummer"
+
+#: views/admin/settings.php:45
 msgid "Public Key"
 msgstr "Öffentlicher Schlüssel"
 
-#: views/admin/settings.php:43
+#: views/admin/settings.php:53
 msgid "Private Key"
 msgstr "Privater Schlüssel"
 
-#: views/admin/settings.php:54
+#: views/admin/settings.php:64
 msgid "Verify SSL certificate"
 msgstr "SSL-Zertifikat überprüfen"
 
-#: views/admin/settings.php:63
+#: views/admin/settings.php:73
 msgid "Load the mosparo resources on all pages."
 msgstr "Laden Sie die mosparo-Ressourcen auf allen Seiten."
 
-#: views/admin/settings.php:79
+#: views/admin/settings.php:82
+msgid "Load the CSS resource on initialization."
+msgstr "CSS-Resource erst bei der Initialisierung laden"
+
+#: views/admin/settings.php:98
 msgid "Reset connection"
 msgstr "Verbindung zurücksetzen"
 
-#: views/admin/settings.php:86
+#: views/admin/settings.php:105
 msgid "Modules"
 msgstr "Module"
 

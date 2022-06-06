@@ -31,8 +31,10 @@ function mosparoWpInitialize()
     $moduleHelper = ModuleHelper::getInstance();
     $moduleHelper->initializeActiveModules(plugin_dir_path(__FILE__), plugin_dir_url(__FILE__));
 
+    $frontendHelper = FrontendHelper::getInstance();
+    $frontendHelper->initializeScheduleEvents();
+
     if (!is_admin() && $configHelper->getLoadResourcesAlways()) {
-        $frontendHelper = FrontendHelper::getInstance();
         $frontendHelper->initializeResourceRegistration();
     }
 
@@ -46,3 +48,17 @@ function mosparoWpInitializeTextDomain()
     load_plugin_textdomain('mosparo-wp', false, dirname(plugin_basename(__FILE__)) . '/languages');
 }
 add_action('init', 'mosparoWpInitializeTextDomain');
+
+function mosparoWpActivatePlugin()
+{
+    if (!wp_next_scheduled('mosparo_wp_refresh_css_url_cache')) {
+        wp_schedule_event(time(), 'daily', 'mosparo_wp_refresh_css_url_cache');
+    }
+}
+register_activation_hook(__FILE__, 'mosparoWpActivatePlugin');
+
+function mosparoWpDeactivatePlugin()
+{
+    wp_clear_scheduled_hook('mosparo_wp_refresh_css_url_cache');
+}
+register_deactivation_hook(__FILE__, 'mosparoWpDeactivatePlugin');

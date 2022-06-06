@@ -136,6 +136,9 @@ class AdminHelper
             $host = trim(sanitize_text_field($_POST['host']), '/');
             $configHelper->setHost($host);
 
+            $uuid = sanitize_text_field($_POST['uuid']);
+            $configHelper->setUuid($uuid);
+
             $publicKey = sanitize_text_field($_POST['publicKey']);
             $configHelper->setPublicKey($publicKey);
 
@@ -155,6 +158,13 @@ class AdminHelper
             $configHelper->setLoadResourcesAlways(false);
         } else {
             $configHelper->setLoadResourcesAlways(true);
+        }
+
+        // Save load css resource on initialization
+        if (!isset($_POST['loadCssResourceOnInitialization'])) {
+            $configHelper->setLoadCssResourceOnInitialization(false);
+        } else {
+            $configHelper->setLoadCssResourceOnInitialization(true);
         }
 
         $configHelper->saveConfiguration();

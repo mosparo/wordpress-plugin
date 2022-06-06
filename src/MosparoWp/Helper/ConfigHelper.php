@@ -24,10 +24,11 @@ class ConfigHelper
     public function isActive()
     {
         $host = $this->getHost();
+        $uuid = $this->getUuid();
         $publicKey = $this->getPublicKey();
         $privateKey = $this->getPrivateKey();
 
-        return $host && $publicKey && $privateKey;
+        return $host && $uuid && $publicKey && $privateKey;
     }
 
     public function getHost()
@@ -38,6 +39,16 @@ class ConfigHelper
     public function setHost($host)
     {
         $this->config['host'] = $host;
+    }
+
+    public function getUuid()
+    {
+        return $this->config['uuid'] ?? '';
+    }
+
+    public function setUuid($uuid)
+    {
+        $this->config['uuid'] = $uuid;
     }
 
     public function getPublicKey()
@@ -80,6 +91,16 @@ class ConfigHelper
         $this->config['loadResourcesAlways'] = $loadResourcesAlways;
     }
 
+    public function getLoadCssResourceOnInitialization()
+    {
+        return $this->config['loadCssResourceOnInitialization'] ?? false;
+    }
+
+    public function setLoadCssResourceOnInitialization($loadCssResourceOnInitialization)
+    {
+        $this->config['loadCssResourceOnInitialization'] = $loadCssResourceOnInitialization;
+    }
+
     public function resetConnectionSettings()
     {
         if (!$this->isActive()) {
@@ -87,6 +108,7 @@ class ConfigHelper
         }
 
         unset($this->config['host']);
+        unset($this->config['uuid']);
         unset($this->config['publicKey']);
         unset($this->config['privateKey']);
     }
