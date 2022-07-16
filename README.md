@@ -3,10 +3,10 @@
     <img src="https://github.com/mosparo/mosparo/blob/master/assets/images/mosparo-logo.svg?raw=true" alt="mosparo logo contains a bird with the name Mo and the mosparo text"/>
 </p>
 
-<h2 align="center">
+<h1 align="center">
     for WordPress
-</h2>
-
+</h1>
+&nbsp;
 <p align="center">
     This WordPress plugins adds the required functionality to use mosparo in your WordPress form.
 </p>
@@ -14,7 +14,7 @@
 -----
 
 ## Description
-The WordPress plugin adds the needed functionality to your WordPress website to use mosparo in your forms.
+The WordPress plugin adds the required functionality to your WordPress website to use mosparo in your forms.
 This plugin is compatible with the WordPress comments, Contact Form 7, Ninja Forms and WPForms.
 
 ## Requirements
