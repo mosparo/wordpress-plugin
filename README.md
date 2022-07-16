@@ -3,7 +3,7 @@
     <img src="https://github.com/mosparo/mosparo/blob/master/assets/images/mosparo-logo.svg?raw=true" alt="mosparo logo contains a bird with the name Mo and the mosparo text"/>
 </p>
 
-<h1 align="center">
+<h1 align="center" style="border-bottom: none;">
     for WordPress
 </h1>
 &nbsp;
