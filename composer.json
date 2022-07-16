@@ -1,6 +1,16 @@
 {
-  "name": "mosparo/wp-plugin-cf7",
-  "homepage": "https://mosparo.io/plugins/wordpress/contact-form-7/",
+  "name": "mosparo/wordpress-plugin",
+  "description": "Plugin for WordPress to integrate mosparo.",
+  "homepage": "https://mosparo.io/plugins/wordpress/",
+  "keywords": ["mosparo", "wordpress", "plugin"],
+  "type": "wordpress-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "mosparo",
+      "homepage": "https://mosparo.io"
+    }
+  ],
   "require": {
     "mosparo/php-api-client": "dev-master"
   },
