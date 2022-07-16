@@ -3,6 +3,7 @@
 namespace MosparoWp\Helper;
 
 use Mosparo\ApiClient\Client;
+use WP_Error;
 
 class FrontendHelper
 {
@@ -34,6 +35,11 @@ class FrontendHelper
         add_action('wp_enqueue_scripts', [$this, 'registerResources']);
     }
 
+    public function clearCssUrlCache()
+    {
+        delete_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY);
+    }
+
     public function refreshCssUrlCache()
     {
         $configHelper = ConfigHelper::getInstance();
@@ -44,6 +50,10 @@ class FrontendHelper
         $url = sprintf('%s/resources/%s/url', $host, $uuid);
 
         $response = wp_remote_get($url, ['sslverify' => $sslVerify]);
+        if ($response instanceof WP_Error) {
+            return;
+        }
+
         $fullCssUrl = wp_remote_retrieve_body($response);
 
         if ($fullCssUrl != '') {

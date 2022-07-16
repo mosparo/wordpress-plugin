@@ -83,6 +83,9 @@ class AdminHelper
                 $configHelper->resetConnectionSettings();
                 $configHelper->saveConfiguration();
 
+                $frontendHelper = FrontendHelper::getInstance();
+                $frontendHelper->clearCssUrlCache();
+
                 $this->redirectToSettingsPage();
             } else if ($action === 'enable' || $action === 'disable') {
                 if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-modules') && !wp_verify_nonce($_REQUEST['_wpnonce'], 'change-module'))) {
@@ -168,6 +171,10 @@ class AdminHelper
         }
 
         $configHelper->saveConfiguration();
+
+        // Try to cache the resource url for the first time
+        $frontendHelper = FrontendHelper::getInstance();
+        $frontendHelper->refreshCssUrlCache();
 
         $this->redirectToSettingsPage('saved');
     }
