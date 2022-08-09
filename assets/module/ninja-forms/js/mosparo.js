@@ -11,7 +11,7 @@ var mosparoFieldController = Marionette.Object.extend( {
                     Backbone.Radio.channel('fields').trigger('change:modelValue', model);
                 };
 
-                new mosparo("mosparo-box-" + model.get('id'), model.get('host'), model.get('publicKey'), mosparoOptions);
+                new mosparo("mosparo-box-" + model.get('id'), model.get('host'), model.get('uuid'), model.get('publicKey'), mosparoOptions);
             });
         });
 

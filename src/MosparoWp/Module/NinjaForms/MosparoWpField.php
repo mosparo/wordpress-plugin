@@ -77,9 +77,10 @@ class MosparoWpField extends NF_Abstracts_Field
         }
 
         $settings['host'] = $configHelper->getHost();
+        $settings['uuid'] = $configHelper->getuuid();
         $settings['publicKey'] = $configHelper->getPublicKey();
 
-        $options = $frontendHelper->getFrontendOptions([]);
+        $options = $frontendHelper->getFrontendOptions([], $configHelper);
         $options['inputFieldSelector'] = '[name]:not(.mosparo__ignored-field):not(.nf-field-hp)';
         $settings['mosparoOptions'] = $options;
 
