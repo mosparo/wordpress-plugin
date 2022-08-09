@@ -130,11 +130,21 @@ class FrontendHelper
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
             <script>
-                window.onload = function(){
-                    new mosparo("mosparo-box-%s", "%s", "%s", "%s", %s);
-                };
+                document.addEventListener("DOMContentLoaded", function () {
+                    let formEl = document.getElementById("mosparo-box-%s");
+                    let options = %s;
+                    
+                    if (
+                        typeof wpcf7 !== "undefined" && typeof wpcf7.cached !== "undefined" && wpcf7.cached && 
+                        typeof formEl.closest !== "undefined" && formEl.closest(".wpcf7") !== null
+                    ) {
+                        options.requestSubmitTokenOnInit = false;
+                    }
+                    
+                    new mosparo("mosparo-box-%s", "%s", "%s", "%s", options);
+                });
             </script>
-        ', $instanceId, $instanceId, $configHelper->getHost(), $configHelper->getUuid(), $configHelper->getPublicKey(), json_encode($options));
+        ', $instanceId, $instanceId, json_encode($options), $instanceId, $configHelper->getHost(), $configHelper->getUuid(), $configHelper->getPublicKey());
 
         return $html;
     }
