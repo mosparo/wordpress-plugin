@@ -11,7 +11,10 @@
  * Plugin Name:       mosparo for WordPress
  * Plugin URI:        https://mosparo.io/integrations/wordpress/
  * Description:       Adds the ability to protect forms in WordPress with mosparo.
- * Version:           1.0.0
+ * Author:            mosparo
+ * Author URI:        https://mosparo.io/
+ * License:           MIT
+ * Version:           0.1.0
  * Text Domain:       mosparo-wp
  * Domain Path:       /languages
  */
