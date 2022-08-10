@@ -5,11 +5,15 @@ namespace MosparoWp\Module\ContactForm7;
 use MosparoWp\Helper\ConfigHelper;
 use MosparoWp\Helper\FrontendHelper;
 use MosparoWp\Helper\VerificationHelper;
+use WPCF7_FormTag;
+use WPCF7_Pipes;
 use WPCF7_Submission;
 
 class MosparoWpField
 {
     private static $instance;
+
+    protected $originalValues = [];
 
     public static function getInstance()
     {
@@ -34,6 +38,13 @@ class MosparoWpField
         add_action('wpcf7_init', [$this, 'addFormTag'], 10, 0);
         add_filter('wpcf7_spam', [$this, 'verifyResponse'], 9, 2);
         add_action('wpcf7_admin_init', [$this, 'addFormTagGenerator'], 100);
+
+        // Register the filters to store the original value
+        add_action('wpcf7_posted_data_select', [$this, 'storeOriginalValue'], 10, 3);
+        add_action('wpcf7_posted_data_select*', [$this, 'storeOriginalValue'], 10, 3);
+        add_action('wpcf7_posted_data_checkbox', [$this, 'storeOriginalValue'], 10, 3);
+        add_action('wpcf7_posted_data_checkbox*', [$this, 'storeOriginalValue'], 10, 3);
+        add_action('wpcf7_posted_data_radio', [$this, 'storeOriginalValue'], 10, 3);
     }
 
     public function addFormTag()
@@ -52,6 +63,16 @@ class MosparoWpField
     {
         $frontendHelper = FrontendHelper::getInstance();
         return $frontendHelper->generateField();
+    }
+
+    public function storeOriginalValue($value, $originalValue, WPCF7_FormTag $tag)
+    {
+        $pipes = $tag->pipes;
+        if (!empty($tag->name) && WPCF7_USE_PIPE && $pipes instanceof WPCF7_Pipes && !$pipes->zero()) {
+            $this->originalValues[$tag->name] = $originalValue;
+        }
+
+        return $value;
     }
 
     public function verifyResponse($spam, WPCF7_Submission $submission)
@@ -117,7 +138,12 @@ class MosparoWpField
                 continue;
             }
 
-            $value = $submission->get_posted_data($tag->name);
+            if (isset($this->originalValues[$tag->name])) {
+                $value = $this->originalValues[$tag->name];
+            } else {
+                $value = $submission->get_posted_data($tag->name);
+            }
+
             if ($value !== null) {
                 $formData[$tag->name] = $value;
             }
