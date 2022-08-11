@@ -42,7 +42,7 @@ class AdminHelper
             __('mosparo', 'mosparo-wp'),
             'manage_options',
             'mosparo-configuration',
-            array($this, 'displayConfiguration')
+            [$this, 'displayConfiguration']
         );
     }
 
@@ -68,7 +68,7 @@ class AdminHelper
     public function executeAction()
     {
         if (!current_user_can( 'manage_options')) {
-            wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+            return;
         }
 
         if (!isset($_REQUEST['action']) || $_REQUEST['action'] === '') {
@@ -127,7 +127,7 @@ class AdminHelper
     public function saveSettings()
     {
         if (!current_user_can( 'manage_options')) {
-            wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+            return;
         }
 
         if (!$this->verifyNonce()) {
