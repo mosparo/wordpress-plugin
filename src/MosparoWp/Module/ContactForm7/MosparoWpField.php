@@ -117,7 +117,17 @@ class MosparoWpField
 
     protected function getFormData(WPCF7_Submission $submission): array
     {
-        $ignoredTypes = apply_filters('mosparo_wp_cf7_ignored_field_types', ['hidden', 'file', 'file*', 'submit', 'mosparo']);
+        $ignoredTypes = apply_filters('mosparo_wp_cf7_ignored_field_types', [
+            'checkbox',
+            'checkbox*',
+            'radio',
+            'acceptance',
+            'hidden',
+            'file',
+            'file*',
+            'submit',
+            'mosparo'
+        ]);
         $formData = (array) $_POST;
         $tags = $submission->get_contact_form()->scan_form_tags();
 

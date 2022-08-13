@@ -109,8 +109,22 @@ class MosparoWpField extends WPForms_Field
     protected function getFormData($entry, $formData)
     {
         $ignoredFields = apply_filters('mosparo_wp_wpforms_ignored_field_types', [
+            'radio',
+            'checkbox',
+            'file-upload',
+            'password',
+            'pagebreak',
+            'divider',
+            'entry-preview',
+            'hidden',
+            'html',
+            'rating',
+            'signature',
+            'likert_scale',
+            'net_promoter_score',
             'gdpr-checkbox',
             'mosparo',
+            'captcha',
             'captcha-none',
             'captcha-grecaptcha',
             'captcha-hcaptcha'
