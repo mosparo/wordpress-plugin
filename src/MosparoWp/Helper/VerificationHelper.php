@@ -4,6 +4,7 @@ namespace MosparoWp\Helper;
 
 use Mosparo\ApiClient\Client;
 use Mosparo\ApiClient\Exception;
+use Mosparo\ApiClient\VerificationResult;
 
 class VerificationHelper
 {
@@ -28,9 +29,8 @@ class VerificationHelper
 
     }
 
-    public function verifySubmission($submitToken, $validationToken, $formData): bool
+    public function verifySubmission($submitToken, $validationToken, $formData): ?VerificationResult
     {
-        $isValid = false;
         $configHelper = ConfigHelper::getInstance();
 
         $client = new Client(
@@ -46,7 +46,7 @@ class VerificationHelper
             $result = $client->validateSubmission($formData, $submitToken, $validationToken);
         } catch (Exception $e) {
             $this->lastException = $e;
-            $result = false;
+            $result = null;
         }
 
         return $result;

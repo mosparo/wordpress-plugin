@@ -81,7 +81,7 @@ class MosparoWpField
             return $spam;
         }
 
-        $formData = $this->getFormData($submission);
+        [ $formData, $requiredFields ] = $this->getFormData($submission);
         $submitToken = trim($formData['_mosparo_submitToken'] ?? '');
         $validationToken = trim($formData['_mosparo_validationToken'] ?? '');
 
@@ -100,10 +100,17 @@ class MosparoWpField
             return strpos($key, '_mosparo_') === false;
         }, ARRAY_FILTER_USE_KEY);
 
-        // If the submission is valid, the submission is no spam.
+        // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        if ($verificationHelper->verifySubmission($submitToken, $validationToken, $formData)) {
-            return false;
+        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        if ($verificationResult !== null) {
+            // Confirm that all required fields were verified
+            $verifiedFields = array_keys($verificationResult->getVerifiedFields());
+            $fieldDifference = array_diff($requiredFields, $verifiedFields);
+
+            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+                return false;
+            }
         }
 
         // Everything else is spam
@@ -117,6 +124,7 @@ class MosparoWpField
 
     protected function getFormData(WPCF7_Submission $submission): array
     {
+        $requiredFields = [];
         $ignoredTypes = apply_filters('mosparo_wp_cf7_ignored_field_types', [
             'checkbox',
             'checkbox*',
@@ -148,6 +156,10 @@ class MosparoWpField
                 continue;
             }
 
+            if (substr($tag->type, -1) === '*') {
+                $requiredFields[] = $tag->name;
+            }
+
             if (isset($this->originalValues[$tag->name])) {
                 $value = $this->originalValues[$tag->name];
             } else {
@@ -161,7 +173,7 @@ class MosparoWpField
 
         $formData = apply_filters('mosparo_wp_cf7_form_data', $formData);
 
-        return $formData;
+        return [ $formData, $requiredFields ];
     }
 
     public function getTagGeneratorContent($contactForm, $args = '')

@@ -87,7 +87,7 @@ class MosparoWpField extends WPForms_Field
         }
 
         // Find the validation data
-        $data = $this->getFormData($entry, $formData);
+        [ $data, $requiredFields ] = $this->getFormData($entry, $formData);
         $submitToken = trim($_REQUEST['_mosparo_submitToken'] ?? '');
         $validationToken = trim($_REQUEST['_mosparo_validationToken'] ?? '');
 
@@ -99,8 +99,15 @@ class MosparoWpField extends WPForms_Field
 
         // If the submission is valid, the submission is not spam.
         $verificationHelper = VerificationHelper::getInstance();
-        if ($verificationHelper->verifySubmission($submitToken, $validationToken, $data)) {
-            return;
+        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $data);
+        if ($verificationResult !== null) {
+            // Confirm that all required fields were verified
+            $verifiedFields = array_keys($verificationResult->getVerifiedFields());
+            $fieldDifference = array_diff($requiredFields, $verifiedFields);
+
+            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+                return;
+            }
         }
 
         wpforms()->process->errors[$formId][$mosparoFieldId] = __('Your submission is not valid.', 'mosparo-wp');
@@ -130,6 +137,7 @@ class MosparoWpField extends WPForms_Field
             'captcha-hcaptcha'
         ]);
         $data = [];
+        $requiredFields = [];
         $fieldsData = $entry['fields'];
 
         foreach ($formData['fields'] as $key => $field) {
@@ -141,15 +149,23 @@ class MosparoWpField extends WPForms_Field
                 foreach ($fieldsData[$key] as $subKey => $value) {
                     $name = sprintf('wpforms[fields][%s][%s]', $key, $subKey);
                     $data[$name] = $value;
+
+                    if ($field['required'] == 1) {
+                        $requiredFields[] = $name;
+                    }
                 }
             } else {
                 $name = sprintf('wpforms[fields][%s]', $key);
                 $data[$name] = $fieldsData[$key];
+
+                if ($field['required'] == 1) {
+                    $requiredFields[] = $name;
+                }
             }
         }
 
         $data = apply_filters('mosparo_wp_wpforms_get_form_data', $data);
 
-        return $data;
+        return [ $data, $requiredFields ];
     }
 }

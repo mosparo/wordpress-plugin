@@ -63,9 +63,18 @@ class CommentForm
             'url' => $commentData['comment_author_url']
         ]);
 
-        // If the submission is valid, the submission is no spam.
+        // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        if (!$verificationHelper->verifySubmission($submitToken, $validationToken, $formData)) {
+        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        if ($verificationResult === null) {
+            return 'spam';
+        }
+
+        // Confirm that all required fields were verified
+        $verifiedFields = array_keys($verificationResult->getVerifiedFields());
+        $fieldDifference = array_diff(['comment', 'author', 'email'], $verifiedFields);
+
+        if (!$verificationResult->isSubmittable() || !empty($fieldDifference)) {
             return 'spam';
         }
 

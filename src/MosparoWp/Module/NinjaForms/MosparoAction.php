@@ -65,7 +65,7 @@ class MosparoAction extends NF_Abstracts_Action
 		}
 
         // Find the validation data
-        [$tokens, $data] = $this->getFormData($nfData);
+        [$tokens, $data, $requiredFields] = $this->getFormData($nfData);
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($tokens['submitToken']) || empty($tokens['validationToken'])) {
@@ -73,10 +73,17 @@ class MosparoAction extends NF_Abstracts_Action
             return $nfData;
         }
 
-        // If the submission is valid, the submission is not spam.
+        // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        if ($verificationHelper->verifySubmission($tokens['submitToken'], $tokens['validationToken'], $data)) {
-            return $nfData;
+        $verificationResult = $verificationHelper->verifySubmission($tokens['submitToken'], $tokens['validationToken'], $data);
+        if ($verificationResult !== null) {
+            // Confirm that all required fields were verified
+            $verifiedFields = array_keys($verificationResult->getVerifiedFields());
+            $fieldDifference = array_diff($requiredFields, $verifiedFields);
+
+            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+                return $nfData;
+            }
         }
 
         $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-wp');
@@ -109,6 +116,7 @@ class MosparoAction extends NF_Abstracts_Action
         ]);
 
         $data = [];
+        $requiredFields = [];
         $tokens = ['submitToken' => '', 'validationToken' => ''];
 
         foreach ($nfData['fields'] as $field) {
@@ -127,12 +135,16 @@ class MosparoAction extends NF_Abstracts_Action
                 $key = $field['settings']['custom_name_attribute'];
             }
 
+            if ($field['required'] == 1) {
+                $requiredFields[] = $key;
+            }
+
             $value = $field['value'];
             $data[$key] = $value;
         }
 
         $data = apply_filters('mosparo_wp_ninja_forms_get_form_data', $data);
 
-        return [$tokens, $data];
+        return [$tokens, $data, $requiredFields];
     }
 }
