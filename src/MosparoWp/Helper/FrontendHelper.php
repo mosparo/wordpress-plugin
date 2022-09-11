@@ -130,21 +130,41 @@ class FrontendHelper
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
             <script>
+                if (typeof mosparoInstances == "undefined") {
+                    var mosparoInstances = [];
+                }
+                
                 document.addEventListener("DOMContentLoaded", function () {
-                    let formEl = document.getElementById("mosparo-box-%s");
+                    let id = "mosparo-box-%s";
+                    let formEl = jQuery("#" + id);
                     let options = %s;
+                    let resetMosparoField = function () {
+                        if (!mosparoInstances[id]) {
+                            return;
+                        }
+                        
+                        mosparoInstances[id].resetState();
+                        mosparoInstances[id].requestSubmitToken();
+                    };
                     
-                    if (
-                        typeof wpcf7 !== "undefined" && typeof wpcf7.cached !== "undefined" && wpcf7.cached && 
-                        typeof formEl.closest !== "undefined" && formEl.closest(".wpcf7") !== null
-                    ) {
-                        options.requestSubmitTokenOnInit = false;
+                    // Contact Form 7
+                    if (typeof wpcf7 !== "undefined" && formEl.closest(".wpcf7").length > 0) {
+                        if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
+                            options.requestSubmitTokenOnInit = false;
+                        }
+                        
+                        formEl.closest(".wpcf7").on("wpcf7spam", resetMosparoField);
                     }
                     
-                    new mosparo("mosparo-box-%s", "%s", "%s", "%s", options);
+                    // WP Forms
+                    if (typeof wpforms !== "undefined" && formEl.closest(".wpforms-form").length > 0) {
+                        jQuery(formEl).closest(".wpforms-form").on("wpformsAjaxSubmitFailed", resetMosparoField);
+                    }
+                    
+                    mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
                 });
             </script>
-        ', $instanceId, $instanceId, json_encode($options), $instanceId, $configHelper->getHost(), $configHelper->getUuid(), $configHelper->getPublicKey());
+        ', $instanceId, $instanceId, json_encode($options), $configHelper->getHost(), $configHelper->getUuid(), $configHelper->getPublicKey());
 
         return $html;
     }

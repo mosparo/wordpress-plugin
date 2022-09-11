@@ -343,12 +343,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:mosparo/php-api-client.git",
-                "reference": "6d4b74f06ff08ce2267fba7f4db8b8f1a8337ac0"
+                "reference": "384d66c61957c6e582dafda66c0ceab2d764cf2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/6d4b74f06ff08ce2267fba7f4db8b8f1a8337ac0",
-                "reference": "6d4b74f06ff08ce2267fba7f4db8b8f1a8337ac0",
+                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/384d66c61957c6e582dafda66c0ceab2d764cf2e",
+                "reference": "384d66c61957c6e582dafda66c0ceab2d764cf2e",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +388,7 @@
                 "source": "https://github.com/mosparo/php-api-client/tree/master",
                 "issues": "https://github.com/mosparo/php-api-client/issues"
             },
-            "time": "2022-08-31T17:57:22+00:00"
+            "time": "2022-09-10T12:06:37+00:00"
         },
         {
             "name": "psr/http-client",

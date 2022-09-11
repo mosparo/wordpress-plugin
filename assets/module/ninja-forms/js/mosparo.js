@@ -1,9 +1,10 @@
-// Create a new object for custom validation of a custom field.
+var mosparoInstances = [];
+
 var mosparoFieldController = Marionette.Object.extend( {
     initialize: function()
     {
-        jQuery(document).on('nfFormReady', function () {
-            jQuery('.mosparo-wp-container').each(function () {
+        jQuery(document).on('nfFormReady', function (ev, form) {
+            form.$el.find('.mosparo-wp-container').each(function () {
                 let model = nfRadio.channel('fields').request('get:field', jQuery(this).data('field-id'));
 
                 let mosparoOptions = model.get('mosparoOptions');
@@ -11,7 +12,8 @@ var mosparoFieldController = Marionette.Object.extend( {
                     Backbone.Radio.channel('fields').trigger('change:modelValue', model);
                 };
 
-                new mosparo("mosparo-box-" + model.get('id'), model.get('host'), model.get('uuid'), model.get('publicKey'), mosparoOptions);
+                let id = "mosparo-box-" + model.get('id');
+                mosparoInstances[id] = new mosparo(id, model.get('host'), model.get('uuid'), model.get('publicKey'), mosparoOptions);
             });
         });
 
@@ -22,6 +24,9 @@ var mosparoFieldController = Marionette.Object.extend( {
         // Check the field status when the form is submitted
         var submitChannel = Backbone.Radio.channel('submit');
         this.listenTo(submitChannel, 'validate:field', this.validateRequired);
+
+        var formsChannel = Backbone.Radio.channel("forms");
+        this.listenTo(formsChannel, "submit:response", this.afterSubmit);
 
         // Store the tokens in the field data before submission
         var fieldChannel = Backbone.Radio.channel('mosparo');
@@ -37,6 +42,20 @@ var mosparoFieldController = Marionette.Object.extend( {
         };
 
         return fieldData;
+    },
+
+    afterSubmit: function (response)
+    {
+        if (typeof response.errors.form !== 'undefined' && typeof response.errors.form.spam !== 'undefined') {
+            let id = jQuery('#nf-form-' + response.data.form_id + '-cont .mosparo__container').prop('id');
+
+            if (!mosparoInstances[id]) {
+                return;
+            }
+
+            mosparoInstances[id].resetState();
+            mosparoInstances[id].requestSubmitToken();
+        }
     },
 
     validateRequired: function(model)
