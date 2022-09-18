@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7249a15b55f95cc718a72de85a35269",
+    "content-hash": "e052b3a083b672c0b805de7bd098928e",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -339,16 +339,16 @@
         },
         {
             "name": "mosparo/php-api-client",
-            "version": "dev-master",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:mosparo/php-api-client.git",
-                "reference": "384d66c61957c6e582dafda66c0ceab2d764cf2e"
+                "url": "https://github.com/mosparo/php-api-client.git",
+                "reference": "c05916111d853fc2883574bf47d459cc15636eb2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/384d66c61957c6e582dafda66c0ceab2d764cf2e",
-                "reference": "384d66c61957c6e582dafda66c0ceab2d764cf2e",
+                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/c05916111d853fc2883574bf47d459cc15636eb2",
+                "reference": "c05916111d853fc2883574bf47d459cc15636eb2",
                 "shasum": ""
             },
             "require": {
@@ -359,7 +359,6 @@
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -369,6 +368,7 @@
                     "/tests/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -385,10 +385,10 @@
                 "php"
             ],
             "support": {
-                "source": "https://github.com/mosparo/php-api-client/tree/master",
-                "issues": "https://github.com/mosparo/php-api-client/issues"
+                "issues": "https://github.com/mosparo/php-api-client/issues",
+                "source": "https://github.com/mosparo/php-api-client/tree/v1.0.0"
             },
-            "time": "2022-09-10T12:06:37+00:00"
+            "time": "2022-09-18T08:26:18+00:00"
         },
         {
             "name": "psr/http-client",
@@ -665,9 +665,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "mosparo/php-api-client": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
