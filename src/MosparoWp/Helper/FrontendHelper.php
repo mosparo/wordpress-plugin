@@ -79,7 +79,7 @@ class FrontendHelper
         wp_enqueue_script(
             'mosparo-wp-mosparo-js',
             $this->getJavaScriptUrl(),
-            [],
+            ['jquery'],
             '1.0',
             true
         );
