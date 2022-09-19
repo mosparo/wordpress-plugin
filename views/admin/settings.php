@@ -94,8 +94,11 @@
 
                 if ($configHelper->isActive()):
             ?>
-                <a href="<?php echo $this->buildConfigPageUrl(['action' => 'reset']); ?>" class="button-secondary">
+                <a href="<?php echo wp_nonce_url($this->buildConfigPageUrl(['action' => 'reset']), 'reset-connection'); ?>" class="button-secondary">
                     <?php _e('Reset connection', 'mosparo-wp'); ?>
+                </a>
+                <a href="<?php echo wp_nonce_url($this->buildConfigPageUrl(['action' => 'refresh_css_cache']), 'refresh-css-cache'); ?>" class="button-secondary">
+                    <?php _e('Refresh CSS Cache', 'mosparo-wp'); ?>
                 </a>
             <?php endif; ?>
         </p>

@@ -80,13 +80,26 @@ class AdminHelper
             $action = $_REQUEST['action'];
 
             if ($action === 'reset') {
+                if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'reset-connection')) {
+                    wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+                }
+
                 $configHelper->resetConnectionSettings();
                 $configHelper->saveConfiguration();
 
                 $frontendHelper = FrontendHelper::getInstance();
                 $frontendHelper->clearCssUrlCache();
 
-                $this->redirectToSettingsPage();
+                $this->redirectToSettingsPage('connection-reseted');
+            } else if ($action === 'refresh_css_cache') {
+                if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'refresh-css-cache')) {
+                    wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+                }
+
+                $frontendHelper = FrontendHelper::getInstance();
+                $frontendHelper->refreshCssUrlCache();
+
+                $this->redirectToSettingsPage('css-cache-refreshed');
             } else if ($action === 'enable' || $action === 'disable') {
                 if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-modules') && !wp_verify_nonce($_REQUEST['_wpnonce'], 'change-module'))) {
                     wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
@@ -240,6 +253,10 @@ class AdminHelper
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully enabled.', 'mosparo-wp')));
         } else if ($message === 'one-disabled') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully disabled.', 'mosparo-wp')));
+        } else if ($message === 'connection-reseted') {
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The connection settings were reseted successfully.', 'mosparo-wp')));
+        } else if ($message === 'css-cache-refreshed') {
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-wp')));
         }
     }
 }

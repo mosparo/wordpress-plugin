@@ -55,7 +55,6 @@ class FrontendHelper
         }
 
         $fullCssUrl = wp_remote_retrieve_body($response);
-
         if ($fullCssUrl != '') {
             set_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY, $fullCssUrl, 7 * 86400);
         }
