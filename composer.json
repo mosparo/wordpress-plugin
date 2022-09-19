@@ -12,6 +12,6 @@
         }
     ],
     "require": {
-        "mosparo/php-api-client": "^v1.0"
+        "mosparo/php-api-client": "^1.0"
     }
 }
