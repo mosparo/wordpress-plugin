@@ -1,9 +1,9 @@
 <?php
 
-namespace MosparoWp\Module\Comments;
+namespace MosparoIntegration\Module\Comments;
 
-use MosparoWp\Module\AbstractModule;
-use MosparoWp\Module\Comments\CommentForm;
+use MosparoIntegration\Module\AbstractModule;
+use MosparoIntegration\Module\Comments\CommentForm;
 
 class CommentsModule extends AbstractModule
 {
@@ -11,8 +11,8 @@ class CommentsModule extends AbstractModule
 
     public function __construct()
     {
-        $this->name = __('Comments', 'mosparo-wp');
-        $this->description = __('Protects the comments form with mosparo.', 'mosparo-wp');
+        $this->name = __('Comments', 'mosparo-integration');
+        $this->description = __('Protects the comments form with mosparo.', 'mosparo-integration');
         $this->dependencies = [];
     }
 

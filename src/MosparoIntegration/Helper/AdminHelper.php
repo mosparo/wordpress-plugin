@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoWp\Helper;
+namespace MosparoIntegration\Helper;
 
 class AdminHelper
 {
@@ -38,8 +38,8 @@ class AdminHelper
     {
         add_submenu_page(
             'options-general.php',
-            __('mosparo for WordPress', 'mosparo-wp'),
-            __('mosparo', 'mosparo-wp'),
+            __('mosparo Integration', 'mosparo-integration'),
+            __('mosparo Integration', 'mosparo-integration'),
             'manage_options',
             'mosparo-configuration',
             [$this, 'displayConfiguration']
@@ -49,7 +49,7 @@ class AdminHelper
     public function enqueueStyles()
     {
         wp_enqueue_style(
-            'mosparo-wp-admin-css',
+            'mosparo-integration-admin-css',
             $this->pluginUrl . '/assets/css/mosparo-admin.css',
             [],
             '1.0'
@@ -59,7 +59,7 @@ class AdminHelper
     public function displayConfiguration($action = '')
     {
         if (!current_user_can( 'manage_options')) {
-            wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+            wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
         }
 
         require_once($this->pluginPath . '/views/admin/settings.php');
@@ -81,7 +81,7 @@ class AdminHelper
 
             if ($action === 'reset') {
                 if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'reset-connection')) {
-                    wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
                 }
 
                 $configHelper->resetConnectionSettings();
@@ -93,7 +93,7 @@ class AdminHelper
                 $this->redirectToSettingsPage('connection-reseted');
             } else if ($action === 'refresh_css_cache') {
                 if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'refresh-css-cache')) {
-                    wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
                 }
 
                 $frontendHelper = FrontendHelper::getInstance();
@@ -102,7 +102,7 @@ class AdminHelper
                 $this->redirectToSettingsPage('css-cache-refreshed');
             } else if ($action === 'enable' || $action === 'disable') {
                 if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-modules') && !wp_verify_nonce($_REQUEST['_wpnonce'], 'change-module'))) {
-                    wp_die(__('No access.', 'mosparo-wp'), __('mosparo for WordPress', 'mosparo-wp'));
+                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
                 }
 
                 if (!isset($_REQUEST['module']) && !isset($_REQUEST['module'])) {
@@ -242,21 +242,21 @@ class AdminHelper
         $message = $_GET['message'] ?? '';
 
         if ($message === 'invalid') {
-            echo sprintf('<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s</p></div>', esc_html(__('Error', 'mosparo-wp')), esc_html(__('Invalid connection data.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s</p></div>', esc_html(__('Error', 'mosparo-integration')), esc_html(__('Invalid connection data.', 'mosparo-integration')));
         } else if ($message === 'saved') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The settings were successfully saved.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The settings were successfully saved.', 'mosparo-integration')));
         } else if ($message === 'multiple-enabled') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The modules were successfully enabled.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The modules were successfully enabled.', 'mosparo-integration')));
         } else if ($message === 'multiple-disabled') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The modules were successfully disabled.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The modules were successfully disabled.', 'mosparo-integration')));
         } else if ($message === 'one-enabled') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully enabled.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully enabled.', 'mosparo-integration')));
         } else if ($message === 'one-disabled') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully disabled.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully disabled.', 'mosparo-integration')));
         } else if ($message === 'connection-reseted') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The connection settings were reseted successfully.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The connection settings were reseted successfully.', 'mosparo-integration')));
         } else if ($message === 'css-cache-refreshed') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-wp')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-integration')));
         }
     }
 }

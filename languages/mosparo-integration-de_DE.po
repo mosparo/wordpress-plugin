@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Mosparo for WordPress\n"
-"POT-Creation-Date: 2022-09-19 07:10+0200\n"
-"PO-Revision-Date: 2022-09-19 07:11+0200\n"
+"Project-Id-Version: mosparo Integration\n"
+"POT-Creation-Date: 2022-10-10 18:06+0200\n"
+"PO-Revision-Date: 2022-10-10 18:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -13,7 +13,7 @@ msgstr ""
 "X-Generator: Poedit 3.1.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
-"X-Poedit-WPHeader: mosparo-wp.php\n"
+"X-Poedit-WPHeader: mosparo-integration.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
@@ -22,121 +22,121 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:42
+#: src/MosparoIntegration/Admin/ModuleListTable.php:42
 msgid "No modules found"
 msgstr "Keine Module gefunden"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:95
+#: src/MosparoIntegration/Admin/ModuleListTable.php:95
 msgid "Module name"
 msgstr "Name des Moduls"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:96
+#: src/MosparoIntegration/Admin/ModuleListTable.php:96
 msgid "Description"
 msgstr "Beschreibung"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:97
+#: src/MosparoIntegration/Admin/ModuleListTable.php:97
 msgid "Dependencies"
 msgstr "Abhängigkeiten"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:108
-#: src/MosparoWp/Admin/ModuleListTable.php:154
+#: src/MosparoIntegration/Admin/ModuleListTable.php:108
+#: src/MosparoIntegration/Admin/ModuleListTable.php:154
 msgid "Disable"
 msgstr "Deaktivieren"
 
-#: src/MosparoWp/Admin/ModuleListTable.php:113
-#: src/MosparoWp/Admin/ModuleListTable.php:153
+#: src/MosparoIntegration/Admin/ModuleListTable.php:113
+#: src/MosparoIntegration/Admin/ModuleListTable.php:153
 msgid "Enable"
 msgstr "Aktivieren"
 
 #. Plugin Name of the plugin/theme
-#: src/MosparoWp/Helper/AdminHelper.php:41
-#: src/MosparoWp/Helper/AdminHelper.php:62
-#: src/MosparoWp/Helper/AdminHelper.php:84
-#: src/MosparoWp/Helper/AdminHelper.php:96
-#: src/MosparoWp/Helper/AdminHelper.php:105
-msgid "mosparo for WordPress"
-msgstr "mosparo für WordPress"
+#: src/MosparoIntegration/Helper/AdminHelper.php:41
+#: src/MosparoIntegration/Helper/AdminHelper.php:62
+#: src/MosparoIntegration/Helper/AdminHelper.php:84
+#: src/MosparoIntegration/Helper/AdminHelper.php:96
+#: src/MosparoIntegration/Helper/AdminHelper.php:105
+msgid "mosparo Integration"
+msgstr "mosparo Integration"
 
 #. Author of the plugin/theme
-#: src/MosparoWp/Helper/AdminHelper.php:42
-#: src/MosparoWp/Module/NinjaForms/MosparoAction.php:38
-#: src/MosparoWp/Module/NinjaForms/MosparoWpField.php:58
-#: src/MosparoWp/Module/WPForms/MosparoWpField.php:13
+#: src/MosparoIntegration/Helper/AdminHelper.php:42
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:38
+#: src/MosparoIntegration/Module/NinjaForms/MosparoField.php:58
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:13
 #: views/admin/settings.php:4
 msgid "mosparo"
 msgstr "mosparo"
 
-#: src/MosparoWp/Helper/AdminHelper.php:62
-#: src/MosparoWp/Helper/AdminHelper.php:84
-#: src/MosparoWp/Helper/AdminHelper.php:96
-#: src/MosparoWp/Helper/AdminHelper.php:105
+#: src/MosparoIntegration/Helper/AdminHelper.php:62
+#: src/MosparoIntegration/Helper/AdminHelper.php:84
+#: src/MosparoIntegration/Helper/AdminHelper.php:96
+#: src/MosparoIntegration/Helper/AdminHelper.php:105
 msgid "No access."
 msgstr "Kein Zugriff."
 
-#: src/MosparoWp/Helper/AdminHelper.php:245
+#: src/MosparoIntegration/Helper/AdminHelper.php:245
 msgid "Error"
 msgstr "Fehler"
 
-#: src/MosparoWp/Helper/AdminHelper.php:245
+#: src/MosparoIntegration/Helper/AdminHelper.php:245
 msgid "Invalid connection data."
 msgstr "Ungültige Verbindungsdaten."
 
-#: src/MosparoWp/Helper/AdminHelper.php:247
+#: src/MosparoIntegration/Helper/AdminHelper.php:247
 msgid "The settings were successfully saved."
 msgstr "Die Einstellungen wurden erfolgreich gespeichert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:249
+#: src/MosparoIntegration/Helper/AdminHelper.php:249
 msgid "The modules were successfully enabled."
 msgstr "Die Module wurden erfolgreich aktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:251
+#: src/MosparoIntegration/Helper/AdminHelper.php:251
 msgid "The modules were successfully disabled."
 msgstr "Die Module wurden erfolgreich deaktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:253
+#: src/MosparoIntegration/Helper/AdminHelper.php:253
 msgid "The module was successfully enabled."
 msgstr "Das Modul wurde erfolgreich aktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:255
+#: src/MosparoIntegration/Helper/AdminHelper.php:255
 msgid "The module was successfully disabled."
 msgstr "Das Modul wurde erfolgreich deaktiviert."
 
-#: src/MosparoWp/Helper/AdminHelper.php:257
+#: src/MosparoIntegration/Helper/AdminHelper.php:257
 msgid "The connection settings were reseted successfully."
 msgstr "Die Verbindung wurde erfolgreich zurückgesetzt."
 
-#: src/MosparoWp/Helper/AdminHelper.php:259
+#: src/MosparoIntegration/Helper/AdminHelper.php:259
 msgid "The CSS cache was refreshed successfully."
 msgstr "Der CSS-Zwischenspeicher wurde erfolgreich aktualisiert."
 
-#: src/MosparoWp/Module/Comments/CommentsModule.php:14
+#: src/MosparoIntegration/Module/Comments/CommentsModule.php:14
 msgid "Comments"
 msgstr "Kommentare"
 
-#: src/MosparoWp/Module/Comments/CommentsModule.php:15
+#: src/MosparoIntegration/Module/Comments/CommentsModule.php:15
 msgid "Protects the comments form with mosparo."
 msgstr "Schützt das Kommentar-Formular mit mosparo."
 
-#: src/MosparoWp/Module/ContactForm7/ContactForm7Module.php:13
-#: src/MosparoWp/Module/ContactForm7/ContactForm7Module.php:16
+#: src/MosparoIntegration/Module/ContactForm7/ContactForm7Module.php:13
+#: src/MosparoIntegration/Module/ContactForm7/ContactForm7Module.php:16
 msgid "Contact Form 7"
 msgstr "Contact Form 7"
 
-#: src/MosparoWp/Module/ContactForm7/ContactForm7Module.php:14
+#: src/MosparoIntegration/Module/ContactForm7/ContactForm7Module.php:14
 msgid "Protects Contact Form 7 forms with mosparo."
 msgstr "Schützt die Contact Form 7-Formulare mit mosparo."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:92
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:92
 msgid "Submit or validation token is empty."
 msgstr "Sende- oder Validierungstoken ist leer."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:119
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:119
 msgid "Verification failed which means the form contains spam."
 msgstr ""
 "Die Überprüfung ist fehlgeschlagen, was bedeutet, dass das Formular Spam "
 "enthält."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:187
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:187
 #, php-format
 msgid ""
 "Adds a mosparo field to your form. Please configure the connection to "
@@ -145,44 +145,44 @@ msgstr ""
 "Fügt ein mosparo-Feld in Ihrem Formular ein. Bitte konfigurieren Sie die "
 "Verbindung zu mosparo in den %sEinstellungen%s."
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:197
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:197
 msgid "Id attribute"
 msgstr "ID Attribut"
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:201
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:201
 msgid "Class attribute"
 msgstr "Klassen-Attribut"
 
-#: src/MosparoWp/Module/ContactForm7/MosparoWpField.php:213
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:213
 msgid "Insert Tag"
 msgstr "Tag einfügen"
 
-#: src/MosparoWp/Module/NinjaForms/MosparoAction.php:72
-#: src/MosparoWp/Module/NinjaForms/MosparoAction.php:89
-#: src/MosparoWp/Module/WPForms/MosparoWpField.php:96
-#: src/MosparoWp/Module/WPForms/MosparoWpField.php:113
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:72
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:89
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:96
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:113
 msgid "Your submission is not valid."
 msgstr "Ihre Einreichung ist ungültig."
 
-#: src/MosparoWp/Module/NinjaForms/NinjaFormsModule.php:19
-#: src/MosparoWp/Module/NinjaForms/NinjaFormsModule.php:22
+#: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:19
+#: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:22
 msgid "Ninja Forms"
 msgstr "Ninja Forms"
 
-#: src/MosparoWp/Module/NinjaForms/NinjaFormsModule.php:20
+#: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:20
 msgid "Protects Ninja Forms forms with mosparo."
 msgstr "Schützt Ninja Forms-Formulare mit Mosparo."
 
-#: src/MosparoWp/Module/WPForms/MosparoWpField.php:85
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:85
 msgid "No mosparo field found in this form."
 msgstr "In diesem Formular wurde kein mosparo-Feld gefunden."
 
-#: src/MosparoWp/Module/WPForms/WPFormsModule.php:13
-#: src/MosparoWp/Module/WPForms/WPFormsModule.php:16
+#: src/MosparoIntegration/Module/WPForms/WPFormsModule.php:13
+#: src/MosparoIntegration/Module/WPForms/WPFormsModule.php:16
 msgid "WPForms"
 msgstr "WPForms"
 
-#: src/MosparoWp/Module/WPForms/WPFormsModule.php:14
+#: src/MosparoIntegration/Module/WPForms/WPFormsModule.php:14
 msgid "Protects WPForms forms with mosparo."
 msgstr "Schützt WPForms-Formulare mit mosparo."
 

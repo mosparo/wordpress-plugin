@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoWp\Helper;
+namespace MosparoIntegration\Helper;
 
 class ConfigHelper
 {
@@ -147,12 +147,12 @@ class ConfigHelper
 
     public function loadConfiguration()
     {
-        $this->config = get_option('mosparo-wp-configuration', []);
+        $this->config = get_option('mosparo-integration-configuration', []);
     }
 
     public function saveConfiguration()
     {
-        update_option('mosparo-wp-configuration', $this->config);
+        update_option('mosparo-integration-configuration', $this->config);
     }
 
     protected function resetConfiguration()

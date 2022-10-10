@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoWp\Helper;
+namespace MosparoIntegration\Helper;
 
 use Mosparo\ApiClient\Client;
 use Mosparo\ApiClient\Exception;

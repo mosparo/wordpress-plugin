@@ -1,10 +1,10 @@
 <?php
 
-namespace MosparoWp\Module\Comments;
+namespace MosparoIntegration\Module\Comments;
 
-use MosparoWp\Helper\ConfigHelper;
-use MosparoWp\Helper\FrontendHelper;
-use MosparoWp\Helper\VerificationHelper;
+use MosparoIntegration\Helper\ConfigHelper;
+use MosparoIntegration\Helper\FrontendHelper;
+use MosparoIntegration\Helper\VerificationHelper;
 
 class CommentForm
 {
@@ -56,7 +56,7 @@ class CommentForm
             return 'spam';
         }
 
-        $formData = apply_filters('mosparo_wp_comments_form_data', [
+        $formData = apply_filters('mosparo_integration_comments_form_data', [
             'comment' => $commentData['comment_content'],
             'author' => $commentData['comment_author'],
             'email' => $commentData['comment_author_email'],

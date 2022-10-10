@@ -1,8 +1,8 @@
 <?php
 
 spl_autoload_register(function ($class) {
-    $prefix = 'MosparoWp\\';
-    $baseDir = __DIR__ . '/MosparoWp/';
+    $prefix = 'MosparoIntegration\\';
+    $baseDir = __DIR__ . '/MosparoIntegration/';
 
     $length = strlen($prefix);
     if (strncmp($prefix, $class, $length) !== 0) {

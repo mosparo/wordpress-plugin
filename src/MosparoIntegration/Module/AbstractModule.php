@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoWp\Module;
+namespace MosparoIntegration\Module;
 
 abstract class AbstractModule
 {

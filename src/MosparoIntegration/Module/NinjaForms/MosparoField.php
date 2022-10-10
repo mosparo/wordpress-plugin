@@ -1,12 +1,12 @@
 <?php
 
-namespace MosparoWp\Module\NinjaForms;
+namespace MosparoIntegration\Module\NinjaForms;
 
-use MosparoWp\Helper\ConfigHelper;
-use MosparoWp\Helper\FrontendHelper;
+use MosparoIntegration\Helper\ConfigHelper;
+use MosparoIntegration\Helper\FrontendHelper;
 use NF_Abstracts_Field;
 
-class MosparoWpField extends NF_Abstracts_Field
+class MosparoField extends NF_Abstracts_Field
 {
     /**
      * @var string
@@ -55,7 +55,7 @@ class MosparoWpField extends NF_Abstracts_Field
     {
         parent::__construct();
 
-        $this->_nicename = esc_html__('mosparo', 'mosparo-wp');
+        $this->_nicename = esc_html__('mosparo', 'mosparo-integration');
 
         add_filter('nf_sub_hidden_field_types', [$this, 'hideFieldType']);
     }

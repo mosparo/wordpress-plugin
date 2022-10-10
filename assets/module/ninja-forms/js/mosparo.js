@@ -4,7 +4,7 @@ var mosparoFieldController = Marionette.Object.extend( {
     initialize: function()
     {
         jQuery(document).on('nfFormReady', function (ev, form) {
-            form.$el.find('.mosparo-wp-container').each(function () {
+            form.$el.find('.mosparo-integration-container').each(function () {
                 let model = nfRadio.channel('fields').request('get:field', jQuery(this).data('field-id'));
 
                 let mosparoOptions = model.get('mosparoOptions');

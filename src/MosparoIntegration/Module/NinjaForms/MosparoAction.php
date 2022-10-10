@@ -1,9 +1,9 @@
 <?php
 
-namespace MosparoWp\Module\NinjaForms;
+namespace MosparoIntegration\Module\NinjaForms;
 
-use MosparoWp\Helper\ConfigHelper;
-use MosparoWp\Helper\VerificationHelper;
+use MosparoIntegration\Helper\ConfigHelper;
+use MosparoIntegration\Helper\VerificationHelper;
 use NF_Abstracts_Action;
 
 class MosparoAction extends NF_Abstracts_Action
@@ -35,7 +35,7 @@ class MosparoAction extends NF_Abstracts_Action
     {
 		parent::__construct();
 
-		$this->_nicename = esc_html__( 'mosparo', 'mosparo-wp');
+		$this->_nicename = esc_html__( 'mosparo', 'mosparo-integration');
 	}
 
 	/**
@@ -69,7 +69,7 @@ class MosparoAction extends NF_Abstracts_Action
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($tokens['submitToken']) || empty($tokens['validationToken'])) {
-            $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-wp');
+            $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-integration');
             return $nfData;
         }
 
@@ -86,7 +86,7 @@ class MosparoAction extends NF_Abstracts_Action
             }
         }
 
-        $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-wp');
+        $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-integration');
 
 		return $nfData;
 	}
@@ -99,7 +99,7 @@ class MosparoAction extends NF_Abstracts_Action
      */
     protected function getFormData($nfData)
     {
-        $ignoredFields = apply_filters('mosparo_wp_ninja_forms_ignored_field_types', [
+        $ignoredFields = apply_filters('mosparo_integration_ninja_forms_ignored_field_types', [
             'checkbox',
             'hr',
             'hidden',
@@ -131,7 +131,7 @@ class MosparoAction extends NF_Abstracts_Action
             }
 
             $key = sprintf('nf-field-%d', $field['id']);
-            if ($field['settings']['custom_name_attribute'] != '') {
+            if (isset($field['settings']['custom_name_attribute']) && $field['settings']['custom_name_attribute'] != '') {
                 $key = $field['settings']['custom_name_attribute'];
             }
 
@@ -143,7 +143,7 @@ class MosparoAction extends NF_Abstracts_Action
             $data[$key] = $value;
         }
 
-        $data = apply_filters('mosparo_wp_ninja_forms_get_form_data', $data);
+        $data = apply_filters('mosparo_integration_ninja_forms_get_form_data', $data);
 
         return [$tokens, $data, $requiredFields];
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace MosparoWp\Admin;
+namespace MosparoIntegration\Admin;
 
-use MosparoWp\Helper\AdminHelper;
-use MosparoWp\Helper\ConfigHelper;
-use MosparoWp\Helper\ModuleHelper;
+use MosparoIntegration\Helper\AdminHelper;
+use MosparoIntegration\Helper\ConfigHelper;
+use MosparoIntegration\Helper\ModuleHelper;
 use WP_List_Table;
 
 class ModuleListTable extends WP_List_Table
@@ -39,7 +39,7 @@ class ModuleListTable extends WP_List_Table
 
     public function no_items()
     {
-        _e('No modules found', 'mosparo-wp');
+        _e('No modules found', 'mosparo-integration');
     }
 
     protected function get_table_classes()
@@ -92,9 +92,9 @@ class ModuleListTable extends WP_List_Table
     {
         return [
             'cb' => '<input type="checkbox" />',
-            'moduleName' => __('Module name', 'mosparo-wp'),
-            'description' => __('Description', 'mosparo-wp'),
-            'dependencies' => __('Dependencies', 'mosparo-wp')
+            'moduleName' => __('Module name', 'mosparo-integration'),
+            'description' => __('Description', 'mosparo-integration'),
+            'dependencies' => __('Dependencies', 'mosparo-integration')
         ];
     }
 
@@ -105,12 +105,12 @@ class ModuleListTable extends WP_List_Table
         if ($configHelper->isModuleActive($item->getKey())) {
             $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
             $actions = [
-                'disable' => sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-wp')),
+                'disable' => sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration')),
             ];
         } else {
             $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'enable', 'module' => $item->getKey()]), 'change-module');
             $actions = [
-                'enable' => sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-wp')),
+                'enable' => sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration')),
             ];
         }
 
@@ -150,8 +150,8 @@ class ModuleListTable extends WP_List_Table
     protected function get_bulk_actions()
     {
         return [
-            'enable' => __('Enable', 'mosparo-wp'),
-            'disable' => __('Disable', 'mosparo-wp')
+            'enable' => __('Enable', 'mosparo-integration'),
+            'disable' => __('Disable', 'mosparo-integration')
         ];
     }
 

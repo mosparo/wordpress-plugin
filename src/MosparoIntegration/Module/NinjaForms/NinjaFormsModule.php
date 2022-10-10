@@ -1,8 +1,8 @@
 <?php
 
-namespace MosparoWp\Module\NinjaForms;
+namespace MosparoIntegration\Module\NinjaForms;
 
-use MosparoWp\Module\AbstractModule;
+use MosparoIntegration\Module\AbstractModule;
 
 class NinjaFormsModule extends AbstractModule
 {
@@ -16,10 +16,10 @@ class NinjaFormsModule extends AbstractModule
      */
     public function __construct()
     {
-        $this->name = __('Ninja Forms', 'mosparo-wp');
-        $this->description = __('Protects Ninja Forms forms with mosparo.', 'mosparo-wp');
+        $this->name = __('Ninja Forms', 'mosparo-integration');
+        $this->description = __('Protects Ninja Forms forms with mosparo.', 'mosparo-integration');
         $this->dependencies = [
-            'ninja-forms' => ['name' => __('Ninja Forms', 'mosparo-wp'), 'url' => 'https://wordpress.org/plugins/ninja-forms/']
+            'ninja-forms' => ['name' => __('Ninja Forms', 'mosparo-integration'), 'url' => 'https://wordpress.org/plugins/ninja-forms/']
         ];
     }
 
@@ -36,7 +36,7 @@ class NinjaFormsModule extends AbstractModule
         }
 
         add_filter('ninja_forms_register_fields', function ($fields) {
-            $fields['mosparo'] = new MosparoWpField();
+            $fields['mosparo'] = new MosparoField();
             return $fields;
         });
 

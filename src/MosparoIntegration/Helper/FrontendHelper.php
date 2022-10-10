@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoWp\Helper;
+namespace MosparoIntegration\Helper;
 
 use Mosparo\ApiClient\Client;
 use WP_Error;
@@ -27,7 +27,7 @@ class FrontendHelper
 
     public function initializeScheduleEvents()
     {
-        add_action('mosparo_wp_refresh_css_url_cache', [$this, 'refreshCssUrlCache']);
+        add_action('mosparo_integration_refresh_css_url_cache', [$this, 'refreshCssUrlCache']);
     }
 
     public function initializeResourceRegistration()
@@ -69,7 +69,7 @@ class FrontendHelper
 
         if (!$configHelper->getLoadCssResourceOnInitialization()) {
             wp_enqueue_style(
-                'mosparo-wp-mosparo-css',
+                'mosparo-integration-mosparo-css',
                 $this->getStylesheetUrl(),
                 [],
                 '1.0'
@@ -77,7 +77,7 @@ class FrontendHelper
         }
 
         wp_enqueue_script(
-            'mosparo-wp-mosparo-js',
+            'mosparo-integration-mosparo-js',
             $this->getJavaScriptUrl(),
             ['jquery'],
             '1.0',
@@ -113,7 +113,7 @@ class FrontendHelper
             $options['cssResourceUrl'] = $this->getStylesheetUrl();
         }
 
-        return apply_filters('mosparo_wp_filter_frontend_options', $options);
+        return apply_filters('mosparo_integration_filter_frontend_options', $options);
     }
 
     public function generateField($options = [])

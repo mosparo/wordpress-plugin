@@ -1,15 +1,15 @@
 <?php
 
-namespace MosparoWp\Module\ContactForm7;
+namespace MosparoIntegration\Module\ContactForm7;
 
-use MosparoWp\Helper\ConfigHelper;
-use MosparoWp\Helper\FrontendHelper;
-use MosparoWp\Helper\VerificationHelper;
+use MosparoIntegration\Helper\ConfigHelper;
+use MosparoIntegration\Helper\FrontendHelper;
+use MosparoIntegration\Helper\VerificationHelper;
 use WPCF7_FormTag;
 use WPCF7_Pipes;
 use WPCF7_Submission;
 
-class MosparoWpField
+class MosparoField
 {
     private static $instance;
 
@@ -88,8 +88,8 @@ class MosparoWpField
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
             $submission->add_spam_log([
-                'agent' => 'mosparo-wp-cf7',
-                'reason' => __('Submit or validation token is empty.', 'mosparo-wp'),
+                'agent' => 'mosparo-integration-cf7',
+                'reason' => __('Submit or validation token is empty.', 'mosparo-integration'),
             ]);
 
             return true;
@@ -115,8 +115,8 @@ class MosparoWpField
 
         // Everything else is spam
         $submission->add_spam_log( array(
-            'agent' => 'mosparo-wp-cf7',
-            'reason' => __('Verification failed which means the form contains spam.', 'mosparo-wp')
+            'agent' => 'mosparo-integration-cf7',
+            'reason' => __('Verification failed which means the form contains spam.', 'mosparo-integration')
         ));
 
         return true;
@@ -125,7 +125,7 @@ class MosparoWpField
     protected function getFormData(WPCF7_Submission $submission): array
     {
         $requiredFields = [];
-        $ignoredTypes = apply_filters('mosparo_wp_cf7_ignored_field_types', [
+        $ignoredTypes = apply_filters('mosparo_integration_cf7_ignored_field_types', [
             'checkbox',
             'checkbox*',
             'radio',
@@ -171,7 +171,7 @@ class MosparoWpField
             }
         }
 
-        $formData = apply_filters('mosparo_wp_cf7_form_data', $formData);
+        $formData = apply_filters('mosparo_integration_cf7_form_data', $formData);
 
         return [ $formData, $requiredFields ];
     }
@@ -184,7 +184,7 @@ class MosparoWpField
             <fieldset>
                 <legend>
                     <?php echo sprintf(
-                            __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-wp'),
+                            __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-integration'),
                             '<a href="' . get_admin_url(null, 'options-general.php?page=mosparo-configuration') . '">',
                             '</a>'
                         );

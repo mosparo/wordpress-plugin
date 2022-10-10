@@ -1,11 +1,11 @@
 <?php
 
-namespace MosparoWp\Helper;
+namespace MosparoIntegration\Helper;
 
-use MosparoWp\Module\Comments\CommentsModule;
-use MosparoWp\Module\ContactForm7\ContactForm7Module;
-use MosparoWp\Module\NinjaForms\NinjaFormsModule;
-use MosparoWp\Module\WPForms\WPFormsModule;
+use MosparoIntegration\Module\Comments\CommentsModule;
+use MosparoIntegration\Module\ContactForm7\ContactForm7Module;
+use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
+use MosparoIntegration\Module\WPForms\WPFormsModule;
 
 class ModuleHelper
 {
@@ -57,6 +57,6 @@ class ModuleHelper
 
     public static function getAvailableModules()
     {
-        return apply_filters('mosparo_wp_filter_available_modules', self::$availableModules);
+        return apply_filters('mosparo_integration_filter_available_modules', self::$availableModules);
     }
 }

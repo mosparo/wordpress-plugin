@@ -1,16 +1,16 @@
 <?php
 
-namespace MosparoWp\Module\WPForms;
+namespace MosparoIntegration\Module\WPForms;
 
-use MosparoWp\Helper\FrontendHelper;
-use MosparoWp\Helper\VerificationHelper;
+use MosparoIntegration\Helper\FrontendHelper;
+use MosparoIntegration\Helper\VerificationHelper;
 use WPForms_Field;
 
-class MosparoWpField extends WPForms_Field
+class MosparoField extends WPForms_Field
 {
     public function init()
     {
-        $this->name = esc_html__('mosparo', 'mosparo-wp');
+        $this->name = esc_html__('mosparo', 'mosparo-integration');
         $this->type = 'mosparo';
         $this->icon = 'fa-cogs';
         $this->order = 200;
@@ -82,7 +82,7 @@ class MosparoWpField extends WPForms_Field
         }
 
         if ($mosparoFieldId === null) {
-            wpforms()->process->errors[$formId]['footer'] = __('No mosparo field found in this form.', 'mosparo-wp');
+            wpforms()->process->errors[$formId]['footer'] = __('No mosparo field found in this form.', 'mosparo-integration');
             return;
         }
 
@@ -93,7 +93,7 @@ class MosparoWpField extends WPForms_Field
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
-            wpforms()->process->errors[$formId][$mosparoFieldId] = __('Your submission is not valid.', 'mosparo-wp');
+            wpforms()->process->errors[$formId][$mosparoFieldId] = __('Your submission is not valid.', 'mosparo-integration');
             return;
         }
 
@@ -110,12 +110,12 @@ class MosparoWpField extends WPForms_Field
             }
         }
 
-        wpforms()->process->errors[$formId][$mosparoFieldId] = __('Your submission is not valid.', 'mosparo-wp');
+        wpforms()->process->errors[$formId][$mosparoFieldId] = __('Your submission is not valid.', 'mosparo-integration');
     }
 
     protected function getFormData($entry, $formData)
     {
-        $ignoredFields = apply_filters('mosparo_wp_wpforms_ignored_field_types', [
+        $ignoredFields = apply_filters('mosparo_integration_wpforms_ignored_field_types', [
             'radio',
             'checkbox',
             'file-upload',
@@ -164,7 +164,7 @@ class MosparoWpField extends WPForms_Field
             }
         }
 
-        $data = apply_filters('mosparo_wp_wpforms_get_form_data', $data);
+        $data = apply_filters('mosparo_integration_wpforms_get_form_data', $data);
 
         return [ $data, $requiredFields ];
     }
