@@ -71,69 +71,68 @@ class AdminHelper
             return;
         }
 
-        if (!isset($_REQUEST['action']) || $_REQUEST['action'] === '') {
+        if (!isset($_REQUEST['action']) || trim($_REQUEST['action']) === '') {
             return;
         }
 
         $configHelper = ConfigHelper::getInstance();
-        if (isset($_REQUEST['action'])) {
-            $action = $_REQUEST['action'];
+        $action = sanitize_key($_REQUEST['action']);
 
-            if ($action === 'reset') {
-                if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'reset-connection')) {
-                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
-                }
-
-                $configHelper->resetConnectionSettings();
-                $configHelper->saveConfiguration();
-
-                $frontendHelper = FrontendHelper::getInstance();
-                $frontendHelper->clearCssUrlCache();
-
-                $this->redirectToSettingsPage('connection-reseted');
-            } else if ($action === 'refresh_css_cache') {
-                if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce($_REQUEST['_wpnonce'], 'refresh-css-cache')) {
-                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
-                }
-
-                $frontendHelper = FrontendHelper::getInstance();
-                $frontendHelper->refreshCssUrlCache();
-
-                $this->redirectToSettingsPage('css-cache-refreshed');
-            } else if ($action === 'enable' || $action === 'disable') {
-                if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce($_REQUEST['_wpnonce'], 'bulk-modules') && !wp_verify_nonce($_REQUEST['_wpnonce'], 'change-module'))) {
-                    wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
-                }
-
-                if (!isset($_REQUEST['module']) && !isset($_REQUEST['module'])) {
-                    $this->redirectToSettingsPage();
-                }
-
-                $modules = $_REQUEST['module'];
-                if (!is_array($modules)) {
-                    $modules = [$modules];
-                }
-
-                $message = '';
-                foreach ($modules as $module) {
-                    if ($action === 'enable') {
-                        $configHelper->enableModule($module);
-                        $message = 'enabled';
-                    } else if ($action === 'disable') {
-                        $configHelper->disableModule($module);
-                        $message = 'disabled';
-                    }
-                }
-
-                if (count($modules) > 1) {
-                    $message = 'multiple-' . $message;
-                } else {
-                    $message = 'one-' . $message;
-                }
-
-                $configHelper->saveConfiguration();
-                $this->redirectToSettingsPage($message);
+        if ($action === 'reset') {
+            if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'reset-connection')) {
+                wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
             }
+
+            $configHelper->resetConnectionSettings();
+            $configHelper->saveConfiguration();
+
+            $frontendHelper = FrontendHelper::getInstance();
+            $frontendHelper->clearCssUrlCache();
+
+            $this->redirectToSettingsPage('connection-reseted');
+        } else if ($action === 'refresh_css_cache') {
+            if (!isset($_REQUEST['_wpnonce']) || !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'refresh-css-cache')) {
+                wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
+            }
+
+            $frontendHelper = FrontendHelper::getInstance();
+            $frontendHelper->refreshCssUrlCache();
+
+            $this->redirectToSettingsPage('css-cache-refreshed');
+        } else if ($action === 'enable' || $action === 'disable') {
+            if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'bulk-modules') && !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'change-module'))) {
+                wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
+            }
+
+            if (!isset($_REQUEST['module'])) {
+                $this->redirectToSettingsPage();
+            }
+
+            $modules = $_REQUEST['module'];
+            if (!is_array($modules)) {
+                $modules = [$modules];
+            }
+            $modules = array_map('sanitize_key', $modules);
+
+            $message = '';
+            foreach ($modules as $module) {
+                if ($action === 'enable') {
+                    $configHelper->enableModule($module);
+                    $message = 'enabled';
+                } else if ($action === 'disable') {
+                    $configHelper->disableModule($module);
+                    $message = 'disabled';
+                }
+            }
+
+            if (count($modules) > 1) {
+                $message = 'multiple-' . $message;
+            } else {
+                $message = 'one-' . $message;
+            }
+
+            $configHelper->saveConfiguration();
+            $this->redirectToSettingsPage($message);
         }
     }
 
@@ -149,7 +148,12 @@ class AdminHelper
 
         $configHelper = ConfigHelper::getInstance();
         if (!$configHelper->isActive()) {
-            $host = trim(sanitize_text_field($_POST['host']), '/');
+            $host = trim(sanitize_url($_POST['host']), '/');
+            if (!filter_var($host, FILTER_VALIDATE_URL)) {
+                $this->redirectToSettingsPage('invalid');
+                return;
+            }
+
             $configHelper->setHost($host);
 
             $uuid = sanitize_text_field($_POST['uuid']);
@@ -198,7 +202,7 @@ class AdminHelper
             return false;
         }
 
-        $field  = wp_unslash($_POST['save-settings']);
+        $field  = wp_unslash(sanitize_key($_POST['save-settings']));
         $action = 'mosparo-settings-form';
 
         return wp_verify_nonce($field, $action);
@@ -231,6 +235,9 @@ class AdminHelper
         }
 
         $privateKey = $configHelper->getPrivateKey();
+        if (strlen($privateKey) < 12) {
+            return str_repeat('*', strlen($privateKey));
+        }
         $maskedPart = str_repeat('*', strlen($privateKey) - 8);
         $maskedKey = substr($privateKey, 0, 4) . $maskedPart . substr($privateKey, -4);
 
@@ -239,7 +246,7 @@ class AdminHelper
 
     public function displayAdminNotice()
     {
-        $message = $_GET['message'] ?? '';
+        $message = sanitize_key($_GET['message'] ?? '');
 
         if ($message === 'invalid') {
             echo sprintf('<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s</p></div>', esc_html(__('Error', 'mosparo-integration')), esc_html(__('Invalid connection data.', 'mosparo-integration')));

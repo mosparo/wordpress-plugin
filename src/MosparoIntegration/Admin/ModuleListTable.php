@@ -19,7 +19,7 @@ class ModuleListTable extends WP_List_Table
             'ajax' => false
         ]);
 
-        $this->pageName = $_REQUEST['page'];
+        $this->pageName = sanitize_key($_REQUEST['page']);
 
         add_action('admin_head', [$this, 'addToAdminHeader']);
     }
@@ -31,7 +31,7 @@ class ModuleListTable extends WP_List_Table
         }
 
         echo '<style type="text/css">';
-        echo '.wp-list-table .column-moduleName { width: 40%; }';
+        echo '.wp-list-table .column-module_name { width: 40%; }';
         echo '.wp-list-table .column-description { width: 35%; }';
         echo '.wp-list-table .column-dependencies { width: 20%;}';
         echo '</style>';
@@ -58,7 +58,7 @@ class ModuleListTable extends WP_List_Table
             $class = 'active';
         }
 
-        echo '<tr class="' . $class . '">';
+        echo '<tr class="' . esc_attr($class) . '">';
         $this->single_row_columns( $item );
         echo '</tr>';
     }
@@ -84,7 +84,7 @@ class ModuleListTable extends WP_List_Table
     protected function get_sortable_columns()
     {
         return [
-            'moduleName'  => ['moduleName', false],
+            'module_name'  => ['module_name', false],
         ];
     }
 
@@ -92,13 +92,13 @@ class ModuleListTable extends WP_List_Table
     {
         return [
             'cb' => '<input type="checkbox" />',
-            'moduleName' => __('Module name', 'mosparo-integration'),
+            'module_name' => __('Module name', 'mosparo-integration'),
             'description' => __('Description', 'mosparo-integration'),
             'dependencies' => __('Dependencies', 'mosparo-integration')
         ];
     }
 
-    protected function column_moduleName($item)
+    protected function column_module_name($item)
     {
         $adminHelper = AdminHelper::getInstance();
         $configHelper = ConfigHelper::getInstance();
@@ -119,12 +119,12 @@ class ModuleListTable extends WP_List_Table
 
     public function sortModules($itemA, $itemB)
     {
-        $orderBy = (!empty($_GET['orderby'])) ? $_GET['orderby'] : 'moduleName';
-        $order = (!empty($_GET['order'])) ? $_GET['order'] : 'asc';
+        $orderBy = (!empty($_GET['orderby'])) ? sanitize_key($_GET['orderby']) : 'module_name';
+        $order = (!empty($_GET['order'])) ? sanitize_key($_GET['order']) : 'asc';
 
         $valA = '';
         $valB = '';
-        if ($orderBy === 'moduleName') {
+        if ($orderBy === 'module_name') {
             $valA = $itemA->getName();
             $valB = $itemB->getName();
         }

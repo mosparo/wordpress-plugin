@@ -82,8 +82,8 @@ class MosparoField
         }
 
         [ $formData, $requiredFields ] = $this->getFormData($submission);
-        $submitToken = trim($formData['_mosparo_submitToken'] ?? '');
-        $validationToken = trim($formData['_mosparo_validationToken'] ?? '');
+        $submitToken = trim(sanitize_text_field($formData['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($formData['_mosparo_validationToken'] ?? ''));
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
@@ -185,7 +185,7 @@ class MosparoField
                 <legend>
                     <?php echo sprintf(
                             __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-integration'),
-                            '<a href="' . get_admin_url(null, 'options-general.php?page=mosparo-configuration') . '">',
+                            '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=mosparo-configuration')) . '">',
                             '</a>'
                         );
                     ?>

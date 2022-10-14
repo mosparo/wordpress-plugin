@@ -48,8 +48,8 @@ class CommentForm
             return $approved;
         }
 
-        $submitToken = trim($_REQUEST['_mosparo_submitToken'] ?? '');
-        $validationToken = trim($_REQUEST['_mosparo_validationToken'] ?? '');
+        $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {

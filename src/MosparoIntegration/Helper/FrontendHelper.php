@@ -54,7 +54,7 @@ class FrontendHelper
             return;
         }
 
-        $fullCssUrl = wp_remote_retrieve_body($response);
+        $fullCssUrl = sanitize_url(wp_remote_retrieve_body($response));
         if ($fullCssUrl != '') {
             set_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY, $fullCssUrl, 7 * 86400);
         }
@@ -110,7 +110,7 @@ class FrontendHelper
     {
         if ($configHelper->getLoadCssResourceOnInitialization()) {
             $options['loadCssResource'] = true;
-            $options['cssResourceUrl'] = $this->getStylesheetUrl();
+            $options['cssResourceUrl'] = esc_url($this->getStylesheetUrl());
         }
 
         return apply_filters('mosparo_integration_filter_frontend_options', $options);
@@ -163,7 +163,7 @@ class FrontendHelper
                     mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
                 });
             </script>
-        ', $instanceId, $instanceId, json_encode($options), $configHelper->getHost(), $configHelper->getUuid(), $configHelper->getPublicKey());
+        ', esc_attr($instanceId), esc_attr($instanceId), wp_json_encode($options), esc_url($configHelper->getHost()), esc_attr($configHelper->getUuid()), esc_attr($configHelper->getPublicKey()));
 
         return $html;
     }

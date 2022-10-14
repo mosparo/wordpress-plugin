@@ -55,7 +55,7 @@ class MosparoField extends WPForms_Field
 
     public function isGutenbergRequest()
     {
-        return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === $_REQUEST['context']);
+        return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === sanitize_key($_REQUEST['context']));
     }
 
     public function validate($fieldId, $fieldSubmit, $formData)
@@ -88,8 +88,8 @@ class MosparoField extends WPForms_Field
 
         // Find the validation data
         [ $data, $requiredFields ] = $this->getFormData($entry, $formData);
-        $submitToken = trim($_REQUEST['_mosparo_submitToken'] ?? '');
-        $validationToken = trim($_REQUEST['_mosparo_validationToken'] ?? '');
+        $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
