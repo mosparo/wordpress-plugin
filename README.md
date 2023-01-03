@@ -7,26 +7,26 @@
     Integration for WordPress
 </h1>
 <p align="center">
-    This WordPress plugins adds the required functionality to use mosparo in your WordPress form.
+    This WordPress plugin adds the required functionality to use mosparo in your WordPress form.
 </p>
 
 -----
 
 ## Description
 The WordPress plugin adds the required functionality to your WordPress website to use mosparo in your forms.
-This plugin is compatible with the WordPress comments, Contact Form 7, Ninja Forms and WPForms.
+This plugin is compatible with WordPress comments, Contact Form 7, Ninja Forms, and WPForms.
 
 ## Requirements
-To use the plugin you need the following requirements:
-- mosparo project (self-hosted or hosted)
-- WordPress website
-- User with ability to install plugins
+To use the plugin, you must meet the following requirements:
+- A mosparo project
+- A WordPress website
+- An User with the ability to install plugins
 - If you want to use it in your contact form, you have to use Contact Form 7, Ninja Forms or WPForms
 
 ## Installation
 To use the plugin, please follow this installation instruction:
 
-1. Login in your WordPress website and go to the plugins.
+1. Log in to your WordPress website and go to the plugins
 2. Click "Install" to install the new plugin
 3. Search for "mosparo Integration"
 4. Install the plugin with the name "mosparo Integration"
