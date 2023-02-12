@@ -49,9 +49,7 @@ class MosparoField
 
     public function addFormTag()
     {
-        wpcf7_add_form_tag('mosparo', [$this, 'displayFormField'], [
-            'name-attr' => true,
-        ]);
+        wpcf7_add_form_tag('mosparo', [$this, 'displayFormField'], []);
     }
 
     public function addFormTagGenerator()
