@@ -4,7 +4,7 @@
  *
  * @package           MosparoIntegration
  * @author            mosparo
- * @copyright         2021-2022 mosparo
+ * @copyright         2021-2023 mosparo
  * @license           MIT
  *
  * @wordpress-plugin
@@ -14,7 +14,7 @@
  * Author:            mosparo
  * Author URI:        https://mosparo.io/
  * License:           MIT
- * Version:           1.0.1
+ * Version:           1.0.2
  * Text Domain:       mosparo-integration
  * Domain Path:       /languages
  */

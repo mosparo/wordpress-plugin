@@ -4,7 +4,7 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: MIT
 
 The plugin adds the functionality to your website to use mosparo in the comment form or a form from Contact Form 7, Ninja Forms, or WPForms.
