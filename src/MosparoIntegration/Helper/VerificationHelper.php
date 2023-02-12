@@ -43,7 +43,7 @@ class VerificationHelper
         );
 
         try {
-            $result = $client->validateSubmission($formData, $submitToken, $validationToken);
+            $result = $client->verifySubmission($formData, $submitToken, $validationToken);
         } catch (Exception $e) {
             $this->lastException = $e;
             $result = null;

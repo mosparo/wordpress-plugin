@@ -12,6 +12,7 @@
         }
     ],
     "require": {
+        "php": ">=7.4.0 <8.1.0 || >=8.1.10",
         "mosparo/php-api-client": "^1.0"
     }
 }

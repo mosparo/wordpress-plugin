@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfe0933ec165d693beedb1583d0fd35b",
+    "content-hash": "fe130708b30dca4b0ec4daa90b7aec54",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -220,16 +220,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "2.4.1",
+            "version": "2.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379"
+                "reference": "67c26b443f348a51926030c83481b85718457d3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/69568e4293f4fa993f3b0e51c9723e1e17c41379",
-                "reference": "69568e4293f4fa993f3b0e51c9723e1e17c41379",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/67c26b443f348a51926030c83481b85718457d3d",
+                "reference": "67c26b443f348a51926030c83481b85718457d3d",
                 "shasum": ""
             },
             "require": {
@@ -319,7 +319,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/2.4.1"
+                "source": "https://github.com/guzzle/psr7/tree/2.4.3"
             },
             "funding": [
                 {
@@ -335,20 +335,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-08-28T14:45:39+00:00"
+            "time": "2022-10-26T14:07:24+00:00"
         },
         {
             "name": "mosparo/php-api-client",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mosparo/php-api-client.git",
-                "reference": "3d42ec994ba24df6d57add124760026d602a7055"
+                "reference": "12c103c0a946ef92e71ffcf8af2a6b7729b4c548"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/3d42ec994ba24df6d57add124760026d602a7055",
-                "reference": "3d42ec994ba24df6d57add124760026d602a7055",
+                "url": "https://api.github.com/repos/mosparo/php-api-client/zipball/12c103c0a946ef92e71ffcf8af2a6b7729b4c548",
+                "reference": "12c103c0a946ef92e71ffcf8af2a6b7729b4c548",
                 "shasum": ""
             },
             "require": {
@@ -386,9 +386,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mosparo/php-api-client/issues",
-                "source": "https://github.com/mosparo/php-api-client/tree/v1.0.1"
+                "source": "https://github.com/mosparo/php-api-client/tree/v1.0.2"
             },
-            "time": "2022-09-19T05:24:39+00:00"
+            "time": "2023-02-04T13:21:17+00:00"
         },
         {
             "name": "psr/http-client",
@@ -668,7 +668,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.4.0 <8.1.0 || >=8.1.10"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"
 }
