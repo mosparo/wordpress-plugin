@@ -2,7 +2,6 @@
 
 namespace MosparoIntegration\Module\Comments;
 
-use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 
@@ -25,11 +24,6 @@ class CommentForm
 
     public function registerHooks()
     {
-        $configHelper = ConfigHelper::getInstance();
-        if (!$configHelper->isActive() || !$configHelper->isModuleActive('comments')) {
-            return;
-        }
-
         add_action('comment_form_after_fields', [$this, 'displayMosparoField'], 10, 1);
         add_filter('pre_comment_approved', [$this, 'verifyComment'], 9, 2);
     }

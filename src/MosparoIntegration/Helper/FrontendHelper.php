@@ -3,7 +3,10 @@
 namespace MosparoIntegration\Helper;
 
 use Mosparo\ApiClient\Client;
+use MosparoIntegration\Module\ContactForm7\MosparoField as ContactForm7MosparoField;
+use MosparoIntegration\Module\WPForms\MosparoField as WpFormsMosparoField;
 use WP_Error;
+use GF_Field;
 
 class FrontendHelper
 {
@@ -116,16 +119,28 @@ class FrontendHelper
         return apply_filters('mosparo_integration_filter_frontend_options', $options);
     }
 
-    public function generateField($options = [])
+    public function displayDummy()
+    {
+        return '<div style="width: 400px; height: 80px; border: 2px solid #888888; border-radius: 10px; display: flex; justify-content: center; align-items: center">mosparo</div>';
+    }
+
+    public function isGutenbergRequest()
+    {
+        return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === sanitize_key($_REQUEST['context']));
+    }
+
+    public function generateField($options = [], $field = null)
     {
         $configHelper = ConfigHelper::getInstance();
         if (!$configHelper->getLoadResourcesAlways()) {
             $this->registerResources();
         }
 
-        $options = $this->getFrontendOptions($options, $configHelper);
-
         $instanceId = uniqid();
+
+        $options = $this->getFrontendOptions($options, $configHelper);
+        $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
+
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
             <script>
@@ -133,20 +148,44 @@ class FrontendHelper
                     var mosparoInstances = [];
                 }
                 
-                document.addEventListener("DOMContentLoaded", function () {
-                    let id = "mosparo-box-%s";
-                    let formEl = jQuery("#" + id);
-                    let options = %s;
-                    let resetMosparoField = function () {
-                        if (!mosparoInstances[id]) {
+                (function () {
+                    let initializeMosparo = function () {
+                        let id = "mosparo-box-%s";
+                        let formEl = jQuery("#" + id);
+                        let options = %s;
+                        let resetMosparoField = function () {
+                            if (!mosparoInstances[id]) {
+                                return;
+                            }
+                            
+                            mosparoInstances[id].resetState();
+                            mosparoInstances[id].requestSubmitToken();
+                        };
+                        
+                        if (typeof mosparoInstances[id] !== "undefined") {
                             return;
                         }
                         
-                        mosparoInstances[id].resetState();
-                        mosparoInstances[id].requestSubmitToken();
+                        %s
+                        
+                        mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
                     };
                     
-                    // Contact Form 7
+                    document.addEventListener("DOMContentLoaded", initializeMosparo);
+                    
+                    %s
+                })();
+            </script>
+        ', esc_attr($instanceId), esc_attr($instanceId), wp_json_encode($options), $additionalCode['before'], esc_url($configHelper->getHost()), esc_attr($configHelper->getUuid()), esc_attr($configHelper->getPublicKey()), $additionalCode['after']);
+
+        return $html;
+    }
+
+    protected function prepareAdditionalJavaScriptCode($instanceId, $field)
+    {
+        if (function_exists('wpcf7_add_form_tag') && $field instanceof ContactForm7MosparoField) {
+            return [
+                'before' => '
                     if (typeof wpcf7 !== "undefined" && formEl.closest(".wpcf7").length > 0) {
                         if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
                             options.requestSubmitTokenOnInit = false;
@@ -154,17 +193,47 @@ class FrontendHelper
                         
                         formEl.closest(".wpcf7").on("wpcf7spam", resetMosparoField);
                     }
-                    
-                    // WP Forms
-                    if (typeof wpforms !== "undefined" && formEl.closest(".wpforms-form").length > 0) {
-                        jQuery(formEl).closest(".wpforms-form").on("wpformsAjaxSubmitFailed", resetMosparoField);
-                    }
-                    
-                    mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
-                });
-            </script>
-        ', esc_attr($instanceId), esc_attr($instanceId), wp_json_encode($options), esc_url($configHelper->getHost()), esc_attr($configHelper->getUuid()), esc_attr($configHelper->getPublicKey()));
+                ',
+                'after' => '',
+            ];
+        }
 
-        return $html;
+        if (defined('WPFORMS_VERSION') && $field instanceof WpFormsMosparoField) {
+            return [
+                'before' => '
+                    if (typeof wpforms !== "undefined" && formEl.closest(".wpforms-form").length > 0) {
+                        formEl.closest(".wpforms-form").on("wpformsAjaxSubmitFailed", resetMosparoField);
+                    }
+                ',
+                'after' => ''
+            ];
+        }
+
+        if (class_exists('GF_Field') && $field instanceof GF_Field) {
+            return [
+                'before' => '',
+                'after' => sprintf('
+                    jQuery(document).on("gform_field_added", function(event, form, field) {
+                        if (field["type"] === "mosparo") {
+                            initializeMosparo();
+                        }
+                    });
+                    
+                    gform.addAction("gform_after_refresh_field_preview", function (fieldId) {
+                        let id = "mosparo-box-%s";
+                        let eventFieldId = %d;
+                        
+                        if (fieldId !== eventFieldId) {
+                            return;
+                        }
+                        
+                        delete mosparoInstances[id];
+                        
+                        initializeMosparo();
+                    });', $instanceId, $field->id),
+            ];
+        }
+
+        return ['before' => '', 'after' => ''];
     }
 }

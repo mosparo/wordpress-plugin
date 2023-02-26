@@ -30,11 +30,6 @@ class MosparoField
 
     public function registerHooks()
     {
-        $configHelper = ConfigHelper::getInstance();
-        if (!$configHelper->isActive() || !$configHelper->isModuleActive('contact-form-7')) {
-            return;
-        }
-
         add_action('wpcf7_init', [$this, 'addFormTag'], 10, 0);
         add_filter('wpcf7_spam', [$this, 'verifyResponse'], 9, 2);
         add_action('wpcf7_admin_init', [$this, 'addFormTagGenerator'], 100);
@@ -60,7 +55,7 @@ class MosparoField
     public function displayFormField()
     {
         $frontendHelper = FrontendHelper::getInstance();
-        return $frontendHelper->generateField();
+        return $frontendHelper->generateField([], $this);
     }
 
     public function storeOriginalValue($value, $originalValue, WPCF7_FormTag $tag)

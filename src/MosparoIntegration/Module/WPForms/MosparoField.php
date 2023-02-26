@@ -31,31 +31,24 @@ class MosparoField extends WPForms_Field
 
     public function field_preview($field)
     {
-        $this->displayDummy();
+        $frontendHelper = FrontendHelper::getInstance();
+        echo $frontendHelper->generateField([
+            'designMode' => true,
+        ], $this);
     }
 
     public function field_display($field, $deprecated, $form_data)
     {
-        if ($this->isGutenbergRequest()) {
-            $this->displayDummy();
+        $frontendHelper = FrontendHelper::getInstance();
+        if ($frontendHelper->isGutenbergRequest()) {
+            echo $frontendHelper->displayDummy();
         } else {
             $primary = $field['properties']['inputs']['primary'];
 
-            $frontendHelper = FrontendHelper::getInstance();
             echo $frontendHelper->generateField([
-                'name' => $primary['attr']['name'] ?? ''
-            ]);
+                'name' => $primary['attr']['name'] ?? '',
+            ], $this);
         }
-    }
-
-    protected function displayDummy()
-    {
-        echo '<div style="width: 400px; height: 80px; border: 2px solid #888888; border-radius: 10px; display: flex; justify-content: center; align-items: center">mosparo</div>';
-    }
-
-    public function isGutenbergRequest()
-    {
-        return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === sanitize_key($_REQUEST['context']));
     }
 
     public function validate($fieldId, $fieldSubmit, $formData)

@@ -51,4 +51,9 @@ class VerificationHelper
 
         return $result;
     }
+
+    public function getLastException()
+    {
+        return $this->lastException;
+    }
 }
