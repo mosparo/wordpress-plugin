@@ -38,7 +38,7 @@ class ConfigHelper
             $connection->setUuid($this->config['uuid'] ?? '');
             $connection->setPublicKey($this->config['publicKey'] ?? '');
             $connection->setPrivateKey($this->config['privateKey'] ?? '');
-            $connection->setVerifySsl($this->config['verifySsl'] ?? '');
+            $connection->setVerifySsl(boolval($this->config['verifySsl'] ?? ''));
             $connection->setDefaults(['general']);
 
             $this->addConnection($connection);

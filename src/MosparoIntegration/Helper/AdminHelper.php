@@ -235,7 +235,7 @@ class AdminHelper
                 $connection->setPrivateKey(sanitize_text_field($_REQUEST['privateKey']));
             }
 
-            $connection->setVerifySsl((sanitize_key($_REQUEST['verifySsl'] ?? false)));
+            $connection->setVerifySsl(boolval(sanitize_key($_REQUEST['verifySsl'] ?? false)));
 
             if ($action === 'add-connection') {
                 if ($configHelper->hasConnection($connection->getKey())) {
