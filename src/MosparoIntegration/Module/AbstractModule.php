@@ -14,6 +14,11 @@ abstract class AbstractModule
         return $this->key;
     }
 
+    final public function getDefaultKey(): string
+    {
+        return 'module_' . $this->key;
+    }
+
     public function getName(): string
     {
         return $this->name;

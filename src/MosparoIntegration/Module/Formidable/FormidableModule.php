@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Module\Formidable;
 
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use MosparoIntegration\Module\AbstractModule;
 
@@ -50,6 +51,12 @@ class FormidableModule extends AbstractModule
 
     public function validateForm($errors, $values, $data)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_formidable');
+        if ($connection === false) {
+            return $errors;
+        }
+
         [ $formData, $requiredFields ] = $this->getFormData($values, $data['posted_fields']);
         $submitToken = trim(sanitize_text_field($values['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($values['_mosparo_validationToken'] ?? ''));
@@ -67,7 +74,7 @@ class FormidableModule extends AbstractModule
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());

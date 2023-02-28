@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Module\Comments;
 
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 
@@ -30,8 +31,19 @@ class CommentForm
 
     public function displayMosparoField($fields = [])
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_comments');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
-        echo $frontendHelper->generateField();
+        $boxHtml = $frontendHelper->generateField($connection);
+
+        $containerHtml = apply_filters('mosparo_integration_comments_html_container', '<p class="comment-mosparo-integration">%s</p>');
+
+        echo sprintf($containerHtml, $boxHtml);
     }
 
     public function verifyComment($approved, $commentData)
@@ -39,6 +51,12 @@ class CommentForm
         // Skip the mosparo verification for logged in users
         $user = wp_get_current_user();
         if (isset($commentData['user_ID']) && $user->exists() && $user->ID == $commentData['user_ID']) {
+            return $approved;
+        }
+
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_comments');
+        if ($connection === false) {
             return $approved;
         }
 
@@ -59,7 +77,7 @@ class CommentForm
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
             return 'spam';
         }

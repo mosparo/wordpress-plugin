@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Module\EverestForms;
 
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use EVF_Form_Fields;
@@ -37,11 +38,18 @@ class MosparoField extends EVF_Form_Fields
      */
     public function field_display($field, $field_atts, $form_data)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_everest-forms');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
         if ($frontendHelper->isGutenbergRequest()) {
             echo $frontendHelper->displayDummy();
         } else {
-            echo $frontendHelper->generateField();
+            echo $frontendHelper->generateField($connection);
         }
     }
 
@@ -52,8 +60,15 @@ class MosparoField extends EVF_Form_Fields
     {
         $this->field_preview_option( 'label', $field );
 
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_everest-forms');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
-        echo $frontendHelper->generateField(['designMode' => true]);
+        echo $frontendHelper->generateField($connection, ['designMode' => true]);
     }
 
     /**
@@ -61,6 +76,12 @@ class MosparoField extends EVF_Form_Fields
      */
     public function validate($fieldId, $fieldSubmit, $form)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_everest-forms');
+        if ($connection === false) {
+            return true;
+        }
+
         [ $formData, $requiredFields ] = $this->getFormData($form);
         $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
@@ -80,7 +101,7 @@ class MosparoField extends EVF_Form_Fields
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());

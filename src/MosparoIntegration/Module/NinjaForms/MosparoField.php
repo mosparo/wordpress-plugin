@@ -72,15 +72,18 @@ class MosparoField extends NF_Abstracts_Field
         $configHelper = ConfigHelper::getInstance();
         $frontendHelper = FrontendHelper::getInstance();
 
-        if (!$configHelper->getLoadResourcesAlways()) {
-            $frontendHelper->registerResources();
+        $connection = $configHelper->getConnectionFor('module_ninja-forms');
+        if ($connection === false) {
+            return [];
         }
 
-        $settings['host'] = $configHelper->getHost();
-        $settings['uuid'] = $configHelper->getuuid();
-        $settings['publicKey'] = $configHelper->getPublicKey();
+        $frontendHelper->registerResources($connection);
 
-        $options = $frontendHelper->getFrontendOptions([], $configHelper);
+        $settings['host'] = $connection->getHost();
+        $settings['uuid'] = $connection->getuuid();
+        $settings['publicKey'] = $connection->getPublicKey();
+
+        $options = $frontendHelper->getFrontendOptions([], $connection);
         $options['inputFieldSelector'] = '[name]:not(.mosparo__ignored-field):not(.nf-field-hp)';
         $settings['mosparoOptions'] = $options;
 

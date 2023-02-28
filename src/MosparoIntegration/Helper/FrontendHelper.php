@@ -2,7 +2,7 @@
 
 namespace MosparoIntegration\Helper;
 
-use Mosparo\ApiClient\Client;
+use MosparoIntegration\Entity\Connection;
 use MosparoIntegration\Module\ContactForm7\MosparoField as ContactForm7MosparoField;
 use MosparoIntegration\Module\WPForms\MosparoField as WpFormsMosparoField;
 use WP_Error;
@@ -38,17 +38,16 @@ class FrontendHelper
         add_action('wp_enqueue_scripts', [$this, 'registerResources']);
     }
 
-    public function clearCssUrlCache()
+    public function clearCssUrlCache(Connection $connection)
     {
-        delete_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY);
+        delete_transient($this->getCssUrlCacheTransientKey($connection));
     }
 
-    public function refreshCssUrlCache()
+    public function refreshCssUrlCache(Connection $connection)
     {
-        $configHelper = ConfigHelper::getInstance();
-        $host = $configHelper->getHost();
-        $uuid = $configHelper->getUuid();
-        $sslVerify = $configHelper->getVerifySsl();
+        $host = $connection->getHost();
+        $uuid = $connection->getUuid();
+        $sslVerify = $connection->shouldVerifySsl();
 
         $url = sprintf('%s/resources/%s/url', $host, $uuid);
 
@@ -59,43 +58,28 @@ class FrontendHelper
 
         $fullCssUrl = sanitize_url(wp_remote_retrieve_body($response));
         if ($fullCssUrl != '') {
-            set_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY, $fullCssUrl, 7 * 86400);
+            set_transient($this->getCssUrlCacheTransientKey($connection), $fullCssUrl, 7 * 86400);
         }
     }
 
-    public function registerResources()
+    public function registerResources(Connection $connection)
     {
-        $configHelper = ConfigHelper::getInstance();
-        if (!$configHelper->isActive()) {
-            return;
-        }
-
-        if (!$configHelper->getLoadCssResourceOnInitialization()) {
-            wp_enqueue_style(
-                'mosparo-integration-mosparo-css',
-                $this->getStylesheetUrl(),
-                [],
-                '1.0'
-            );
-        }
-
         wp_enqueue_script(
             'mosparo-integration-mosparo-js',
-            $this->getJavaScriptUrl(),
+            $this->getJavaScriptUrl($connection),
             ['jquery'],
             '1.0',
             true
         );
     }
 
-    public function getStylesheetUrl()
+    public function getStylesheetUrl(Connection $connection)
     {
-        $fullCssUrl = get_transient(self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY);
+        $fullCssUrl = get_transient($this->getCssUrlCacheTransientKey($connection));
 
         if ($fullCssUrl == '') {
-            $configHelper = ConfigHelper::getInstance();
-            $host = $configHelper->getHost();
-            $uuid = $configHelper->getUuid();
+            $host = $connection->getHost();
+            $uuid = $connection->getUuid();
 
             $fullCssUrl = sprintf('%s/resources/%s.css', $host, $uuid);
         }
@@ -103,18 +87,15 @@ class FrontendHelper
         return $fullCssUrl;
     }
 
-    public function getJavaScriptUrl()
+    public function getJavaScriptUrl(Connection $connection)
     {
-        $configHelper = ConfigHelper::getInstance();
-        return $configHelper->getHost() . '/build/mosparo-frontend.js';
+        return $connection->getHost() . '/build/mosparo-frontend.js';
     }
 
-    public function getFrontendOptions($options, ConfigHelper $configHelper)
+    public function getFrontendOptions($options, Connection $connection)
     {
-        if ($configHelper->getLoadCssResourceOnInitialization()) {
-            $options['loadCssResource'] = true;
-            $options['cssResourceUrl'] = esc_url($this->getStylesheetUrl());
-        }
+        $options['loadCssResource'] = true;
+        $options['cssResourceUrl'] = esc_url($this->getStylesheetUrl($connection));
 
         return apply_filters('mosparo_integration_filter_frontend_options', $options);
     }
@@ -129,16 +110,13 @@ class FrontendHelper
         return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === sanitize_key($_REQUEST['context']));
     }
 
-    public function generateField($options = [], $field = null)
+    public function generateField(Connection $connection, $options = [], $field = null)
     {
-        $configHelper = ConfigHelper::getInstance();
-        if (!$configHelper->getLoadResourcesAlways()) {
-            $this->registerResources();
-        }
+        $this->registerResources($connection);
 
         $instanceId = uniqid();
 
-        $options = $this->getFrontendOptions($options, $configHelper);
+        $options = $this->getFrontendOptions($options, $connection);
         $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
 
         $html = sprintf('
@@ -175,8 +153,16 @@ class FrontendHelper
                     
                     %s
                 })();
-            </script>
-        ', esc_attr($instanceId), esc_attr($instanceId), wp_json_encode($options), $additionalCode['before'], esc_url($configHelper->getHost()), esc_attr($configHelper->getUuid()), esc_attr($configHelper->getPublicKey()), $additionalCode['after']);
+            </script>',
+            esc_attr($instanceId),
+            esc_attr($instanceId),
+            wp_json_encode($options),
+            $additionalCode['before'],
+            esc_url($connection->getHost()),
+            esc_attr($connection->getUuid()),
+            esc_attr($connection->getPublicKey()),
+            $additionalCode['after']
+        );
 
         return $html;
     }
@@ -235,5 +221,10 @@ class FrontendHelper
         }
 
         return ['before' => '', 'after' => ''];
+    }
+
+    protected function getCssUrlCacheTransientKey(Connection $connection)
+    {
+        return self::MOSPARO_FULL_CSS_URL_TRANSIENT_KEY . '_' . $connection->getKey();
     }
 }

@@ -40,6 +40,20 @@ class ModuleHelper
 
     }
 
+    public function getActiveModules()
+    {
+        return $this->activeModules;
+    }
+
+    public function getActiveModule($moduleKey)
+    {
+        if (!isset($this->activeModules[$moduleKey])) {
+            return null;
+        }
+
+        return $this->activeModules[$moduleKey];
+    }
+
     public function initializeActiveModules($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         $configHelper = ConfigHelper::getInstance();

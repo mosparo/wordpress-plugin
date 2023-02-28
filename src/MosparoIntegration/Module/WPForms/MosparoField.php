@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Module\WPForms;
 
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use WPForms_Field;
@@ -31,21 +32,35 @@ class MosparoField extends WPForms_Field
 
     public function field_preview($field)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_wpforms');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
-        echo $frontendHelper->generateField([
+        echo $frontendHelper->generateField($connection, [
             'designMode' => true,
         ], $this);
     }
 
     public function field_display($field, $deprecated, $form_data)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_wpforms');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
         if ($frontendHelper->isGutenbergRequest()) {
             echo $frontendHelper->displayDummy();
         } else {
             $primary = $field['properties']['inputs']['primary'];
 
-            echo $frontendHelper->generateField([
+            echo $frontendHelper->generateField($connection, [
                 'name' => $primary['attr']['name'] ?? '',
             ], $this);
         }
@@ -63,6 +78,12 @@ class MosparoField extends WPForms_Field
 
     public function validateSubmission($fields, $entry, $formData)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_wpforms');
+        if ($connection === false) {
+            return;
+        }
+
         $formId = $entry['id'];
         $mosparoFieldId = null;
 
@@ -92,7 +113,7 @@ class MosparoField extends WPForms_Field
 
         // If the submission is valid, the submission is not spam.
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $data);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $data);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());

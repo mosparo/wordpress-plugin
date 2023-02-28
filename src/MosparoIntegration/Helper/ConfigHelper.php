@@ -2,10 +2,12 @@
 
 namespace MosparoIntegration\Helper;
 
+use MosparoIntegration\Entity\Connection;
+
 class ConfigHelper
 {
     private static $instance;
-    private $connection = [];
+    private $config = [];
 
     public static function getInstance()
     {
@@ -21,96 +23,101 @@ class ConfigHelper
         $this->loadConfiguration();
     }
 
-    public function isActive()
+    public function getConnections()
     {
-        $host = $this->getHost();
-        $uuid = $this->getUuid();
-        $publicKey = $this->getPublicKey();
-        $privateKey = $this->getPrivateKey();
+        $connections = $this->config['connections'] ?? [];
 
-        return $host && $uuid && $publicKey && $privateKey;
+        // Before V1.1 of this plugin, there was only one connection possible, so the connection
+        // was stored directly into the config array. This fallback converts these originally
+        // stored connection into a Connection object.
+        if (!$connections && isset($this->config['host'])) {
+            $connection = new Connection();
+            $connection->setKey('mosparo-connection-v1');
+            $connection->setName('mosparo Connection');
+            $connection->setHost($this->config['host'] ?? '');
+            $connection->setUuid($this->config['uuid'] ?? '');
+            $connection->setPublicKey($this->config['publicKey'] ?? '');
+            $connection->setPrivateKey($this->config['privateKey'] ?? '');
+            $connection->setVerifySsl($this->config['verifySsl'] ?? '');
+            $connection->setDefaults(['general']);
+
+            $this->addConnection($connection);
+
+            unset($this->config['host']);
+            unset($this->config['uuid']);
+            unset($this->config['publicKey']);
+            unset($this->config['privateKey']);
+            unset($this->config['verifySsl']);
+
+            $this->saveConfiguration();
+
+            $connections = $this->config['connections'] ?? [];
+        }
+
+        return $connections;
     }
 
-    public function getHost()
+    public function addConnection(Connection $connection)
     {
-        return $this->config['host'] ?? '';
-    }
-
-    public function setHost($host)
-    {
-        $this->config['host'] = $host;
-    }
-
-    public function getUuid()
-    {
-        return $this->config['uuid'] ?? '';
-    }
-
-    public function setUuid($uuid)
-    {
-        $this->config['uuid'] = $uuid;
-    }
-
-    public function getPublicKey()
-    {
-        return $this->config['publicKey'] ?? '';
-    }
-
-    public function setPublicKey($publicKey)
-    {
-        $this->config['publicKey'] = $publicKey;
-    }
-
-    public function getPrivateKey()
-    {
-        return $this->config['privateKey'] ?? '';
-    }
-
-    public function setPrivateKey($privateKey)
-    {
-        $this->config['privateKey'] = $privateKey;
-    }
-
-    public function getVerifySsl()
-    {
-        return $this->config['verifySsl'] ?? true;
-    }
-
-    public function setVerifySsl($verifySsl)
-    {
-        $this->config['verifySsl'] = $verifySsl;
-    }
-
-    public function getLoadResourcesAlways()
-    {
-        return $this->config['loadResourcesAlways'] ?? true;
-    }
-
-    public function setLoadResourcesAlways($loadResourcesAlways)
-    {
-        $this->config['loadResourcesAlways'] = $loadResourcesAlways;
-    }
-
-    public function getLoadCssResourceOnInitialization()
-    {
-        return $this->config['loadCssResourceOnInitialization'] ?? false;
-    }
-
-    public function setLoadCssResourceOnInitialization($loadCssResourceOnInitialization)
-    {
-        $this->config['loadCssResourceOnInitialization'] = $loadCssResourceOnInitialization;
-    }
-
-    public function resetConnectionSettings()
-    {
-        if (!$this->isActive()) {
+        // Every connection needs a key
+        if ($connection->getKey() === '') {
             return;
         }
 
-        unset($this->config['host']);
-        unset($this->config['uuid']);
-        unset($this->config['publicKey']);
-        unset($this->config['privateKey']);
+        if (!is_array($this->config['connections'])) {
+            $this->config['connections'] = [];
+        }
+
+        $this->config['connections'][$connection->getKey()] = $connection;
+    }
+
+    public function deleteConnection(Connection $connection)
+    {
+        if (!$this->hasConnection($connection->getKey())) {
+            return;
+        }
+
+        unset($this->config['connections'][$connection->getKey()]);
+    }
+
+    public function hasConnection($key)
+    {
+        return (isset($this->config['connections'][$key]));
+    }
+
+    public function getConnection($key)
+    {
+        return $this->config['connections'][$key] ?? false;
+    }
+
+    public function getConnectionFor($key, $fallbackToGeneral = true)
+    {
+        $generalConnection = false;
+
+        foreach ($this->config['connections'] as $connection) {
+            if ($connection->isDefaultFor($key)) {
+                return $connection;
+            } else if ($connection->isDefaultFor('general')) {
+                $generalConnection = $connection;
+            }
+        }
+
+        if ($fallbackToGeneral) {
+            return $generalConnection;
+        }
+
+        return false;
+    }
+
+    public function resetDefaultConnections($defaults)
+    {
+        foreach ($this->config['connections'] as $connection) {
+            foreach ($defaults as $default) {
+                if ($connection->isDefaultFor($default)) {
+                    $connection->removeDefault($default);
+                }
+            }
+        }
     }
 
     public function isModuleActive($moduleKey)
@@ -153,11 +160,5 @@ class ConfigHelper
     public function saveConfiguration()
     {
         update_option('mosparo-integration-configuration', $this->config);
-    }
-
-    protected function resetConfiguration()
-    {
-        $this->config = [];
-        $this->saveConfiguration();
     }
 }

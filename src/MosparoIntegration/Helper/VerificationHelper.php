@@ -5,6 +5,7 @@ namespace MosparoIntegration\Helper;
 use Mosparo\ApiClient\Client;
 use Mosparo\ApiClient\Exception;
 use Mosparo\ApiClient\VerificationResult;
+use MosparoIntegration\Entity\Connection;
 
 class VerificationHelper
 {
@@ -29,16 +30,14 @@ class VerificationHelper
 
     }
 
-    public function verifySubmission($submitToken, $validationToken, $formData): ?VerificationResult
+    public function verifySubmission(Connection $connection, $submitToken, $validationToken, $formData): ?VerificationResult
     {
-        $configHelper = ConfigHelper::getInstance();
-
         $client = new Client(
-            $configHelper->getHost(),
-            $configHelper->getPublicKey(),
-            $configHelper->getPrivateKey(),
+            $connection->getHost(),
+            $connection->getPublicKey(),
+            $connection->getPrivateKey(),
             [
-                'verify' => $configHelper->getVerifySsl()
+                'verify' => ($connection->shouldVerifySsl())
             ]
         );
 

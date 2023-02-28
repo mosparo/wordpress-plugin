@@ -54,8 +54,14 @@ class MosparoField
 
     public function displayFormField()
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_contact-form-7');
+        if ($connection === false) {
+            return __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
-        return $frontendHelper->generateField([], $this);
+        return $frontendHelper->generateField($connection, [], $this);
     }
 
     public function storeOriginalValue($value, $originalValue, WPCF7_FormTag $tag)
@@ -71,6 +77,12 @@ class MosparoField
     public function verifyResponse($spam, WPCF7_Submission $submission)
     {
         if ($spam) {
+            return $spam;
+        }
+
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_contact-form-7');
+        if ($connection === false) {
             return $spam;
         }
 
@@ -95,7 +107,7 @@ class MosparoField
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());

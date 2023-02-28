@@ -37,10 +37,6 @@ function mosparoIntegrationInitialize()
     $frontendHelper = FrontendHelper::getInstance();
     $frontendHelper->initializeScheduleEvents();
 
-    if (!is_admin() && $configHelper->getLoadResourcesAlways()) {
-        $frontendHelper->initializeResourceRegistration();
-    }
-
     $adminHelper = AdminHelper::getInstance();
     $adminHelper->initializeAdmin(__DIR__, plugin_dir_url(__FILE__));
 }

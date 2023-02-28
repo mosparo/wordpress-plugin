@@ -59,7 +59,7 @@ class ModuleListTable extends WP_List_Table
         }
 
         echo '<tr class="' . esc_attr($class) . '">';
-        $this->single_row_columns( $item );
+        $this->single_row_columns($item);
         echo '</tr>';
     }
 

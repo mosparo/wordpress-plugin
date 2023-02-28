@@ -14,14 +14,14 @@
 
 ## Description
 The WordPress plugin adds the required functionality to your WordPress website to use mosparo in your forms.
-This plugin is compatible with WordPress comments, Contact Form 7, Ninja Forms, and WPForms.
+This plugin is compatible with WordPress comments and user forms (login, lost password, registration), Contact Form 7, Everest Forms, Formidable, Gravity Forms, Ninja Forms, and WPForms.
 
 ## Requirements
 To use the plugin, you must meet the following requirements:
 - A mosparo project
 - A WordPress website
-- An User with the ability to install plugins
-- If you want to use it in your contact form, you have to use Contact Form 7, Ninja Forms or WPForms
+- An user with the ability to install plugins
+- If you want to use it in your contact form, you need a compatible contact form plugin
 
 ## Installation
 To use the plugin, please follow this installation instruction:
@@ -31,6 +31,6 @@ To use the plugin, please follow this installation instruction:
 3. Search for "mosparo Integration"
 4. Install the plugin with the name "mosparo Integration"
 5. Activate the plugin
-6. Go to "Settings" > "mosparo Integration" and connect your WordPress website with your mosparo installation
+6. Go to "Settings" > "mosparo Integration" and add a connection to connect your WordPress website with your mosparo installation
 7. Enable the needed modules
-8. Edit your form and add the mosparo field to your form
+8. If you want to add it to your contact form, edit your form and add the mosparo field

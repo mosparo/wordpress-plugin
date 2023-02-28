@@ -3,6 +3,7 @@
 namespace MosparoIntegration\Module\GravityForms;
 
 use GFFormsModel;
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use GF_Field;
@@ -35,12 +36,18 @@ class MosparoField extends GF_Field
 
     public function get_field_input($form, $value = '', $entry = null)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_gravity-forms');
+        if ($connection === false) {
+            return __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
 
         if ($frontendHelper->isGutenbergRequest()) {
             return $frontendHelper->displayDummy();
         } else {
-            $html = $frontendHelper->generateField(['designMode' => $this->is_form_editor()], $this);
+            $html = $frontendHelper->generateField($connection, ['designMode' => $this->is_form_editor()], $this);
 
             if ($this->is_form_editor()) {
                 return '<form class="gform-mosparo-form">' . $html . '</form>';
@@ -52,6 +59,12 @@ class MosparoField extends GF_Field
 
     public function validate($value, $form)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_gravity-forms');
+        if ($connection === false) {
+            return;
+        }
+
         [ $formData, $requiredFields ] = $this->getFormData($form);
         $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
@@ -71,7 +84,7 @@ class MosparoField extends GF_Field
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
@@ -137,7 +150,11 @@ class MosparoField extends GF_Field
                         $requiredFields[] = 'input_' . $subField['id'];
                     }
                 }
-            } else if ($value !== null) {
+            } else {
+                if (!$value && $field['type'] === 'multiselect') {
+                    $value = [];
+                }
+
                 $formData['input_' . $field['id']] = $value;
 
                 if ($field['isRequired']) {

@@ -64,6 +64,12 @@ class MosparoAction extends NF_Abstracts_Action
 			return $nfData;
 		}
 
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_ninja-forms');
+        if ($connection === false) {
+            return $nfData;
+        }
+
         // Find the validation data
         [$tokens, $data, $requiredFields] = $this->getFormData($nfData);
 
@@ -75,7 +81,7 @@ class MosparoAction extends NF_Abstracts_Action
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($tokens['submitToken'], $tokens['validationToken'], $data);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $tokens['submitToken'], $tokens['validationToken'], $data);
         if ($verificationResult !== null) {
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());

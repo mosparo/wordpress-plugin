@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Module\User;
 
+use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use WP_Error;
@@ -35,13 +36,26 @@ class UserForm
 
     public function displayMosparoField()
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_user');
+        if ($connection === false) {
+            echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
+            return;
+        }
+
         $frontendHelper = FrontendHelper::getInstance();
-        echo $frontendHelper->generateField();
+        echo $frontendHelper->generateField($connection);
     }
 
     public function verifyLoginForm($user)
     {
         $errors = new WP_Error();
+
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_user');
+        if ($connection === false) {
+            return $user;
+        }
 
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
@@ -51,7 +65,7 @@ class UserForm
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
             $errors->add(
                 'mosparo_integration_general_error',
@@ -78,6 +92,12 @@ class UserForm
 
     public function verifyLostPasswordForm(WP_Error $errors)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_user');
+        if ($connection === false) {
+            return;
+        }
+
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
@@ -86,7 +106,7 @@ class UserForm
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
             $errors->add(
                 'mosparo_integration_general_error',
@@ -109,6 +129,12 @@ class UserForm
 
     public function verifyRegisterForm($username, $email, WP_Error $errors)
     {
+        $configHelper = ConfigHelper::getInstance();
+        $connection = $configHelper->getConnectionFor('module_user');
+        if ($connection === false) {
+            return;
+        }
+
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
@@ -118,7 +144,7 @@ class UserForm
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
-        $verificationResult = $verificationHelper->verifySubmission($submitToken, $validationToken, $formData);
+        $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
             $errors->add(
                 'mosparo_integration_general_error',
