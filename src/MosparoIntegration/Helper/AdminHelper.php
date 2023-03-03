@@ -313,7 +313,7 @@ class AdminHelper
         } else if ($message === 'connection-deleted') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The connection was successfully deleted.', 'mosparo-integration')));
         } else if ($message === 'general-locked') {
-            echo sprintf('<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s</p></div>', esc_html(__('Error', 'mosparo-integration')), esc_html(__('You cannot delete the general connection.', 'mosparo-integration')));
+            echo sprintf('<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s</p></div>', esc_html(__('Error', 'mosparo-integration')), esc_html(__('You cannot delete the default connection.', 'mosparo-integration')));
         } else if ($message === 'multiple-enabled') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The modules were successfully enabled.', 'mosparo-integration')));
         } else if ($message === 'multiple-disabled') {

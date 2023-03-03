@@ -78,7 +78,7 @@ class ConnectionListTable extends WP_List_Table
             'name' => __('Name', 'mosparo-integration'),
             'host' => __('mosparo Host', 'mosparo-integration'),
             'uuid' => __('mosparo UUID', 'mosparo-integration'),
-            'defaults' => __('Default connections', 'mosparo-integration'),
+            'defaults' => __('Default connection for', 'mosparo-integration'),
         ];
     }
 
@@ -152,7 +152,7 @@ class ConnectionListTable extends WP_List_Table
 
         // The general should always be the first default string
         if (in_array('general', $defaults)) {
-            $strings[] = '<strong>' . __('General', 'mosparo-integration') . '</strong>';
+            $strings[] = '<strong>' . __('Default', 'mosparo-integration') . '</strong>';
         }
 
         foreach ($defaults as $default) {

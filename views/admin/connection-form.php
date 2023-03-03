@@ -34,6 +34,9 @@
                         </th>
                         <td>
                             <input name="key" type="text" id="key" value="<?php echo esc_attr($key); ?>" class="regular-text code" <?php if ($action === 'edit-connection'): ?>readonly<?php endif; ?>>
+                            <p class="description">
+                                <?php _e('The key is an internal identifier and can only contain lowercase alphanumeric characters, dashes, and underscores.', 'mosparo-integration'); ?>
+                            </p>
                         </td>
                     </tr>
                     <tr>
@@ -95,15 +98,15 @@
                         }
                     ?>
                     <tr>
-                        <th><?php _e('General', 'mosparo-integration'); ?></th>
+                        <th><?php _e('Default', 'mosparo-integration'); ?></th>
                         <td>
                             <label for="defaultGeneral">
                                 <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?>>
-                                <?php _e('General default connection', 'mosparo-integration'); ?>
+                                <?php _e('Default connection', 'mosparo-integration'); ?>
                             </label>
                             <?php if ($isGeneral): ?>
                                 <p class="description">
-                                    <?php _e('You cannot unset the general connection. Please configure a new connection and mark it as the general connection.', 'mosparo-integration'); ?>
+                                    <?php _e('You cannot unset the default connection. Please configure a new connection and mark it as the default connection.', 'mosparo-integration'); ?>
                                 </p>
                             <?php endif; ?>
                         </td>

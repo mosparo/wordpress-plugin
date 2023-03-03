@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2022-10-10 18:06+0200\n"
-"PO-Revision-Date: 2022-10-10 18:10+0200\n"
+"POT-Creation-Date: 2023-03-03 07:26+0100\n"
+"PO-Revision-Date: 2023-03-03 07:27+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -10,17 +10,56 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: mosparo-integration.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
-"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
-"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.min.js\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:43
+msgid "No connections found"
+msgstr "Keine Verbidnungen gefunden"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:78
+#: views/admin/connection-form.php:44
+msgid "Name"
+msgstr "Name"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:79
+msgid "mosparo Host"
+msgstr "mosparo Host"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:80
+msgid "mosparo UUID"
+msgstr "mosparo UUID"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:81
+msgid "Default connection for"
+msgstr "Standard-Verbindung für"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:92
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:93
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:137
+msgid "Refresh CSS cache"
+msgstr "CSS-Zwischenspeicher aktualisieren"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:98
+msgid "Delete"
+msgstr "Löschen"
+
+#: src/MosparoIntegration/Admin/ConnectionListTable.php:155
+#: views/admin/connection-form.php:101
+msgid "Default"
+msgstr "Standard"
 
 #: src/MosparoIntegration/Admin/ModuleListTable.php:42
 msgid "No modules found"
@@ -49,65 +88,77 @@ msgid "Enable"
 msgstr "Aktivieren"
 
 #. Plugin Name of the plugin/theme
-#: src/MosparoIntegration/Helper/AdminHelper.php:41
-#: src/MosparoIntegration/Helper/AdminHelper.php:62
-#: src/MosparoIntegration/Helper/AdminHelper.php:84
-#: src/MosparoIntegration/Helper/AdminHelper.php:96
-#: src/MosparoIntegration/Helper/AdminHelper.php:105
+#: src/MosparoIntegration/Helper/AdminHelper.php:43
+#: src/MosparoIntegration/Helper/AdminHelper.php:44
+#: src/MosparoIntegration/Helper/AdminHelper.php:64
+#: src/MosparoIntegration/Helper/AdminHelper.php:115
+#: src/MosparoIntegration/Helper/AdminHelper.php:142
 msgid "mosparo Integration"
 msgstr "mosparo Integration"
 
-#. Author of the plugin/theme
-#: src/MosparoIntegration/Helper/AdminHelper.php:42
-#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:38
-#: src/MosparoIntegration/Module/NinjaForms/MosparoField.php:58
-#: src/MosparoIntegration/Module/WPForms/MosparoField.php:13
-#: views/admin/settings.php:4
-msgid "mosparo"
-msgstr "mosparo"
-
-#: src/MosparoIntegration/Helper/AdminHelper.php:62
-#: src/MosparoIntegration/Helper/AdminHelper.php:84
-#: src/MosparoIntegration/Helper/AdminHelper.php:96
-#: src/MosparoIntegration/Helper/AdminHelper.php:105
+#: src/MosparoIntegration/Helper/AdminHelper.php:64
+#: src/MosparoIntegration/Helper/AdminHelper.php:115
+#: src/MosparoIntegration/Helper/AdminHelper.php:142
 msgid "No access."
 msgstr "Kein Zugriff."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:245
+#: src/MosparoIntegration/Helper/AdminHelper.php:310
+#: src/MosparoIntegration/Helper/AdminHelper.php:316
 msgid "Error"
 msgstr "Fehler"
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:245
+#: src/MosparoIntegration/Helper/AdminHelper.php:310
 msgid "Invalid connection data."
 msgstr "Ungültige Verbindungsdaten."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:247
-msgid "The settings were successfully saved."
-msgstr "Die Einstellungen wurden erfolgreich gespeichert."
+#: src/MosparoIntegration/Helper/AdminHelper.php:312
+msgid "The connection was successfully saved."
+msgstr "Die Verbindung wurden erfolgreich gespeichert."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:249
+#: src/MosparoIntegration/Helper/AdminHelper.php:314
+msgid "The connection was successfully deleted."
+msgstr "Die Verbindung wurde erfolgreich gelöscht."
+
+#: src/MosparoIntegration/Helper/AdminHelper.php:316
+msgid "You cannot delete the default connection."
+msgstr "Sie können die Standard-Verbindung nicht löschen."
+
+#: src/MosparoIntegration/Helper/AdminHelper.php:318
 msgid "The modules were successfully enabled."
 msgstr "Die Module wurden erfolgreich aktiviert."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:251
+#: src/MosparoIntegration/Helper/AdminHelper.php:320
 msgid "The modules were successfully disabled."
 msgstr "Die Module wurden erfolgreich deaktiviert."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:253
+#: src/MosparoIntegration/Helper/AdminHelper.php:322
 msgid "The module was successfully enabled."
 msgstr "Das Modul wurde erfolgreich aktiviert."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:255
+#: src/MosparoIntegration/Helper/AdminHelper.php:324
 msgid "The module was successfully disabled."
 msgstr "Das Modul wurde erfolgreich deaktiviert."
 
-#: src/MosparoIntegration/Helper/AdminHelper.php:257
-msgid "The connection settings were reseted successfully."
-msgstr "Die Verbindung wurde erfolgreich zurückgesetzt."
-
-#: src/MosparoIntegration/Helper/AdminHelper.php:259
+#: src/MosparoIntegration/Helper/AdminHelper.php:326
 msgid "The CSS cache was refreshed successfully."
 msgstr "Der CSS-Zwischenspeicher wurde erfolgreich aktualisiert."
+
+#: src/MosparoIntegration/Module/Comments/CommentForm.php:37
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:60
+#: src/MosparoIntegration/Module/EverestForms/MosparoField.php:44
+#: src/MosparoIntegration/Module/EverestForms/MosparoField.php:66
+#: src/MosparoIntegration/Module/Formidable/MosparoField.php:24
+#: src/MosparoIntegration/Module/Formidable/MosparoField.php:42
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:42
+#: src/MosparoIntegration/Module/User/UserForm.php:42
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:38
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:53
+msgid ""
+"No mosparo connection available. Please configure the connection in the "
+"mosparo settings."
+msgstr ""
+"Es ist keine mosparo Verbindung verfügbar. Bitte konfigurieren Sie die "
+"Verbindung in den mosparo Einstellungen."
 
 #: src/MosparoIntegration/Module/Comments/CommentsModule.php:14
 msgid "Comments"
@@ -126,17 +177,25 @@ msgstr "Contact Form 7"
 msgid "Protects Contact Form 7 forms with mosparo."
 msgstr "Schützt die Contact Form 7-Formulare mit mosparo."
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:92
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:97
+#: src/MosparoIntegration/Module/EverestForms/MosparoField.php:91
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:66
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:75
 msgid "Submit or validation token is empty."
 msgstr "Sende- oder Validierungstoken ist leer."
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:119
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:124
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:88
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:100
+#: src/MosparoIntegration/Module/User/UserForm.php:84
+#: src/MosparoIntegration/Module/User/UserForm.php:125
+#: src/MosparoIntegration/Module/User/UserForm.php:163
 msgid "Verification failed which means the form contains spam."
 msgstr ""
 "Die Überprüfung ist fehlgeschlagen, was bedeutet, dass das Formular Spam "
 "enthält."
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:187
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:192
 #, php-format
 msgid ""
 "Adds a mosparo field to your form. Please configure the connection to "
@@ -145,24 +204,65 @@ msgstr ""
 "Fügt ein mosparo-Feld in Ihrem Formular ein. Bitte konfigurieren Sie die "
 "Verbindung zu mosparo in den %sEinstellungen%s."
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:197
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:202
 msgid "Id attribute"
 msgstr "ID Attribut"
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:201
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:206
 msgid "Class attribute"
 msgstr "Klassen-Attribut"
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:213
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:218
 msgid "Insert Tag"
 msgstr "Tag einfügen"
 
-#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:72
-#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:89
-#: src/MosparoIntegration/Module/WPForms/MosparoField.php:96
-#: src/MosparoIntegration/Module/WPForms/MosparoField.php:113
+#: src/MosparoIntegration/Module/EverestForms/EverestFormsModule.php:13
+#: src/MosparoIntegration/Module/EverestForms/EverestFormsModule.php:16
+msgid "Everest Forms"
+msgstr "Everest Forms"
+
+#: src/MosparoIntegration/Module/EverestForms/EverestFormsModule.php:14
+msgid "Protects Everest Forms forms with mosparo."
+msgstr "Schützt Everest Forms-Formulare mit mosparo."
+
+#. Author of the plugin/theme
+#: src/MosparoIntegration/Module/EverestForms/MosparoField.php:16
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:17
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:38
+#: src/MosparoIntegration/Module/NinjaForms/MosparoField.php:58
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:14
+#: views/admin/settings.php:4
+msgid "mosparo"
+msgstr "mosparo"
+
+#: src/MosparoIntegration/Module/EverestForms/MosparoField.php:116
+msgid "mosparo verification failed."
+msgstr "mosparo Verifizierung fehlgeschlagen."
+
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:15
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:18
+msgid "Formidable"
+msgstr "Formidable"
+
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:16
+msgid "Protects Formidable forms with mosparo."
+msgstr "Schützt Formidable-Formulare mit mosparo."
+
+#: src/MosparoIntegration/Module/GravityForms/GravityFormsModule.php:14
+#: src/MosparoIntegration/Module/GravityForms/GravityFormsModule.php:17
+msgid "Gravity Forms"
+msgstr "Gravity Forms"
+
+#: src/MosparoIntegration/Module/GravityForms/GravityFormsModule.php:15
+msgid "Protects Gravity Forms forms with mosparo."
+msgstr "Schützt Gravity Forms-Formulare mit Mosparo."
+
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:78
+#: src/MosparoIntegration/Module/NinjaForms/MosparoAction.php:95
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:110
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:127
 msgid "Your submission is not valid."
-msgstr "Ihre Einreichung ist ungültig."
+msgstr "Ihre Einsendung ist ungültig."
 
 #: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:19
 #: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:22
@@ -173,7 +273,25 @@ msgstr "Ninja Forms"
 msgid "Protects Ninja Forms forms with mosparo."
 msgstr "Schützt Ninja Forms-Formulare mit Mosparo."
 
-#: src/MosparoIntegration/Module/WPForms/MosparoField.php:85
+#: src/MosparoIntegration/Module/User/UserForm.php:72
+#: src/MosparoIntegration/Module/User/UserForm.php:113
+#: src/MosparoIntegration/Module/User/UserForm.php:151
+#, php-format
+msgid "A general error occurred: %s"
+msgstr "Ein genereller Fehler ist aufgetreten: %s"
+
+#: src/MosparoIntegration/Module/User/UserModule.php:13
+msgid "User"
+msgstr "Benutzer:innen"
+
+#: src/MosparoIntegration/Module/User/UserModule.php:14
+msgid ""
+"Protects the user forms like login, register and password reset with mosparo."
+msgstr ""
+"Schützt die WordPress-Formulare Login, Registrieren und Passwort "
+"zurücksetzen mit mosparo."
+
+#: src/MosparoIntegration/Module/WPForms/MosparoField.php:99
 msgid "No mosparo field found in this form."
 msgstr "In diesem Formular wurde kein mosparo-Feld gefunden."
 
@@ -186,47 +304,102 @@ msgstr "WPForms"
 msgid "Protects WPForms forms with mosparo."
 msgstr "Schützt WPForms-Formulare mit mosparo."
 
+#: views/admin/connection-delete.php:5
+#, php-format
+msgid "Delete connection \"%s\""
+msgstr "Verbindung \"%s\" löschen"
+
+#: views/admin/connection-delete.php:15
+#, php-format
+msgid "Are you sure you want to delete the connection \"%s\"?"
+msgstr "Sind Sie sicher, dass Sie die Verbindung \"%s\" löschen möchten?"
+
+#: views/admin/connection-delete.php:19
+msgid ""
+"If you delete the connection, you can no longer use the connection for "
+"mosparo in your forms."
+msgstr ""
+"Wenn Sie die Verbindung löschen, können Sie sie nicht mehr weiter in einem "
+"Formular verwenden."
+
+#: views/admin/connection-delete.php:25
+msgid "Delete connection"
+msgstr "Verbindung löschen"
+
+#: views/admin/connection-form.php:6 views/admin/settings.php:12
+msgid "Add connection"
+msgstr "Verbindung hinzufügen"
+
+#: views/admin/connection-form.php:8
+#, php-format
+msgid "Edit connection \"%s\""
+msgstr "Verbindung \"%s\" bearbeiten"
+
+#: views/admin/connection-form.php:33
+msgid "Key"
+msgstr "Key"
+
+#: views/admin/connection-form.php:38
+msgid ""
+"The key is an internal identifier and can only contain lowercase "
+"alphanumeric characters, dashes, and underscores."
+msgstr ""
+"Der Schlüssel ist eine interne Identifikation und kann nur Kleinbuchstaben, "
+"Bindestriche sowie Unterstriche enthalten."
+
+#: views/admin/connection-form.php:52
+msgid "Host"
+msgstr "Host"
+
+#: views/admin/connection-form.php:60
+msgid "Unique identification number"
+msgstr "Eindeutige Identifikationsnummer"
+
+#: views/admin/connection-form.php:68
+msgid "Public Key"
+msgstr "Öffentlicher Schlüssel"
+
+#: views/admin/connection-form.php:76
+msgid "Private Key"
+msgstr "Privater Schlüssel"
+
+#: views/admin/connection-form.php:81
+msgid ""
+"Please leave this field empty if you don't want to change the private key."
+msgstr ""
+"Bitte lassen Sie dieses Feld leer, wenn Sie den privaten Schlüssel nicht "
+"ändern möchten."
+
+#: views/admin/connection-form.php:90
+msgid "Verify SSL certificate"
+msgstr "SSL-Zertifikat überprüfen"
+
+#: views/admin/connection-form.php:105
+msgid "Default connection"
+msgstr "Standard-Verbindung"
+
+#: views/admin/connection-form.php:109
+msgid ""
+"You cannot unset the default connection. Please configure a new connection "
+"and mark it as the default connection."
+msgstr ""
+"Sie können die Standard-Verbindung nicht entfernen. Bitte konfigurieren Sie "
+"eine neue Verbindung und markieren Sie diese als Standard-Verbindung."
+
+#: views/admin/connection-form.php:120
+#, php-format
+msgid "Default connection for %s"
+msgstr "Standard-Verbindung für %s"
+
+#: views/admin/connection-form.php:132
+msgid "Save connection"
+msgstr "Verbindung speichern"
+
 #: views/admin/settings.php:11
 msgid "Connection"
 msgstr "Verbindung"
 
-#: views/admin/settings.php:29
-msgid "Host"
-msgstr "Host"
-
-#: views/admin/settings.php:37
-msgid "Unique identification number"
-msgstr "Eindeutige Identifikationsnummer"
-
-#: views/admin/settings.php:45
-msgid "Public Key"
-msgstr "Öffentlicher Schlüssel"
-
-#: views/admin/settings.php:53
-msgid "Private Key"
-msgstr "Privater Schlüssel"
-
-#: views/admin/settings.php:64
-msgid "Verify SSL certificate"
-msgstr "SSL-Zertifikat überprüfen"
-
-#: views/admin/settings.php:73
-msgid "Load the mosparo resources on all pages."
-msgstr "Laden Sie die mosparo-Ressourcen auf allen Seiten."
-
-#: views/admin/settings.php:82
-msgid "Load the CSS resource on initialization."
-msgstr "CSS-Resource erst bei der Initialisierung laden"
-
-#: views/admin/settings.php:98
-msgid "Reset connection"
-msgstr "Verbindung zurücksetzen"
-
-#: views/admin/settings.php:101
-msgid "Refresh CSS Cache"
-msgstr "CSS-Zwischenspeicher aktualisieren"
-
-#: views/admin/settings.php:108
+#: views/admin/settings.php:27
 msgid "Modules"
 msgstr "Module"
 
@@ -242,6 +415,26 @@ msgstr ""
 #. Author URI of the plugin/theme
 msgid "https://mosparo.io/"
 msgstr "https://mosparo.io"
+
+#~ msgid "Standard"
+#~ msgstr "Standard"
+
+#~ msgid "General"
+#~ msgstr "Standard"
+
+#, fuzzy
+#~| msgid "Reset connection"
+#~ msgid "General default connection"
+#~ msgstr "Verbindung zurücksetzen"
+
+#~ msgid "The connection settings were reseted successfully."
+#~ msgstr "Die Verbindung wurde erfolgreich zurückgesetzt."
+
+#~ msgid "Load the mosparo resources on all pages."
+#~ msgstr "Laden Sie die mosparo-Ressourcen auf allen Seiten."
+
+#~ msgid "Load the CSS resource on initialization."
+#~ msgstr "CSS-Resource erst bei der Initialisierung laden"
 
 #~ msgid "Mosparo for WordPress"
 #~ msgstr "mosparo für WordPress"

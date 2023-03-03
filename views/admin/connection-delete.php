@@ -16,13 +16,13 @@
         </div>
 
         <p>
-            <?php _e('If you delete the connection, you can only use it in a form once you add it again.', 'mosparo-integration'); ?>
+            <?php _e('If you delete the connection, you can no longer use the connection for mosparo in your forms.', 'mosparo-integration'); ?>
         </p>
 
         <p>
             <?php
             wp_nonce_field('delete-connection', 'save-connection');
-            submit_button(__('Delete connection'), 'primary', 'submit', false);
+            submit_button(__('Delete connection', 'mosparo-integration'), 'primary', 'submit', false);
             ?>
         </p>
     </form>
