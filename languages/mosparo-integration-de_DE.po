@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2023-03-03 07:26+0100\n"
-"PO-Revision-Date: 2023-03-03 07:27+0100\n"
+"POT-Creation-Date: 2023-03-11 10:38+0100\n"
+"PO-Revision-Date: 2023-03-11 10:41+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: mosparo-integration.php\n"
@@ -157,8 +157,8 @@ msgid ""
 "No mosparo connection available. Please configure the connection in the "
 "mosparo settings."
 msgstr ""
-"Es ist keine mosparo Verbindung verfügbar. Bitte konfigurieren Sie die "
-"Verbindung in den mosparo Einstellungen."
+"Es ist keine mosparo Verbindung verfügbar. Bitte konfiguriere die Verbindung "
+"in den mosparo Einstellungen."
 
 #: src/MosparoIntegration/Module/Comments/CommentsModule.php:14
 msgid "Comments"
@@ -201,12 +201,12 @@ msgid ""
 "Adds a mosparo field to your form. Please configure the connection to "
 "mosparo in the %ssettings%s."
 msgstr ""
-"Fügt ein mosparo-Feld in Ihrem Formular ein. Bitte konfigurieren Sie die "
+"Fügt ein mosparo-Feld in deinem Formular ein. Bitte konfiguriere die "
 "Verbindung zu mosparo in den %sEinstellungen%s."
 
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:202
 msgid "Id attribute"
-msgstr "ID Attribut"
+msgstr "ID-Attribut"
 
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:206
 msgid "Class attribute"
@@ -262,7 +262,7 @@ msgstr "Schützt Gravity Forms-Formulare mit Mosparo."
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:110
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:127
 msgid "Your submission is not valid."
-msgstr "Ihre Einsendung ist ungültig."
+msgstr "Deine Einsendung ist ungültig."
 
 #: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:19
 #: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:22
@@ -282,13 +282,13 @@ msgstr "Ein genereller Fehler ist aufgetreten: %s"
 
 #: src/MosparoIntegration/Module/User/UserModule.php:13
 msgid "User"
-msgstr "Benutzer:innen"
+msgstr "Konto"
 
 #: src/MosparoIntegration/Module/User/UserModule.php:14
 msgid ""
 "Protects the user forms like login, register and password reset with mosparo."
 msgstr ""
-"Schützt die WordPress-Formulare Login, Registrieren und Passwort "
+"Schützt die Konto-Formulare wie Login, Registrieren und Passwort "
 "zurücksetzen mit mosparo."
 
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:99
@@ -312,15 +312,15 @@ msgstr "Verbindung \"%s\" löschen"
 #: views/admin/connection-delete.php:15
 #, php-format
 msgid "Are you sure you want to delete the connection \"%s\"?"
-msgstr "Sind Sie sicher, dass Sie die Verbindung \"%s\" löschen möchten?"
+msgstr "Bist du sicher, dass du die Verbindung \"%s\" löschen möchten?"
 
 #: views/admin/connection-delete.php:19
 msgid ""
 "If you delete the connection, you can no longer use the connection for "
 "mosparo in your forms."
 msgstr ""
-"Wenn Sie die Verbindung löschen, können Sie sie nicht mehr weiter in einem "
-"Formular verwenden."
+"Wenn du die Verbindung löschst, kannst du sie nicht mehr in einem Formular "
+"verwenden."
 
 #: views/admin/connection-delete.php:25
 msgid "Delete connection"
@@ -367,8 +367,8 @@ msgstr "Privater Schlüssel"
 msgid ""
 "Please leave this field empty if you don't want to change the private key."
 msgstr ""
-"Bitte lassen Sie dieses Feld leer, wenn Sie den privaten Schlüssel nicht "
-"ändern möchten."
+"Bitte lasse dieses Feld leer, wenn du den privaten Schlüssel nicht ändern "
+"möchtst."
 
 #: views/admin/connection-form.php:90
 msgid "Verify SSL certificate"
@@ -383,8 +383,8 @@ msgid ""
 "You cannot unset the default connection. Please configure a new connection "
 "and mark it as the default connection."
 msgstr ""
-"Sie können die Standard-Verbindung nicht entfernen. Bitte konfigurieren Sie "
-"eine neue Verbindung und markieren Sie diese als Standard-Verbindung."
+"Du kannst die Standard-Verbindung nicht entfernen. Bitte konfiguriere eine "
+"neue Verbindung und markieren diese als Standard-Verbindung."
 
 #: views/admin/connection-form.php:120
 #, php-format
