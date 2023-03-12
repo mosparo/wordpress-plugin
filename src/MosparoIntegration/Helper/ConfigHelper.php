@@ -94,6 +94,10 @@ class ConfigHelper
     {
         $generalConnection = false;
 
+        if (!isset($this->config['connections'])) {
+            $this->config['connections'] = [];
+        }
+
         foreach ($this->config['connections'] as $connection) {
             if ($connection->isDefaultFor($key)) {
                 return $connection;
