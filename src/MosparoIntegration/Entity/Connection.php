@@ -82,7 +82,7 @@ class Connection
 
     public function shouldVerifySsl()
     {
-        return ($this->verifySsl);
+        return (bool) $this->verifySsl;
     }
 
     public function setVerifySsl(bool $verifySsl)

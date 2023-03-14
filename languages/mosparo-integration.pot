@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2023-03-11 10:41+0100\n"
+"POT-Creation-Date: 2023-03-14 19:56+0100\n"
 "PO-Revision-Date: 2023-03-11 09:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -143,6 +143,7 @@ msgstr ""
 msgid "The CSS cache was refreshed successfully."
 msgstr ""
 
+#: src/MosparoIntegration/Module/Account/AccountForm.php:42
 #: src/MosparoIntegration/Module/Comments/CommentForm.php:37
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:60
 #: src/MosparoIntegration/Module/EverestForms/MosparoField.php:44
@@ -150,12 +151,36 @@ msgstr ""
 #: src/MosparoIntegration/Module/Formidable/MosparoField.php:24
 #: src/MosparoIntegration/Module/Formidable/MosparoField.php:42
 #: src/MosparoIntegration/Module/GravityForms/MosparoField.php:42
-#: src/MosparoIntegration/Module/User/UserForm.php:42
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:38
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:53
 msgid ""
-"No mosparo connection available. Please configure the connection in the "
-"mosparo settings."
+"No mosparo connection available. Please configure the connection in the mosparo "
+"settings."
+msgstr ""
+
+#: src/MosparoIntegration/Module/Account/AccountForm.php:72
+#: src/MosparoIntegration/Module/Account/AccountForm.php:113
+#: src/MosparoIntegration/Module/Account/AccountForm.php:151
+#, php-format
+msgid "A general error occurred: %s"
+msgstr ""
+
+#: src/MosparoIntegration/Module/Account/AccountForm.php:84
+#: src/MosparoIntegration/Module/Account/AccountForm.php:125
+#: src/MosparoIntegration/Module/Account/AccountForm.php:163
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:124
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:88
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:100
+msgid "Verification failed which means the form contains spam."
+msgstr ""
+
+#: src/MosparoIntegration/Module/Account/AccountModule.php:13
+msgid "Account"
+msgstr ""
+
+#: src/MosparoIntegration/Module/Account/AccountModule.php:14
+msgid ""
+"Protects the account forms like login, register and password reset with mosparo."
 msgstr ""
 
 #: src/MosparoIntegration/Module/Comments/CommentsModule.php:14
@@ -182,20 +207,11 @@ msgstr ""
 msgid "Submit or validation token is empty."
 msgstr ""
 
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:124
-#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:88
-#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:100
-#: src/MosparoIntegration/Module/User/UserForm.php:84
-#: src/MosparoIntegration/Module/User/UserForm.php:125
-#: src/MosparoIntegration/Module/User/UserForm.php:163
-msgid "Verification failed which means the form contains spam."
-msgstr ""
-
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:192
 #, php-format
 msgid ""
-"Adds a mosparo field to your form. Please configure the connection to "
-"mosparo in the %ssettings%s."
+"Adds a mosparo field to your form. Please configure the connection to mosparo "
+"in the %ssettings%s."
 msgstr ""
 
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:202
@@ -267,22 +283,6 @@ msgstr ""
 msgid "Protects Ninja Forms forms with mosparo."
 msgstr ""
 
-#: src/MosparoIntegration/Module/User/UserForm.php:72
-#: src/MosparoIntegration/Module/User/UserForm.php:113
-#: src/MosparoIntegration/Module/User/UserForm.php:151
-#, php-format
-msgid "A general error occurred: %s"
-msgstr ""
-
-#: src/MosparoIntegration/Module/User/UserModule.php:13
-msgid "User"
-msgstr ""
-
-#: src/MosparoIntegration/Module/User/UserModule.php:14
-msgid ""
-"Protects the user forms like login, register and password reset with mosparo."
-msgstr ""
-
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:99
 msgid "No mosparo field found in this form."
 msgstr ""
@@ -308,8 +308,8 @@ msgstr ""
 
 #: views/admin/connection-delete.php:19
 msgid ""
-"If you delete the connection, you can no longer use the connection for "
-"mosparo in your forms."
+"If you delete the connection, you can no longer use the connection for mosparo "
+"in your forms."
 msgstr ""
 
 #: views/admin/connection-delete.php:25
@@ -331,8 +331,8 @@ msgstr ""
 
 #: views/admin/connection-form.php:38
 msgid ""
-"The key is an internal identifier and can only contain lowercase "
-"alphanumeric characters, dashes, and underscores."
+"The key is an internal identifier and can only contain lowercase alphanumeric "
+"characters, dashes, and underscores."
 msgstr ""
 
 #: views/admin/connection-form.php:52
@@ -352,8 +352,7 @@ msgid "Private Key"
 msgstr ""
 
 #: views/admin/connection-form.php:81
-msgid ""
-"Please leave this field empty if you don't want to change the private key."
+msgid "Please leave this field empty if you don't want to change the private key."
 msgstr ""
 
 #: views/admin/connection-form.php:90
@@ -366,8 +365,8 @@ msgstr ""
 
 #: views/admin/connection-form.php:109
 msgid ""
-"You cannot unset the default connection. Please configure a new connection "
-"and mark it as the default connection."
+"You cannot unset the default connection. Please configure a new connection and "
+"mark it as the default connection."
 msgstr ""
 
 #: views/admin/connection-form.php:120

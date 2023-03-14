@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2023-03-11 10:38+0100\n"
-"PO-Revision-Date: 2023-03-11 10:41+0100\n"
+"POT-Creation-Date: 2023-03-14 19:56+0100\n"
+"PO-Revision-Date: 2023-03-14 19:56+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -143,6 +143,7 @@ msgstr "Das Modul wurde erfolgreich deaktiviert."
 msgid "The CSS cache was refreshed successfully."
 msgstr "Der CSS-Zwischenspeicher wurde erfolgreich aktualisiert."
 
+#: src/MosparoIntegration/Module/Account/AccountForm.php:42
 #: src/MosparoIntegration/Module/Comments/CommentForm.php:37
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:60
 #: src/MosparoIntegration/Module/EverestForms/MosparoField.php:44
@@ -150,7 +151,6 @@ msgstr "Der CSS-Zwischenspeicher wurde erfolgreich aktualisiert."
 #: src/MosparoIntegration/Module/Formidable/MosparoField.php:24
 #: src/MosparoIntegration/Module/Formidable/MosparoField.php:42
 #: src/MosparoIntegration/Module/GravityForms/MosparoField.php:42
-#: src/MosparoIntegration/Module/User/UserForm.php:42
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:38
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:53
 msgid ""
@@ -159,6 +159,36 @@ msgid ""
 msgstr ""
 "Es ist keine mosparo Verbindung verfügbar. Bitte konfiguriere die Verbindung "
 "in den mosparo Einstellungen."
+
+#: src/MosparoIntegration/Module/Account/AccountForm.php:72
+#: src/MosparoIntegration/Module/Account/AccountForm.php:113
+#: src/MosparoIntegration/Module/Account/AccountForm.php:151
+#, php-format
+msgid "A general error occurred: %s"
+msgstr "Ein genereller Fehler ist aufgetreten: %s"
+
+#: src/MosparoIntegration/Module/Account/AccountForm.php:84
+#: src/MosparoIntegration/Module/Account/AccountForm.php:125
+#: src/MosparoIntegration/Module/Account/AccountForm.php:163
+#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:124
+#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:88
+#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:100
+msgid "Verification failed which means the form contains spam."
+msgstr ""
+"Die Überprüfung ist fehlgeschlagen, was bedeutet, dass das Formular Spam "
+"enthält."
+
+#: src/MosparoIntegration/Module/Account/AccountModule.php:13
+msgid "Account"
+msgstr "Konto"
+
+#: src/MosparoIntegration/Module/Account/AccountModule.php:14
+msgid ""
+"Protects the account forms like login, register and password reset with "
+"mosparo."
+msgstr ""
+"Schützt die Konto-Formulare wie Login, Registrieren und Passwort "
+"zurücksetzen mit mosparo."
 
 #: src/MosparoIntegration/Module/Comments/CommentsModule.php:14
 msgid "Comments"
@@ -183,17 +213,6 @@ msgstr "Schützt die Contact Form 7-Formulare mit mosparo."
 #: src/MosparoIntegration/Module/GravityForms/MosparoField.php:75
 msgid "Submit or validation token is empty."
 msgstr "Sende- oder Validierungstoken ist leer."
-
-#: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:124
-#: src/MosparoIntegration/Module/Formidable/FormidableModule.php:88
-#: src/MosparoIntegration/Module/GravityForms/MosparoField.php:100
-#: src/MosparoIntegration/Module/User/UserForm.php:84
-#: src/MosparoIntegration/Module/User/UserForm.php:125
-#: src/MosparoIntegration/Module/User/UserForm.php:163
-msgid "Verification failed which means the form contains spam."
-msgstr ""
-"Die Überprüfung ist fehlgeschlagen, was bedeutet, dass das Formular Spam "
-"enthält."
 
 #: src/MosparoIntegration/Module/ContactForm7/MosparoField.php:192
 #, php-format
@@ -272,24 +291,6 @@ msgstr "Ninja Forms"
 #: src/MosparoIntegration/Module/NinjaForms/NinjaFormsModule.php:20
 msgid "Protects Ninja Forms forms with mosparo."
 msgstr "Schützt Ninja Forms-Formulare mit Mosparo."
-
-#: src/MosparoIntegration/Module/User/UserForm.php:72
-#: src/MosparoIntegration/Module/User/UserForm.php:113
-#: src/MosparoIntegration/Module/User/UserForm.php:151
-#, php-format
-msgid "A general error occurred: %s"
-msgstr "Ein genereller Fehler ist aufgetreten: %s"
-
-#: src/MosparoIntegration/Module/User/UserModule.php:13
-msgid "User"
-msgstr "Konto"
-
-#: src/MosparoIntegration/Module/User/UserModule.php:14
-msgid ""
-"Protects the user forms like login, register and password reset with mosparo."
-msgstr ""
-"Schützt die Konto-Formulare wie Login, Registrieren und Passwort "
-"zurücksetzen mit mosparo."
 
 #: src/MosparoIntegration/Module/WPForms/MosparoField.php:99
 msgid "No mosparo field found in this form."

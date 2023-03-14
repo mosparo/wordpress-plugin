@@ -1,13 +1,13 @@
 <?php
 
-namespace MosparoIntegration\Module\User;
+namespace MosparoIntegration\Module\Account;
 
 use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use WP_Error;
 
-class UserForm
+class AccountForm
 {
     private static $instance;
 
@@ -37,7 +37,7 @@ class UserForm
     public function displayMosparoField()
     {
         $configHelper = ConfigHelper::getInstance();
-        $connection = $configHelper->getConnectionFor('module_user');
+        $connection = $configHelper->getConnectionFor('module_account');
         if ($connection === false) {
             echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
             return;
@@ -52,7 +52,7 @@ class UserForm
         $errors = new WP_Error();
 
         $configHelper = ConfigHelper::getInstance();
-        $connection = $configHelper->getConnectionFor('module_user');
+        $connection = $configHelper->getConnectionFor('module_account');
         if ($connection === false) {
             return $user;
         }
@@ -60,7 +60,7 @@ class UserForm
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_user_login_form_data', [
+        $formData = apply_filters('mosparo_integration_account_login_form_data', [
             'log' => sanitize_user($_REQUEST['log']),
         ]);
 
@@ -93,7 +93,7 @@ class UserForm
     public function verifyLostPasswordForm(WP_Error $errors)
     {
         $configHelper = ConfigHelper::getInstance();
-        $connection = $configHelper->getConnectionFor('module_user');
+        $connection = $configHelper->getConnectionFor('module_account');
         if ($connection === false) {
             return;
         }
@@ -101,8 +101,8 @@ class UserForm
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_user_lost_password_form_data', [
-            'user_login' => sanitize_text_field($_REQUEST['user_login']),
+        $formData = apply_filters('mosparo_integration_account_lost_password_form_data', [
+            'user_login' => sanitize_user($_REQUEST['user_login']),
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
@@ -130,7 +130,7 @@ class UserForm
     public function verifyRegisterForm($username, $email, WP_Error $errors)
     {
         $configHelper = ConfigHelper::getInstance();
-        $connection = $configHelper->getConnectionFor('module_user');
+        $connection = $configHelper->getConnectionFor('module_account');
         if ($connection === false) {
             return;
         }
@@ -138,8 +138,8 @@ class UserForm
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_user_register_form_data', [
-            'user_login' => sanitize_text_field($_REQUEST['user_login']),
+        $formData = apply_filters('mosparo_integration_account_register_form_data', [
+            'user_login' => sanitize_user($_REQUEST['user_login']),
             'user_email' => sanitize_email($_REQUEST['user_email']),
         ]);
 
@@ -155,7 +155,7 @@ class UserForm
 
         // Confirm that all required fields were verified
         $verifiedFields = array_keys($verificationResult->getVerifiedFields());
-        $fieldDifference = array_diff(['user_login', 'user_email2'], $verifiedFields);
+        $fieldDifference = array_diff(['user_login', 'user_email'], $verifiedFields);
 
         if (!$verificationResult->isSubmittable() || !empty($fieldDifference)) {
             $errors->add(

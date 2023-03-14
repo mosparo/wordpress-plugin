@@ -9,7 +9,7 @@ use MosparoIntegration\Module\Formidable\FormidableModule;
 use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
-use MosparoIntegration\Module\User\UserModule;
+use MosparoIntegration\Module\Account\AccountModule;
 
 class ModuleHelper
 {
@@ -22,7 +22,7 @@ class ModuleHelper
         GravityFormsModule::class,
         NinjaFormsModule::class,
         WPFormsModule::class,
-        UserModule::class,
+        AccountModule::class,
     ];
     protected $activeModules = [];
 
