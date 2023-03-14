@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2023-03-14 19:56+0100\n"
+"POT-Creation-Date: 2023-03-14 20:20+0100\n"
 "PO-Revision-Date: 2023-03-11 09:47+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -58,7 +58,7 @@ msgstr ""
 
 #: src/MosparoIntegration/Admin/ConnectionListTable.php:155
 #: views/admin/connection-form.php:101
-msgid "Default"
+msgid "General"
 msgstr ""
 
 #: src/MosparoIntegration/Admin/ModuleListTable.php:42

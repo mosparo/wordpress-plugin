@@ -152,7 +152,7 @@ class ConnectionListTable extends WP_List_Table
 
         // The general should always be the first default string
         if (in_array('general', $defaults)) {
-            $strings[] = '<strong>' . __('Default', 'mosparo-integration') . '</strong>';
+            $strings[] = '<strong>' . __('General', 'mosparo-integration') . '</strong>';
         }
 
         foreach ($defaults as $default) {

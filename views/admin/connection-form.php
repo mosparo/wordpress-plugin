@@ -98,7 +98,7 @@
                         }
                     ?>
                     <tr>
-                        <th><?php _e('Default', 'mosparo-integration'); ?></th>
+                        <th><?php _e('General', 'mosparo-integration'); ?></th>
                         <td>
                             <label for="defaultGeneral">
                                 <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?>>

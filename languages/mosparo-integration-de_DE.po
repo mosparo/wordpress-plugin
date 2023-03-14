@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: mosparo Integration\n"
-"POT-Creation-Date: 2023-03-14 19:56+0100\n"
-"PO-Revision-Date: 2023-03-14 19:56+0100\n"
+"POT-Creation-Date: 2023-03-14 20:20+0100\n"
+"PO-Revision-Date: 2023-03-14 20:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: de_DE\n"
@@ -58,8 +58,8 @@ msgstr "Löschen"
 
 #: src/MosparoIntegration/Admin/ConnectionListTable.php:155
 #: views/admin/connection-form.php:101
-msgid "Default"
-msgstr "Standard"
+msgid "General"
+msgstr "Allgemein"
 
 #: src/MosparoIntegration/Admin/ModuleListTable.php:42
 msgid "No modules found"
@@ -417,10 +417,10 @@ msgstr ""
 msgid "https://mosparo.io/"
 msgstr "https://mosparo.io"
 
-#~ msgid "Standard"
+#~ msgid "Default"
 #~ msgstr "Standard"
 
-#~ msgid "General"
+#~ msgid "Standard"
 #~ msgstr "Standard"
 
 #, fuzzy
