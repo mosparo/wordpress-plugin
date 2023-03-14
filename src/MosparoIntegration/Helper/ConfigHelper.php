@@ -82,23 +82,24 @@ class ConfigHelper
 
     public function hasConnection($key)
     {
-        return (isset($this->config['connections'][$key]));
+        $connections = $this->getConnections();
+
+        return isset($connections[$key]);
     }
 
     public function getConnection($key)
     {
-        return $this->config['connections'][$key] ?? false;
+        $connections = $this->getConnections();
+
+        return $connections[$key] ?? false;
     }
 
     public function getConnectionFor($key, $fallbackToGeneral = true)
     {
+        $connections = $this->getConnections();
         $generalConnection = false;
 
-        if (!isset($this->config['connections'])) {
-            $this->config['connections'] = [];
-        }
-
-        foreach ($this->config['connections'] as $connection) {
+        foreach ($connections as $connection) {
             if ($connection->isDefaultFor($key)) {
                 return $connection;
             } else if ($connection->isDefaultFor('general')) {
@@ -115,7 +116,9 @@ class ConfigHelper
 
     public function resetDefaultConnections($defaults)
     {
-        foreach ($this->config['connections'] as $connection) {
+        $connections = $this->getConnections();
+
+        foreach ($connections as $connection) {
             foreach ($defaults as $default) {
                 if ($connection->isDefaultFor($default)) {
                     $connection->removeDefault($default);
