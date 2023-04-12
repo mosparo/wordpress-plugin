@@ -64,6 +64,11 @@ class MosparoAction extends NF_Abstracts_Action
 			return $nfData;
 		}
 
+        // Stop the verification if the mosparo tag is not found in the form
+        if (!$this->searchMosparoFieldInForm($nfData)) {
+            return $nfData;
+        }
+
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_ninja-forms');
         if ($connection === false) {
@@ -152,5 +157,22 @@ class MosparoAction extends NF_Abstracts_Action
         $data = apply_filters('mosparo_integration_ninja_forms_get_form_data', $data);
 
         return [$tokens, $data, $requiredFields];
+    }
+
+    /**
+     * Returns true if the form contains a mosparo field
+     *
+     * @param array $nfData
+     * @return bool
+     */
+    protected function searchMosparoFieldInForm($nfData)
+    {
+        foreach ($nfData['fields'] as $field) {
+            if ($field['type'] === 'mosparo') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
