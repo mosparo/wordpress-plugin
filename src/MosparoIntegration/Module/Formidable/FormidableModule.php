@@ -51,6 +51,11 @@ class FormidableModule extends AbstractModule
 
     public function validateForm($errors, $values, $data)
     {
+        // Stop the verification if the mosparo tag is not found in the form
+        if (!$this->searchMosparoFieldInForm($data['posted_fields'])) {
+            return $errors;
+        }
+
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_formidable');
         if ($connection === false) {
@@ -149,5 +154,16 @@ class FormidableModule extends AbstractModule
         $formData = apply_filters('mosparo_integration_formidable_form_data', $formData);
 
         return [ $formData, $requiredFields ];
+    }
+
+    protected function searchMosparoFieldInForm($postedFields)
+    {
+        foreach ($postedFields as $key => $field) {
+            if ($field->type === 'mosparo') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
