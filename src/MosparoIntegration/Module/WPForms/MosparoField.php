@@ -78,6 +78,11 @@ class MosparoField extends WPForms_Field
 
     public function validateSubmission($fields, $entry, $formData)
     {
+        // Stop the verification if the mosparo tag is not found in the form
+        if (!$this->searchMosparoFieldInForm($formData)) {
+            return;
+        }
+
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_wpforms');
         if ($connection === false) {
@@ -181,5 +186,16 @@ class MosparoField extends WPForms_Field
         $data = apply_filters('mosparo_integration_wpforms_get_form_data', $data);
 
         return [ $data, $requiredFields ];
+    }
+
+    protected function searchMosparoFieldInForm($formData)
+    {
+        foreach ($formData['fields'] as $key => $field) {
+            if ($field['type'] === 'mosparo') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
