@@ -80,6 +80,11 @@ class MosparoField
             return $spam;
         }
 
+        // Stop the verification if the mosparo tag is not found in the form
+        if (!$this->searchMosparoFieldInForm($submission)) {
+            return $spam;
+        }
+
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_contact-form-7');
         if ($connection === false) {
@@ -219,5 +224,17 @@ class MosparoField
             </div>
         </div>
         <?php
+    }
+
+    protected function searchMosparoFieldInForm(WPCF7_Submission $submission)
+    {
+        $tags = $submission->get_contact_form()->scan_form_tags();
+        foreach ($tags as $tag) {
+            if ($tag->type === 'mosparo') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
