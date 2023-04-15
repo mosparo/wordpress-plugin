@@ -65,7 +65,7 @@ class MosparoField extends GF_Field
             return;
         }
 
-        [ $formData, $requiredFields ] = $this->getFormData($form);
+        [ $formData, $requiredFields, $verifiableFields ] = $this->getFormData($form);
         $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
@@ -89,8 +89,9 @@ class MosparoField extends GF_Field
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 $this->failed_validation = false;
                 return;
             }
@@ -104,6 +105,7 @@ class MosparoField extends GF_Field
     {
         $formData = [];
         $requiredFields = [];
+        $verifiableFields = [];
         $ignoredTypes = apply_filters('mosparo_integration_gravity_forms_ignored_field_types', [
             'checkbox',
             'radio',
@@ -128,6 +130,13 @@ class MosparoField extends GF_Field
             'shipping',
             'total',
         ]);
+        $verifiableFieldTypes = apply_filters('mosparo_integration_gravity_forms_verifiable_field_types', [
+            'text',
+            'textarea',
+            'name',
+            'email',
+            'website',
+        ]);
 
         foreach ($form['fields'] as $field) {
             if (in_array($field['type'], $ignoredTypes)) {
@@ -144,10 +153,15 @@ class MosparoField extends GF_Field
 
                     $subValue = $value[$subField['id']];
 
-                    $formData['input_' . $subField['id']] = $subValue;
+                    $fieldKey = 'input_' . $subField['id'];
+                    $formData[$fieldKey] = $subValue;
 
                     if ($field['isRequired']) {
-                        $requiredFields[] = 'input_' . $subField['id'];
+                        $requiredFields[] = $fieldKey;
+                    }
+
+                    if (in_array($field['type'], $verifiableFieldTypes)) {
+                        $verifiableFields[] = $fieldKey;
                     }
                 }
             } else {
@@ -155,24 +169,32 @@ class MosparoField extends GF_Field
                     $value = [];
                 }
 
-                $formData['input_' . $field['id']] = $value;
+                $fieldKey = 'input_' . $field['id'];
+                $formData[$fieldKey] = $value;
 
                 if ($field['isRequired']) {
-                    $requiredFields[] = 'input_' . $field['id'];
+                    $requiredFields[] = $fieldKey;
+                }
+
+                if (in_array($field['type'], $verifiableFieldTypes)) {
+                    $verifiableFields[] = $fieldKey;
                 }
 
                 if ($field['type'] === 'email' && $field['emailConfirmEnabled'] ?? false) {
-                    $formData['input_' . $field['id'] . '_2'] = $value;
+                    $secondFieldKey = 'input_' . $field['id'] . '_2';
+                    $formData[$secondFieldKey] = $value;
 
                     if ($field['isRequired']) {
-                        $requiredFields[] = 'input_' . $field['id'] . '_2';
+                        $requiredFields[] = $secondFieldKey;
                     }
+
+                    $verifiableFields[] = $secondFieldKey;
                 }
             }
         }
 
         $formData = apply_filters('mosparo_integration_gravity_forms_form_data', $formData);
 
-        return [ $formData, $requiredFields ];
+        return [ $formData, $requiredFields, $verifiableFields ];
     }
 }
