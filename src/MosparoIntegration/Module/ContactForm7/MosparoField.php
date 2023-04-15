@@ -91,7 +91,7 @@ class MosparoField
             return $spam;
         }
 
-        [ $formData, $requiredFields ] = $this->getFormData($submission);
+        [ $formData, $requiredFields, $verifiableFields ] = $this->getFormData($submission);
         $submitToken = trim(sanitize_text_field($formData['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($formData['_mosparo_validationToken'] ?? ''));
 
@@ -117,8 +117,9 @@ class MosparoField
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 return false;
             }
         }
@@ -135,6 +136,7 @@ class MosparoField
     protected function getFormData(WPCF7_Submission $submission): array
     {
         $requiredFields = [];
+        $verifiableFields = [];
         $ignoredTypes = apply_filters('mosparo_integration_cf7_ignored_field_types', [
             'checkbox',
             'checkbox*',
@@ -146,6 +148,17 @@ class MosparoField
             'submit',
             'mosparo'
         ]);
+        $verifiableFieldTypes = apply_filters('mosparo_integration_cf7_verifiable_field_types', [
+            'text',
+            'text*',
+            'textarea',
+            'textarea*',
+            'email',
+            'email*',
+            'url',
+            'url*',
+        ]);
+
         $formData = (array) $_POST;
         $tags = $submission->get_contact_form()->scan_form_tags();
 
@@ -170,6 +183,7 @@ class MosparoField
                 $requiredFields[] = $tag->name;
             }
 
+            $value = null;
             if (isset($this->originalValues[$tag->name])) {
                 $value = $this->originalValues[$tag->name];
             } else {
@@ -179,11 +193,15 @@ class MosparoField
             if ($value !== null) {
                 $formData[$tag->name] = $value;
             }
+
+            if (in_array($tag->type, $verifiableFieldTypes)) {
+                $verifiableFields[] = $tag->name;
+            }
         }
 
         $formData = apply_filters('mosparo_integration_cf7_form_data', $formData);
 
-        return [ $formData, $requiredFields ];
+        return [ $formData, $requiredFields, $verifiableFields ];
     }
 
     public function getTagGeneratorContent($contactForm, $args = '')
