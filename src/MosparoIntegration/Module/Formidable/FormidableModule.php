@@ -98,7 +98,7 @@ class FormidableModule extends AbstractModule
     {
         $formData = [];
         $requiredFields = [];
-        $ignoredTypes = apply_filters('mosparo_integration_cf7_ignored_field_types', [
+        $ignoredTypes = apply_filters('mosparo_integration_formidable_ignored_field_types', [
             'checkbox',
             'radio',
             'select',

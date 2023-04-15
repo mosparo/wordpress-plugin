@@ -104,7 +104,7 @@ class MosparoField extends GF_Field
     {
         $formData = [];
         $requiredFields = [];
-        $ignoredTypes = apply_filters('mosparo_integration_cf7_ignored_field_types', [
+        $ignoredTypes = apply_filters('mosparo_integration_gravity_forms_ignored_field_types', [
             'checkbox',
             'radio',
             'hidden',
