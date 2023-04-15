@@ -4,7 +4,7 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.2
 Requires PHP: 7.4
-Stable tag: 1.2
+Stable tag: 1.3
 License: MIT
 
 The plugin adds the functionality to your website to use mosparo in the WordPress comment and account forms (login, lost password, register) or a form from Contact Form 7, Everest Forms, Formidable, Gravity Forms, Ninja Forms, or WPForms.
@@ -18,3 +18,23 @@ You can use different projects for the different modules. This is required, for 
 	 
 == Installation ==
 After installing the plugin, please go to Settings > mosparo Integration and add a connection to your mosparo installation. For this, you need the host, the UUID, the public, and the private key of the mosparo project. You can add multiple connections to use different connections for the different modules.
+
+== Changelog ==
+
+= 1.3 =
+*Release Date: 15th April 2023*
+
+* [Enhancement] Optimized the protection with the verifiable fields check in all modules (except comments and account)
+* [Fix] Fixed the repeater field in the Formidable forms
+* [Fix] Fixed the repeater field in the NinjaForms forms
+
+= 1.2 =
+*Release Date: 12th April 2023*
+
+* [Fix] Check for the mosparo field in the form before executing the validation (Modules: Contact Form 7, Formidable, NinjaForms, and WPForms)
+
+= 1.1 =
+*Release Date: 14th March 2023*
+
+* [Enhancement] Added the modules for Everest Forms, Formidable, Gravity Forms, and the WordPress account forms.
+* [Enhancement] Added the ability to configure multiple connections to different mosparo projects
