@@ -106,7 +106,7 @@ class MosparoField extends WPForms_Field
         }
 
         // Find the validation data
-        [ $data, $requiredFields ] = $this->getFormData($entry, $formData);
+        [ $data, $requiredFields, $verifiableFields ] = $this->getFormData($entry, $formData);
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
@@ -123,8 +123,9 @@ class MosparoField extends WPForms_Field
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 return;
             }
         }
@@ -134,7 +135,10 @@ class MosparoField extends WPForms_Field
 
     protected function getFormData($entry, $formData)
     {
-        $ignoredFields = apply_filters('mosparo_integration_wpforms_ignored_field_types', [
+        $data = [];
+        $requiredFields = [];
+        $verifiableFields = [];
+        $ignoredTypes = apply_filters('mosparo_integration_wpforms_ignored_field_types', [
             'radio',
             'checkbox',
             'file-upload',
@@ -155,12 +159,17 @@ class MosparoField extends WPForms_Field
             'captcha-grecaptcha',
             'captcha-hcaptcha'
         ]);
-        $data = [];
-        $requiredFields = [];
+        $verifiableFieldTypes = apply_filters('mosparo_integration_wpforms_verifiable_field_types', [
+            'text',
+            'textarea',
+            'name',
+            'email',
+            'url',
+        ]);
         $fieldsData = $entry['fields'];
 
         foreach ($formData['fields'] as $key => $field) {
-            if (in_array($field['type'], $ignoredFields)) {
+            if (in_array($field['type'], $ignoredTypes)) {
                 continue;
             }
 
@@ -172,6 +181,10 @@ class MosparoField extends WPForms_Field
                     if ($field['required'] == 1) {
                         $requiredFields[] = $name;
                     }
+
+                    if (in_array($field['type'], $verifiableFieldTypes)) {
+                        $verifiableFields[] = $name;
+                    }
                 }
             } else {
                 $name = sprintf('wpforms[fields][%s]', $key);
@@ -180,12 +193,16 @@ class MosparoField extends WPForms_Field
                 if ($field['required'] == 1) {
                     $requiredFields[] = $name;
                 }
+
+                if (in_array($field['type'], $verifiableFieldTypes)) {
+                    $verifiableFields[] = $name;
+                }
             }
         }
 
         $data = apply_filters('mosparo_integration_wpforms_get_form_data', $data);
 
-        return [ $data, $requiredFields ];
+        return [ $data, $requiredFields, $verifiableFields ];
     }
 
     protected function searchMosparoFieldInForm($formData)
