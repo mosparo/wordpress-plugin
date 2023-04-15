@@ -108,19 +108,13 @@ class FormidableModule extends AbstractModule
             'captcha',
             'mosparo',
             'file',
-            'date',
-            'time',
             'scale',
             'star',
             'range',
             'toggle',
-            'data',
-            'lookup',
-            'divider|repeat',
-            'divider',
             'break',
-            'form',
             'likert',
+            'end_divider',
             'nps',
             'password',
             'tag',
@@ -144,7 +138,29 @@ class FormidableModule extends AbstractModule
                 $requiredFields[] = $fullKey;
             }
 
-            $formData[$fullKey] = $values['item_meta'][$field->id];
+            $value = $values['item_meta'][$field->id] ?? '';
+
+            if (is_array($value) && isset($value['row_ids'])) {
+                foreach ($value['row_ids'] as $idx) {
+                    $row = $value[$idx];
+                    $rowKey = $fullKey . '[' . $idx . ']';
+
+                    foreach ($row as $subKey => $subValue) {
+                        if ($subKey === 0) {
+                            continue;
+                        }
+
+                        $fullSubKey = $rowKey . '[' . $subKey . ']';
+                        $formData[$fullSubKey] = $subValue;
+                    }
+                }
+            } else if (is_array($value) && !isset($value['row_ids'])) {
+                foreach ($value as $subKey => $val) {
+                    $formData[$fullKey . '[' . $subKey . ']'] = $val;
+                }
+            } else {
+                $formData[$fullKey] = $value;
+            }
         }
 
         if (isset($values['frm_verify'])) {
