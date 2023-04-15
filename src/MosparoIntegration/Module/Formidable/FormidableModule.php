@@ -62,7 +62,7 @@ class FormidableModule extends AbstractModule
             return $errors;
         }
 
-        [ $formData, $requiredFields ] = $this->getFormData($values, $data['posted_fields']);
+        [ $formData, $requiredFields, $verifiableFields ] = $this->getFormData($values, $data['posted_fields']);
         $submitToken = trim(sanitize_text_field($values['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($values['_mosparo_validationToken'] ?? ''));
 
@@ -84,8 +84,9 @@ class FormidableModule extends AbstractModule
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 return $errors;
             }
         }
@@ -98,6 +99,7 @@ class FormidableModule extends AbstractModule
     {
         $formData = [];
         $requiredFields = [];
+        $verifiableFields = [];
         $ignoredTypes = apply_filters('mosparo_integration_formidable_ignored_field_types', [
             'checkbox',
             'radio',
@@ -126,6 +128,13 @@ class FormidableModule extends AbstractModule
             'quantity',
             'total',
         ]);
+        $verifiableFieldTypes = apply_filters('mosparo_integration_formidable_verifiable_field_types', [
+            'text',
+            'textarea',
+            'email',
+            'url',
+            'name',
+        ]);
 
         foreach ($postedFields as $key => $field) {
             if (in_array($field->type, $ignoredTypes)) {
@@ -134,13 +143,36 @@ class FormidableModule extends AbstractModule
 
             $fullKey = 'item_meta[' . $field->id . ']';
 
-            if ($field->required ?? false) {
-                $requiredFields[] = $fullKey;
-            }
-
             $value = $values['item_meta'][$field->id] ?? '';
 
-            if (is_array($value) && isset($value['row_ids'])) {
+            if ($field->type === 'divider' || $field->type === 'form') {
+                $subFields = \FrmField::get_all_for_form($field->field_options['form_select']);
+
+                foreach ($value as $subKey => $subValues) {
+                    if ($subKey === 'form' || $subKey === 'row_ids') {
+                        continue;
+                    }
+
+                    $subValKey = $fullKey . '[' . $subKey . ']';
+                    foreach ($subFields as $subField) {
+                        if (in_array($subField->type, $ignoredTypes)) {
+                            continue;
+                        }
+
+                        $fullSubKey = $subValKey . '[' . $subField->id . ']';
+
+                        if ($subField->required == 1) {
+                            $requiredFields[] = $fullSubKey;
+                        }
+
+                        if (in_array($subField->type, $verifiableFieldTypes)) {
+                            $verifiableFields[] = $fullSubKey;
+                        }
+
+                        $formData[$fullSubKey] = $subValues[$subField->id];
+                    }
+                }
+            } else if (is_array($value) && isset($value['row_ids'])) {
                 foreach ($value['row_ids'] as $idx) {
                     $row = $value[$idx];
                     $rowKey = $fullKey . '[' . $idx . ']';
@@ -152,14 +184,39 @@ class FormidableModule extends AbstractModule
 
                         $fullSubKey = $rowKey . '[' . $subKey . ']';
                         $formData[$fullSubKey] = $subValue;
+
+                        if ($field->required ?? false) {
+                            $requiredFields[] = $fullSubKey;
+                        }
+
+                        if (in_array($field->type, $verifiableFieldTypes)) {
+                            $verifiableFields[] = $fullSubKey;
+                        }
                     }
                 }
             } else if (is_array($value) && !isset($value['row_ids'])) {
                 foreach ($value as $subKey => $val) {
-                    $formData[$fullKey . '[' . $subKey . ']'] = $val;
+                    $fullSubKey = $fullKey . '[' . $subKey . ']';
+                    $formData[$fullSubKey] = $val;
+
+                    if ($field->required ?? false) {
+                        $requiredFields[] = $fullSubKey;
+                    }
+
+                    if (in_array($field->type, $verifiableFieldTypes)) {
+                        $verifiableFields[] = $fullSubKey;
+                    }
                 }
             } else {
                 $formData[$fullKey] = $value;
+
+                if ($field->required ?? false) {
+                    $requiredFields[] = $fullKey;
+                }
+
+                if (in_array($field->type, $verifiableFieldTypes)) {
+                    $verifiableFields[] = $fullKey;
+                }
             }
         }
 
@@ -169,7 +226,7 @@ class FormidableModule extends AbstractModule
 
         $formData = apply_filters('mosparo_integration_formidable_form_data', $formData);
 
-        return [ $formData, $requiredFields ];
+        return [ $formData, $requiredFields, $verifiableFields ];
     }
 
     protected function searchMosparoFieldInForm($postedFields)
