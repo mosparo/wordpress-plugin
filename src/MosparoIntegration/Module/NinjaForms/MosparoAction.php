@@ -76,7 +76,7 @@ class MosparoAction extends NF_Abstracts_Action
         }
 
         // Find the validation data
-        [$tokens, $data, $requiredFields] = $this->getFormData($nfData);
+        [$tokens, $data, $requiredFields, $verifiableFields] = $this->getFormData($nfData);
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($tokens['submitToken']) || empty($tokens['validationToken'])) {
@@ -91,8 +91,9 @@ class MosparoAction extends NF_Abstracts_Action
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 return $nfData;
             }
         }
@@ -110,7 +111,10 @@ class MosparoAction extends NF_Abstracts_Action
      */
     protected function getFormData($nfData)
     {
-        $ignoredFields = apply_filters('mosparo_integration_ninja_forms_ignored_field_types', [
+        $data = [];
+        $requiredFields = [];
+        $verifiableFields = [];
+        $ignoredTypes = apply_filters('mosparo_integration_ninja_forms_ignored_field_types', [
             'checkbox',
             'hr',
             'hidden',
@@ -123,21 +127,29 @@ class MosparoAction extends NF_Abstracts_Action
             'spam',
             'starrating',
             'submit',
-            'unknown'
+            'unknown',
+            'mosparo',
+        ]);
+        $verifiableFieldTypes = apply_filters('mosparo_integration_ninja_forms_verifiable_field_types', [
+            'textbox',
+            'textarea',
+            'firstname',
+            'lastname',
+            'address',
+            'city',
+            'email',
         ]);
 
-        $data = [];
-        $requiredFields = [];
         $tokens = ['submitToken' => '', 'validationToken' => ''];
 
         foreach ($nfData['fields'] as $field) {
-            if (in_array($field['type'], $ignoredFields)) {
-                continue;
-            }
-
             // Save the mosparo data separated
             if ($field['type'] == 'mosparo') {
                 $tokens = array_map('sanitize_text_field', $field['value']);
+                continue;
+            }
+
+            if (in_array($field['type'], $ignoredTypes)) {
                 continue;
             }
 
@@ -146,17 +158,52 @@ class MosparoAction extends NF_Abstracts_Action
                 $key = $field['settings']['custom_name_attribute'];
             }
 
-            if ($field['required'] == 1) {
-                $requiredFields[] = $key;
-            }
-
             $value = $field['value'];
-            $data[$key] = $value;
+            if ($field['type'] === 'repeater') {
+                foreach ($value as $subValue) {
+                    $id = $subValue['id'];
+                    $idParts = explode('.', $id);
+                    $subFieldIdPart = $idParts[1];
+
+                    $subFieldId = $field['id'] . '.' . substr($subFieldIdPart, 0, strpos($subFieldIdPart, '_'));
+                    foreach ($field['fields'] as $subField) {
+                        if ($subField['id'] != $subFieldId) {
+                            continue;
+                        }
+
+                        if (in_array($subField['type'], $ignoredTypes)) {
+                            continue;
+                        }
+
+                        $subKey = $key . '.' . $subFieldIdPart;
+
+                        if ($subField['required'] == 1) {
+                            $requiredFields[] = $subKey;
+                        }
+
+                        if (in_array($subField['type'], $verifiableFieldTypes)) {
+                            $verifiableFields[] = $subKey;
+                        }
+
+                        $data[$subKey] = $subValue['value'];
+                    }
+                }
+            } else {
+                if ($field['required'] == 1) {
+                    $requiredFields[] = $key;
+                }
+
+                if (in_array($field['type'], $verifiableFieldTypes)) {
+                    $verifiableFields[] = $key;
+                }
+
+                $data[$key] = $value;
+            }
         }
 
         $data = apply_filters('mosparo_integration_ninja_forms_get_form_data', $data);
 
-        return [$tokens, $data, $requiredFields];
+        return [$tokens, $data, $requiredFields, $verifiableFields];
     }
 
     /**
