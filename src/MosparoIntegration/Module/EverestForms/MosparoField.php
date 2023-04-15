@@ -82,7 +82,7 @@ class MosparoField extends EVF_Form_Fields
             return true;
         }
 
-        [ $formData, $requiredFields ] = $this->getFormData($form);
+        [ $formData, $requiredFields, $verifiableFields ] = $this->getFormData($form);
         $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
@@ -106,8 +106,9 @@ class MosparoField extends EVF_Form_Fields
             // Confirm that all required fields were verified
             $verifiedFields = array_keys($verificationResult->getVerifiedFields());
             $fieldDifference = array_diff($requiredFields, $verifiedFields);
+            $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
-            if ($verificationResult->isSubmittable() && empty($fieldDifference)) {
+            if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
                 return true;
             }
         }
@@ -130,6 +131,7 @@ class MosparoField extends EVF_Form_Fields
     {
         $formData = [];
         $requiredFields = [];
+        $verifiableFields = [];
         $ignoredTypes = apply_filters('mosparo_integration_everest_forms_ignored_field_types', [
             'title',
             'html',
@@ -161,6 +163,14 @@ class MosparoField extends EVF_Form_Fields
             'checkbox',
             'mosparo'
         ]);
+        $verifiableFieldTypes = apply_filters('mosparo_integration_everest_forms_verifiable_field_types', [
+            'text',
+            'textarea',
+            'first-name',
+            'last-name',
+            'email',
+            'url',
+        ]);
         $fields = $form['form_fields'];
         $fieldData = $form['entry']['form_fields'];
 
@@ -176,6 +186,10 @@ class MosparoField extends EVF_Form_Fields
             }
 
             $formData[$originFieldName] = $fieldData[$fieldName] ?? '';
+
+            if (in_array($field['type'], $verifiableFieldTypes)) {
+                $verifiableFields[] = $originFieldName;
+            }
         }
 
         if (isset($form['entry']['hp'])) {
@@ -184,6 +198,6 @@ class MosparoField extends EVF_Form_Fields
 
         $formData = apply_filters('mosparo_integration_everest_forms_form_data', $formData, $requiredFields);
 
-        return [ $formData, $requiredFields ];
+        return [ $formData, $requiredFields, $verifiableFields ];
     }
 }
