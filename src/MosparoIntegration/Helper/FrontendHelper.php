@@ -4,6 +4,7 @@ namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Entity\Connection;
 use MosparoIntegration\Module\ContactForm7\MosparoField as ContactForm7MosparoField;
+use MosparoIntegration\Module\ElementorForm\MosparoField as ElementorFormMosparoField;
 use MosparoIntegration\Module\WPForms\MosparoField as WpFormsMosparoField;
 use WP_Error;
 use GF_Field;
@@ -217,6 +218,17 @@ class FrontendHelper
                         
                         initializeMosparo();
                     });', $instanceId, $field->id),
+            ];
+        }
+
+        if (function_exists('elementor_pro_load_plugin') && $field instanceof ElementorFormMosparoField) {
+            return [
+                'before' => '',
+                'after' => '
+                    jQuery(document).ready(function () {
+                        initializeMosparo();
+                    });
+                ',
             ];
         }
 

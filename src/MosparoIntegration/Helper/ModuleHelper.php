@@ -4,6 +4,7 @@ namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Module\Comments\CommentsModule;
 use MosparoIntegration\Module\ContactForm7\ContactForm7Module;
+use MosparoIntegration\Module\ElementorForm\ElementorFormModule;
 use MosparoIntegration\Module\EverestForms\EverestFormsModule;
 use MosparoIntegration\Module\Formidable\FormidableModule;
 use MosparoIntegration\Module\GravityForms\GravityFormsModule;
@@ -15,14 +16,15 @@ class ModuleHelper
 {
     private static $instance;
     protected static $availableModules = [
+        AccountModule::class,
         CommentsModule::class,
         ContactForm7Module::class,
+        ElementorFormModule::class,
         EverestFormsModule::class,
         FormidableModule::class,
         GravityFormsModule::class,
         NinjaFormsModule::class,
         WPFormsModule::class,
-        AccountModule::class,
     ];
     protected $activeModules = [];
 
