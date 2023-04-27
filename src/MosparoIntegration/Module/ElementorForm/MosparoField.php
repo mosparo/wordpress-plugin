@@ -40,6 +40,7 @@ class MosparoField
     {
         add_filter('elementor_pro/forms/field_types', [$this, 'registerFieldType']);
         add_action('elementor_pro/forms/register/action', [$this, 'registerAction']);
+        add_action('elementor/element/form/section_form_fields/before_section_end', [$this, 'updateControls']);
         add_action('elementor_pro/forms/render/item', [$this, 'filterItem']);
         add_action('elementor_pro/forms/render_field/mosparo', [$this, 'displayFormField'], 10, 3);
         add_filter('elementor_pro/editor/localize_settings', [$this, 'localizeSettings']);
@@ -56,6 +57,30 @@ class MosparoField
     public function registerAction($module)
     {
         $module->add_component('mosparo', $this);
+    }
+
+    public function updateControls($widget)
+    {
+        $elementor = Plugin::elementor();
+        $controlData = $elementor->controls_manager->get_control_from_stack($widget->get_unique_name(), 'form_fields');
+
+        if (is_wp_error($controlData)) {
+            return;
+        }
+
+        foreach ($controlData['fields'] as $index => $field) {
+            if ('required' === $field['name'] || 'width' === $field['name']) {
+                $controlData['fields'][ $index ]['conditions']['terms'][] = [
+                    'name' => 'field_type',
+                    'operator' => '!in',
+                    'value' => [
+                        'mosparo',
+                    ],
+                ];
+            }
+        }
+
+        $widget->update_control('form_fields', $controlData);
     }
 
     public function localizeSettings($settings)
@@ -150,6 +175,8 @@ class MosparoField
             true
         );
     }
+
+
 
     public function verifyResponse(Form_Record $record, Ajax_Handler $ajaxHandler)
     {
