@@ -1,5 +1,5 @@
 h1.mosparo-header {
-    display: flex;
+    display: flex !important;
     justify-content: space-between;
 
     padding-top: 15px;
