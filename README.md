@@ -14,7 +14,7 @@
 
 ## Description
 The WordPress plugin adds the required functionality to your WordPress website to use mosparo in your forms.
-This plugin is compatible with WordPress comments and account forms (login, lost password, registration), Contact Form 7, Everest Forms, Formidable, Gravity Forms, Ninja Forms, and WPForms.
+This plugin is compatible with WordPress comments and account forms (login, lost password, registration), Contact Form 7, Elementor Form, Everest Forms, Formidable, Gravity Forms, Ninja Forms, and WPForms.
 
 ## Requirements
 To use the plugin, you must meet the following requirements:
