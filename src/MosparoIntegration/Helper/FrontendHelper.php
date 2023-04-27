@@ -224,11 +224,21 @@ class FrontendHelper
         if (function_exists('elementor_pro_load_plugin') && $field instanceof ElementorFormMosparoField) {
             return [
                 'before' => '',
-                'after' => '
+                'after' => sprintf('
                     jQuery(document).ready(function () {
                         initializeMosparo();
+                    
+                        let id = "mosparo-box-%s";
+                        jQuery("#" + id).parents("form").on("error", function () {
+                            if (!mosparoInstances[id]) {
+                                return;
+                            }
+                            
+                            mosparoInstances[id].resetState();
+                            mosparoInstances[id].requestSubmitToken();
+                        });
                     });
-                ',
+                ', $instanceId),
             ];
         }
 
