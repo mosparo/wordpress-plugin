@@ -31,12 +31,22 @@ class FrontendHelper
 
     public function initializeScheduleEvents()
     {
-        add_action('mosparo_integration_refresh_css_url_cache', [$this, 'refreshCssUrlCache']);
+        add_action('mosparo_integration_refresh_css_url_cache', [$this, 'refreshCssUrlCacheForAllConnections']);
     }
 
     public function initializeResourceRegistration()
     {
         add_action('wp_enqueue_scripts', [$this, 'registerResources']);
+    }
+
+    public function refreshCssUrlCacheForAllConnections()
+    {
+        $configHelper = ConfigHelper::getInstance();
+        $connections = $configHelper->getConnections();
+
+        foreach ($connections as $connection) {
+            $this->refreshCssUrlCache($connection);
+        }
     }
 
     public function clearCssUrlCache(Connection $connection)
