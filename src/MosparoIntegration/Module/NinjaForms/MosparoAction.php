@@ -145,7 +145,8 @@ class MosparoAction extends NF_Abstracts_Action
         foreach ($nfData['fields'] as $field) {
             // Save the mosparo data separated
             if ($field['type'] == 'mosparo') {
-                $tokens = array_map('sanitize_text_field', $field['value']);
+                $val = (is_array($field['value'])) ? $field['value'] : [];
+                $tokens = array_map('sanitize_text_field', $val);
                 continue;
             }
 

@@ -6,10 +6,15 @@ var mosparoFieldController = Marionette.Object.extend( {
         jQuery(document).on('nfFormReady', function (ev, form) {
             form.$el.find('.mosparo-integration-container').each(function () {
                 let model = nfRadio.channel('fields').request('get:field', jQuery(this).data('field-id'));
+                let formModel = nfRadio.channel("form-" + model.get('formID')).request("get:form")
 
                 let mosparoOptions = model.get('mosparoOptions');
                 mosparoOptions.onCheckForm = function () {
-                    Backbone.Radio.channel('fields').trigger('change:modelValue', model);
+                    nfRadio.channel('fields').trigger('change:modelValue', model);
+                };
+
+                mosparoOptions.doSubmitFormInvisible = function () {
+                    nfRadio.channel('form-' + model.get('formID')).request('submit', formModel);
                 };
 
                 let id = "mosparo-box-" + model.get('id');
@@ -18,24 +23,44 @@ var mosparoFieldController = Marionette.Object.extend( {
         });
 
         // Check the field status when the form is validated
-        var fieldsChannel = Backbone.Radio.channel('fields');
+        var fieldsChannel = nfRadio.channel('fields');
         this.listenTo(fieldsChannel, 'change:modelValue', this.validateRequired);
 
         // Check the field status when the form is submitted
-        var submitChannel = Backbone.Radio.channel('submit');
+        var submitChannel = nfRadio.channel('submit');
         this.listenTo(submitChannel, 'validate:field', this.validateRequired);
 
-        var formsChannel = Backbone.Radio.channel("forms");
-        this.listenTo(formsChannel, "submit:response", this.afterSubmit);
+        var formsChannel = nfRadio.channel('forms');
+        formsChannel.reply('maybe:validate', this.stopValidateIfInvisible, this);
+        this.listenTo(formsChannel, 'submit:response', this.afterSubmit);
+        this.listenTo(formsChannel, 'init:model', this.registerSubmitHandler);
 
         // Store the tokens in the field data before submission
-        var fieldChannel = Backbone.Radio.channel('mosparo');
+        var fieldChannel = nfRadio.channel('mosparo');
         fieldChannel.reply('get:submitData', this.beforeSubmit, this);
+    },
+
+    registerSubmitHandler: function (model)
+    {
+        let formChannel = nfRadio.channel('form-' + model.get('id'));
+        formChannel.reply('maybe:submit', this.stopValidateIfInvisible, this);
+        this.listenTo(formChannel, 'submit:cancel', this.checkFormIfInvisible);
     },
 
     beforeSubmit: function (fieldData, field)
     {
-        let el = jQuery('#mosparo-box-' + field.attributes.id);
+        let id = 'mosparo-box-' + field.attributes.id;
+        let mosparoInstance = mosparoInstances[id];
+
+        if (!mosparoInstance) {
+            return;
+        }
+
+        if (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData()) {
+            return false;
+        }
+
+        let el = jQuery('#' + id);
         fieldData.value = {
             submitToken: el.find('input[name="_mosparo_submitToken"]').val() || '',
             validationToken: el.find('input[name="_mosparo_validationToken"]').val() || ''
@@ -66,9 +91,37 @@ var mosparoFieldController = Marionette.Object.extend( {
 
         let el = jQuery('#mosparo-box-' + model.attributes.id).find('input[type="checkbox"]');
         if (el[0].checked) {
-            Backbone.Radio.channel('fields').request('remove:error', model.get('id'), 'custom-field-error');
+            nfRadio.channel('fields').request('remove:error', model.get('id'), 'custom-field-error');
         } else {
-            Backbone.Radio.channel('fields').request('add:error', model.get('id'), 'custom-field-error');
+            nfRadio.channel('fields').request('add:error', model.get('id'), 'custom-field-error');
+        }
+    },
+
+    stopValidateIfInvisible: function (model)
+    {
+        let id = jQuery('#nf-form-' + model.get('id') + '-cont .mosparo__container').prop('id');
+        let mosparoInstance = mosparoInstances[id];
+        if (!mosparoInstance) {
+            return;
+        }
+
+        if (mosparoInstance.invisible && (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData())) {
+            return false;
+        }
+    },
+
+    checkFormIfInvisible: function (model)
+    {
+        let id = jQuery('#nf-form-' + model.get('id') + '-cont .mosparo__container').prop('id');
+        let mosparoInstance = mosparoInstances[id];
+
+        if (!mosparoInstance) {
+            return;
+        }
+
+        if (mosparoInstance.invisible && (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData())) {
+            let ev = new CustomEvent('c_submit');
+            mosparoInstance.onSubmit(ev);
         }
     }
 });

@@ -24,6 +24,10 @@ class EverestFormsModule extends AbstractModule
         }
         
         add_filter('everest_forms_fields', [$this, 'addFieldType']);
+
+        add_action('wp_enqueue_scripts', function () use ($pluginDirectoryUrl) {
+            wp_enqueue_script('mosparo-ajax', $pluginDirectoryUrl . 'assets/module/everest-forms/js/mosparo-ajax.js', ['everest-forms-ajax-submission']);
+        });
     }
 
     public function addFieldType($fields)

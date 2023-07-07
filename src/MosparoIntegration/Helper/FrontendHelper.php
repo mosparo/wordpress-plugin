@@ -208,7 +208,10 @@ class FrontendHelper
 
         if (class_exists('GF_Field') && $field instanceof GF_Field) {
             return [
-                'before' => '',
+                'before' => '
+                    options.doSubmitFormInvisible = function () {
+                        formEl.parents("form").submit();
+                    };',
                 'after' => sprintf('
                     jQuery(document).on("gform_field_added", function(event, form, field) {
                         if (field["type"] === "mosparo") {
