@@ -13,7 +13,7 @@ class MosparoField extends EVF_Form_Fields
      * Constructor.
      */
     public function __construct() {
-        $this->name   = esc_html__( 'mosparo', 'everest-forms' );
+        $this->name   = esc_html__('mosparo', 'everest-forms');
         $this->type   = 'mosparo';
         $this->icon   = 'evf-icon evf-icon-captcha';
         $this->order  = 50;
@@ -21,16 +21,35 @@ class MosparoField extends EVF_Form_Fields
         $this->is_pro = false;
 
         $this->settings = array(
-            'basic-options'    => array(
+            'basic-options' => array(
                 'field_options' => array(
-                    'label',
                     'meta',
-                    'label_hide'
                 ),
             ),
         );
 
         parent::__construct();
+    }
+
+
+
+    /**
+     * @inheritDoc
+     */
+    public function field_prefill_value_property($properties, $field, $form_data)
+    {
+        $properties = parent::field_prefill_value_property($properties, $field, $form_data);
+
+        // Process only for current field.
+        if ( $this->type !== $field['type'] ) {
+            return $properties;
+        }
+
+        // We always hide the label for the mosparo box
+        $properties['label']['hidden'] = true;
+        $properties['label']['class'][] = 'evf-label-hide';
+
+        return $properties;
     }
 
     /**
@@ -58,7 +77,7 @@ class MosparoField extends EVF_Form_Fields
      */
     public function field_preview($field)
     {
-        $this->field_preview_option( 'label', $field );
+        $this->field_preview_option('label', $field);
 
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_everest-forms');

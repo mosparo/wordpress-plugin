@@ -13,6 +13,27 @@ class MosparoField extends FrmFieldType
      */
     protected $has_input = false;
 
+
+    /** Field HTML **/
+    public function default_html()
+    {
+        if (!$this->has_html) {
+            return '';
+        }
+
+        $input = $this->input_html();
+
+        $default_html = <<<DEFAULT_HTML
+<div id="frm_field_[id]_container" class="frm_form_field form-field [required_class][error_class]">
+    $input
+    [if description]<div class="frm_description" id="frm_desc_field_[key]">[description]</div>[/if description]
+    [if error]<div class="frm_error" role="alert" id="frm_error_field_[key]">[error]</div>[/if error]
+</div>
+DEFAULT_HTML;
+
+        return $default_html;
+    }
+
     /**
      * @inheritdoc
      */
