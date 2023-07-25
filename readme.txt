@@ -19,7 +19,20 @@ You can use different projects for the different modules. This is required, for 
 == Installation ==
 After installing the plugin, please go to Settings > mosparo Integration and add a connection to your mosparo installation. For this, you need the host, the UUID, the public, and the private key of the mosparo project. You can add multiple connections to use different connections for the different modules.
 
+== Upgrade Notice ==
+
+= 1.5 =
+
+**Everest Forms**
+Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
+
 == Changelog ==
+
+= 1.5 =
+*Release Date: 25th July 2023*
+
+* [Enhancement] Prepare the modules for the invisible mode of mosparo, which will be available with mosparo v1.0
+* [Fix] Hide the label for the mosparo field in the Everest Forms and Formidable plugins
 
 = 1.4.1 =
 *Release Date: 4th May 2023*

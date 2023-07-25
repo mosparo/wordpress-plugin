@@ -34,3 +34,10 @@ To use the plugin, please follow this installation instruction:
 6. Go to "Settings" > "mosparo Integration" and add a connection to connect your WordPress website with your mosparo installation
 7. Enable the needed modules
 8. If you want to add it to your contact form, edit your form and add the mosparo field
+
+## Upgrade Notice
+
+### Version 1.5
+
+#### Everest Forms
+Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
