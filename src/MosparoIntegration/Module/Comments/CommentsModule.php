@@ -3,7 +3,6 @@
 namespace MosparoIntegration\Module\Comments;
 
 use MosparoIntegration\Module\AbstractModule;
-use MosparoIntegration\Module\Comments\CommentForm;
 
 class CommentsModule extends AbstractModule
 {
