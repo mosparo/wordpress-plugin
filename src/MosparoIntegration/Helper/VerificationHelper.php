@@ -2,9 +2,9 @@
 
 namespace MosparoIntegration\Helper;
 
-use Mosparo\ApiClient\Client;
-use Mosparo\ApiClient\Exception;
-use Mosparo\ApiClient\VerificationResult;
+use MosparoDependencies\Mosparo\ApiClient\Client;
+use MosparoDependencies\Mosparo\ApiClient\Exception;
+use MosparoDependencies\Mosparo\ApiClient\VerificationResult;
 use MosparoIntegration\Entity\Connection;
 
 class VerificationHelper
@@ -12,7 +12,7 @@ class VerificationHelper
     private static $instance;
 
     /**
-     * @var \Mosparo\ApiClient\Exception;
+     * @var \MosparoDependencies\Mosparo\ApiClient\Exception;
      */
     protected $lastException;
 

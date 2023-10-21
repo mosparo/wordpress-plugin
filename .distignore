@@ -1,4 +1,5 @@
 assets/.wordpress-org
+vendor/
 .distignore
 .editorconfig
 .git

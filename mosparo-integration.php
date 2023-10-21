@@ -25,7 +25,7 @@ use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\ModuleHelper;
 
 require_once(__DIR__ . '/src/autoload.php');
-require_once(__DIR__ . '/vendor/autoload.php');
+require_once(__DIR__ . '/vendor-prefixed/autoload.php');
 
 function mosparoIntegrationInitialize()
 {

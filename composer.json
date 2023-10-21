@@ -14,5 +14,33 @@
     "require": {
         "php": ">=7.4.0 <8.1.0 || >=8.1.10",
         "mosparo/php-api-client": "^1.0"
+    },
+    "require-dev": {
+        "brianhenryie/strauss": "^0.14.0"
+    },
+    "extra": {
+        "mozart": {
+            "target_directory": "vendor-prefixed",
+            "dep_namespace": "MosparoDependencies\\",
+            "classmap_prefix": "MosparoDependencies_",
+            "constant_prefix": "MOS_",
+            "packages": [
+                "mosparo/php-api-client"
+            ],
+            "delete_vendor_packages": false,
+            "delete_vendor_files": false,
+            "include_author": false,
+            "include_modified_date": false
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "vendor/bin/strauss",
+            "scripts/copy-licenses.php"
+        ],
+        "post-update-cmd": [
+            "vendor/bin/strauss",
+            "scripts/copy-licenses.php"
+        ]
     }
 }
