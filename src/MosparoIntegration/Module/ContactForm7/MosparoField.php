@@ -37,9 +37,6 @@ class MosparoField
         // Register the filters to store the original value
         add_action('wpcf7_posted_data_select', [$this, 'storeOriginalValue'], 10, 3);
         add_action('wpcf7_posted_data_select*', [$this, 'storeOriginalValue'], 10, 3);
-        add_action('wpcf7_posted_data_checkbox', [$this, 'storeOriginalValue'], 10, 3);
-        add_action('wpcf7_posted_data_checkbox*', [$this, 'storeOriginalValue'], 10, 3);
-        add_action('wpcf7_posted_data_radio', [$this, 'storeOriginalValue'], 10, 3);
     }
 
     public function addFormTag()
@@ -66,10 +63,7 @@ class MosparoField
 
     public function storeOriginalValue($value, $originalValue, WPCF7_FormTag $tag)
     {
-        $pipes = $tag->pipes;
-        if (!empty($tag->name) && WPCF7_USE_PIPE && $pipes instanceof WPCF7_Pipes && !$pipes->zero()) {
-            $this->originalValues[$tag->name] = $originalValue;
-        }
+        $this->originalValues[$tag->name] = $originalValue;
 
         return $value;
     }
@@ -109,6 +103,9 @@ class MosparoField
         $formData = array_filter($formData, function($key) {
             return strpos($key, '_mosparo_') === false;
         }, ARRAY_FILTER_USE_KEY);
+
+        /*var_dump($formData);
+        exit;*/
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
@@ -189,6 +186,8 @@ class MosparoField
             } else {
                 $value = $submission->get_posted_data($tag->name);
             }
+
+            //var_dump($tag->name, $value);
 
             if ($value !== null) {
                 $formData[$tag->name] = $value;
