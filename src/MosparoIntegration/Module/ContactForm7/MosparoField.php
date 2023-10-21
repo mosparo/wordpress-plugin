@@ -6,7 +6,6 @@ use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
 use MosparoIntegration\Helper\VerificationHelper;
 use WPCF7_FormTag;
-use WPCF7_Pipes;
 use WPCF7_Submission;
 
 class MosparoField
