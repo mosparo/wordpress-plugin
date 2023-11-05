@@ -20,27 +20,12 @@ class ConnectionListTable extends WP_List_Table
         ]);
 
         $this->pageName = sanitize_key($_REQUEST['page']);
-
-        add_action('admin_head', [$this, 'addToAdminHeader']);
-    }
-
-    function addToAdminHeader()
-    {
-        if ($this->pageName != 'mosparo-configuration') {
-            return;
-        }
-
-        echo '<style type="text/css">';
-        echo '.wp-list-table .column-connection_name { width: 25%; }';
-        echo '.wp-list-table .column-connection_host { width: 35%; }';
-        echo '.wp-list-table .column-connection_uuid { width: 20%;}';
-        echo '.wp-list-table .column-connection_defaults { width: 20%;}';
-        echo '</style>';
     }
 
     public function no_items()
     {
-        _e('No connections found', 'mosparo-integration');
+        $adminHelper = AdminHelper::getInstance();
+        $adminHelper->displayHowToUseBox();
     }
 
     public function single_row($item)

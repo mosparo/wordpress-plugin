@@ -20,21 +20,6 @@ class ModuleListTable extends WP_List_Table
         ]);
 
         $this->pageName = sanitize_key($_REQUEST['page']);
-
-        add_action('admin_head', [$this, 'addToAdminHeader']);
-    }
-
-    function addToAdminHeader()
-    {
-        if ($this->pageName != 'mosparo-configuration') {
-            return;
-        }
-
-        echo '<style type="text/css">';
-        echo '.wp-list-table .column-module_name { width: 40%; }';
-        echo '.wp-list-table .column-description { width: 35%; }';
-        echo '.wp-list-table .column-dependencies { width: 20%;}';
-        echo '</style>';
     }
 
     public function no_items()

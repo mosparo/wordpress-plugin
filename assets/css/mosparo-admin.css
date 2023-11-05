@@ -5,3 +5,99 @@ h1.mosparo-header {
     padding-top: 15px;
     padding-bottom: 10px;
 }
+
+.wp-list-table .column-connection_name {
+    width: 25%;
+}
+
+.wp-list-table .column-connection_host {
+    width: 35%;
+}
+
+.wp-list-table .column-connection_uuid {
+    width: 20%;
+}
+
+.wp-list-table .column-connection_defaults {
+    width: 20%;
+}
+
+.wp-list-table .mosparo-how-to-use-box {
+    text-align: center;
+    padding: 48px;
+}
+
+.wp-list-table .column-module_name {
+    width: 35%;
+}
+
+.wp-list-table .column-description {
+    width: 45%;
+}
+
+.wp-list-table .column-dependencies {
+    width: 20%;
+}
+
+.mosparo-how-to-use-box h1 {
+    padding-top: 0 !important;
+}
+
+.widefat td .mosparo-how-to-use-box p.tight-text-box {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wp-core-ui .mosparo-how-to-use-box .button.button-space-left {
+    margin-left: 10px;
+}
+
+.mosparo-two-columns {
+    display: flex;
+}
+
+.mosparo-two-columns .left-column {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.mosparo-two-columns .right-column {
+    width: 33.3333%;
+}
+
+.mosparo-two-columns .right-column .mosparo-how-to-use-box {
+    padding: 48px;
+
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+
+    text-align: center;
+}
+
+@media (max-width: 1110px) {
+    .mosparo-two-columns .right-column .mosparo-how-to-use-box {
+        padding: 32px;
+    }
+}
+
+@media (max-width: 880px) {
+    .mosparo-two-columns {
+        display: block;
+    }
+
+    .mosparo-two-columns .left-column {
+        padding-right: 0;
+    }
+
+    .mosparo-two-columns .right-column {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .mosparo-two-columns .right-column .mosparo-how-to-use-box {
+        padding: 24px;
+    }
+}

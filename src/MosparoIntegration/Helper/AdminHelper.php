@@ -326,4 +326,18 @@ class AdminHelper
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-integration')));
         }
     }
+
+    public function displayHowToUseBox($withAddButton = true)
+    {
+        echo '<div class="mosparo-how-to-use-box">';
+        echo '<h1>' . __('How to use', 'mosparo-integration') . '</h1>';
+        echo '<p class="tight-text-box">' . __('To use the mosparo plugin, you need a connection to a mosparo project. Learn more about the next steps on our website.', 'mosparo-integration') . '</p>';
+        echo '<a href="https://mosparo.io/how-to-use/" class="button button-primary" target="_blank">' . __('Read more', 'mosparo-integration') . '</a>';
+
+        if ($withAddButton) {
+            echo '<a href="' . esc_url($this->buildConfigPageUrl(['action' => 'add-connection'])) . '" class="button button-secondary button-space-left">' . __('Add connection', 'mosparo-integration') . '</a>';
+        }
+
+        echo '</div>';
+    }
 }
