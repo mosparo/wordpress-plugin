@@ -25,15 +25,25 @@ class AdminHelper
     {
     }
 
-    public function initializeAdmin($pluginPath, $pluginUrl)
+    public function initializeAdmin($pluginPath, $pluginUrl, $pluginBasename)
     {
         $this->pluginPath = $pluginPath;
         $this->pluginUrl = $pluginUrl;
 
+        add_filter('plugin_action_links_' . $pluginBasename, [$this, 'addPluginLink']);
         add_action('admin_menu', [$this, 'registerSubmenu']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueStyles']);
         add_action('admin_post', [$this, 'saveSettings']);
         add_action('admin_init', [$this, 'executeAction']);
+    }
+
+    function addPluginLink($links)
+    {
+        $link = '<a href="' . $this->buildConfigPageUrl() . '">' . __('Settings', 'mosparo-integration') . '</a>';
+
+        array_unshift($links, $link);
+
+        return $links;
     }
 
     public function registerSubmenu()

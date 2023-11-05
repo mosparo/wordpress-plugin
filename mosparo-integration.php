@@ -38,7 +38,7 @@ function mosparoIntegrationInitialize()
     $frontendHelper->initializeScheduleEvents();
 
     $adminHelper = AdminHelper::getInstance();
-    $adminHelper->initializeAdmin(__DIR__, plugin_dir_url(__FILE__));
+    $adminHelper->initializeAdmin(__DIR__, plugin_dir_url(__FILE__), plugin_basename(__FILE__));
 }
 add_action('plugins_loaded', 'mosparoIntegrationInitialize', 1);
 
