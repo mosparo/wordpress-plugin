@@ -68,12 +68,19 @@ class CommentForm
             return 'spam';
         }
 
-        $formData = apply_filters('mosparo_integration_comments_form_data', [
+        $formData = [
             'comment' => $commentData['comment_content'],
             'author' => $commentData['comment_author'],
             'email' => $commentData['comment_author_email'],
             'url' => $commentData['comment_author_url']
-        ]);
+        ];
+
+        // Add the rating field from the WooCommerce reviews to the form data
+        if ($commentData['comment_type'] === 'review' && isset($_POST['rating'])) {
+            $formData['rating'] = $_POST['rating'];
+        }
+
+        $formData = apply_filters('mosparo_integration_comments_form_data', $formData);
 
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();

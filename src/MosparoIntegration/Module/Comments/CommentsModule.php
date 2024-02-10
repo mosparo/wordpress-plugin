@@ -11,7 +11,7 @@ class CommentsModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Comments', 'mosparo-integration');
-        $this->description = __('Protects the comments form with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects the comments form with mosparo. It is also compatible with WooCommerce reviews.', 'mosparo-integration');
         $this->dependencies = [];
     }
 
