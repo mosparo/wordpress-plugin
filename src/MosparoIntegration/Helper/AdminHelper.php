@@ -31,10 +31,18 @@ class AdminHelper
         $this->pluginUrl = $pluginUrl;
 
         add_filter('plugin_action_links_' . $pluginBasename, [$this, 'addPluginLink']);
-        add_action('admin_menu', [$this, 'registerSubmenu']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueStyles']);
-        add_action('admin_post', [$this, 'saveSettings']);
         add_action('admin_init', [$this, 'executeAction']);
+
+        if (is_multisite() && is_network_admin()) {
+            add_action('network_admin_menu', [$this, 'registerSubmenu']);
+            add_action('network_admin_edit_add-connection', [$this, 'saveSettings']);
+            add_action('network_admin_edit_edit-connection', [$this, 'saveSettings']);
+            add_action('network_admin_edit_delete-connection', [$this, 'saveSettings']);
+        } else {
+            add_action('admin_menu', [$this, 'registerSubmenu']);
+            add_action('admin_post', [$this, 'saveSettings']);
+        }
     }
 
     function addPluginLink($links)
@@ -48,8 +56,13 @@ class AdminHelper
 
     public function registerSubmenu()
     {
+        $parentSlug = 'options-general.php';
+        if (is_multisite() && is_network_admin()) {
+            $parentSlug = 'settings.php';
+        }
+
         add_submenu_page(
-            'options-general.php',
+            $parentSlug,
             __('mosparo Integration', 'mosparo-integration'),
             __('mosparo Integration', 'mosparo-integration'),
             'manage_options',
@@ -81,7 +94,7 @@ class AdminHelper
             require_once($this->pluginPath . '/views/admin/connection-form.php');
         } else if ($action === 'edit-connection') {
             $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
-            if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey)) {
+            if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey) || !$configHelper->hasAccessToConnection($connectionKey)) {
                 $this->redirectToSettingsPage();
                 return;
             }
@@ -90,13 +103,13 @@ class AdminHelper
             require_once($this->pluginPath . '/views/admin/connection-form.php');
         } else if ($action === 'delete-connection') {
             $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
-            if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey)) {
+            if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey) || !$configHelper->hasAccessToConnection($connectionKey)) {
                 $this->redirectToSettingsPage();
                 return;
             }
 
             $connection = $configHelper->getConnection($connectionKey);
-            if ($connection->isDefaultFor('general')) {
+            if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
                 $this->redirectToSettingsPage('general-locked');
                 return;
             }
@@ -202,8 +215,20 @@ class AdminHelper
                 $connection = new Connection();
                 $connection->setKey(sanitize_key($_REQUEST['key']));
 
+                // It's not allowed to use mc__wp_config as key since this is the key for the connection
+                // defined in the wp-config.php
+                if (strtolower($connection->getKey()) === 'mc__wp_config') {
+                    $connection->setKey($connection->getKey() . uniqid());
+                }
+
                 if ($connection->getKey() === '') {
                     $connection->setKey(sanitize_key($_REQUEST['name']));
+                }
+
+                if (is_multisite() && is_network_admin()) {
+                    $connection->setOrigin(ConfigHelper::ORIGIN_NETWORK);
+                } else {
+                    $connection->setOrigin(ConfigHelper::ORIGIN_LOCAL);
                 }
             } else if ($action === 'edit-connection') {
                 $key = sanitize_key($_REQUEST['key']);
@@ -268,7 +293,7 @@ class AdminHelper
             }
 
             $connection = $configHelper->getConnection($connectionKey);
-            if ($connection->isDefaultFor('general')) {
+            if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
                 $this->redirectToSettingsPage('general-locked');
                 return;
             }
@@ -309,7 +334,21 @@ class AdminHelper
         $defaultArgs = ['page' => 'mosparo-configuration'];
         $args = array_merge($defaultArgs, $args);
 
-        return add_query_arg($args, admin_url('options-general.php'));
+        $settingsUrl = admin_url('options-general.php');
+        if (is_network_admin()) {
+            $settingsUrl = network_admin_url('settings.php');
+        }
+
+        return add_query_arg($args, $settingsUrl);
+    }
+
+    public function buildConfigPostUrl($action = '')
+    {
+        if (is_network_admin()) {
+            return add_query_arg(['action' => $action], network_admin_url('edit.php'));
+        }
+
+        return admin_url('admin-post.php');
     }
 
     public function displayAdminNotice()

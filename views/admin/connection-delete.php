@@ -7,7 +7,7 @@
 
     <?php $this->displayAdminNotice(); ?>
 
-    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+    <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
         <input type="hidden" name="mosparo_action" value="delete-connection" />
         <input type="hidden" name="connection" value="<?php echo esc_attr($connection->getKey()); ?>" />
 

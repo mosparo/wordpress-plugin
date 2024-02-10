@@ -6,36 +6,36 @@ h1.mosparo-header {
     padding-bottom: 10px;
 }
 
-.wp-list-table .column-connection_name {
-    width: 25%;
+.wp-list-table.connections .column-name {
+    width: 30%;
 }
 
-.wp-list-table .column-connection_host {
-    width: 35%;
+.wp-list-table.connections .column-host {
+    width: 30%;
 }
 
-.wp-list-table .column-connection_uuid {
+.wp-list-table.connections .column-uuid {
     width: 20%;
 }
 
-.wp-list-table .column-connection_defaults {
+.wp-list-table.connections .column-defaults {
     width: 20%;
 }
 
-.wp-list-table .mosparo-how-to-use-box {
+.wp-list-table.connections .mosparo-how-to-use-box {
     text-align: center;
     padding: 48px;
 }
 
-.wp-list-table .column-module_name {
+.wp-list-table.modules .column-module_name {
     width: 35%;
 }
 
-.wp-list-table .column-description {
+.wp-list-table.modules .column-description {
     width: 45%;
 }
 
-.wp-list-table .column-dependencies {
+.wp-list-table.modules .column-dependencies {
     width: 20%;
 }
 

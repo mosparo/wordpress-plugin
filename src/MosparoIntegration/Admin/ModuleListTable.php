@@ -87,11 +87,16 @@ class ModuleListTable extends WP_List_Table
     {
         $adminHelper = AdminHelper::getInstance();
         $configHelper = ConfigHelper::getInstance();
+
         if ($configHelper->isModuleActive($item->getKey())) {
-            $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
-            $actions = [
-                'disable' => sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration')),
-            ];
+            if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
+                $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
+                $actions = [
+                    'disable' => sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration')),
+                ];
+            } else {
+                $actions['network_active'] = __('Enabled in network', 'mosparo-integration');
+            }
         } else {
             $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'enable', 'module' => $item->getKey()]), 'change-module');
             $actions = [
@@ -142,8 +147,15 @@ class ModuleListTable extends WP_List_Table
 
     protected function column_cb($item)
     {
+        $configHelper = ConfigHelper::getInstance();
+
+        $disabled = '';
+        if ($configHelper->isModuleActive($item->getKey()) && $configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_NETWORK) {
+            $disabled = 'disabled';
+        }
+
         return sprintf(
-            '<input type="checkbox" name="module[]" value="%s" />', $item->getKey()
+            '<input type="checkbox" name="module[]" value="%s" %s />', $item->getKey(), $disabled
         );
     }
 }

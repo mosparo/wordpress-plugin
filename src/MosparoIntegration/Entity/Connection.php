@@ -2,6 +2,8 @@
 
 namespace MosparoIntegration\Entity;
 
+use MosparoIntegration\Helper\ConfigHelper;
+
 class Connection
 {
     protected $key;
@@ -19,6 +21,13 @@ class Connection
     protected $defaults = [];
 
     protected $verifySsl;
+
+    protected $origin;
+
+    public function __construct()
+    {
+        $this->origin = ConfigHelper::ORIGIN_LOCAL;
+    }
 
     public function getKey()
     {
@@ -88,6 +97,31 @@ class Connection
     public function setVerifySsl(bool $verifySsl)
     {
         $this->verifySsl = $verifySsl;
+    }
+
+    public function getOrigin()
+    {
+        if (!$this->origin) {
+            return ConfigHelper::ORIGIN_LOCAL;
+        }
+
+        return $this->origin;
+    }
+
+    public function setOrigin($origin)
+    {
+        $this->origin = $origin;
+    }
+
+    public function getOriginPriority()
+    {
+        $priorities = [
+            ConfigHelper::ORIGIN_WP_CONFIG => 1,
+            ConfigHelper::ORIGIN_NETWORK => 2,
+            ConfigHelper::ORIGIN_LOCAL => 3,
+        ];
+
+        return $priorities[$this->origin] ?? $priorities[ConfigHelper::ORIGIN_LOCAL];
     }
 
     public function isDefaultFor($default)

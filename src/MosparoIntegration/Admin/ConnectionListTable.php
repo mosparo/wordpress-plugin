@@ -43,7 +43,7 @@ class ConnectionListTable extends WP_List_Table
             case 'uuid':
                 return $item->getUuid();
             case 'defaults':
-                return $this->translateDefaults($item->getDefaults());
+                return $this->translateDefaults($item);
             default:
                 return '';
         }
@@ -70,17 +70,27 @@ class ConnectionListTable extends WP_List_Table
     protected function column_name($item)
     {
         $adminHelper = AdminHelper::getInstance();
-        $editUrl = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'edit-connection', 'connection' => $item->getKey()]), 'edit-connection');
+        $configHelper = ConfigHelper::getInstance();
+        $actions = [];
+
+        $isSameOrigin = $item->getOrigin() === ConfigHelper::ORIGIN_LOCAL || (is_network_admin() && $item->getOrigin() === ConfigHelper::ORIGIN_NETWORK);
+        if ($isSameOrigin) {
+            $editUrl = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'edit-connection', 'connection' => $item->getKey()]), 'edit-connection');
+            $actions['edit'] = sprintf('<a href="%s">%s</a>', $editUrl, __('Edit', 'mosparo-integration'));
+        }
+
         $refreshCssCacheUrl = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'refresh-css-cache', 'connection' => $item->getKey()]), 'refresh-css-cache');
+        $actions['refresh-css-cache'] = sprintf('<a href="%s">%s</a>', $refreshCssCacheUrl, __('Refresh CSS cache', 'mosparo-integration'));
 
-        $actions = [
-            'edit' => sprintf('<a href="%s">%s</a>', $editUrl, __('Edit', 'mosparo-integration')),
-            'refresh-css-cache' => sprintf('<a href="%s">%s</a>', $refreshCssCacheUrl, __('Refresh CSS cache', 'mosparo-integration')),
-        ];
-
-        if (!$item->isDefaultFor('general')) {
+        if (!$configHelper->isConnectionDefaultConnectionFor($item, 'general') && $isSameOrigin) {
             $deleteUrl = $adminHelper->buildConfigPageUrl(['action' => 'delete-connection', 'connection' => $item->getKey()]);
             $actions['delete'] = sprintf('<a href="%s">%s</a>', $deleteUrl, __('Delete', 'mosparo-integration'));
+        }
+
+        if ($item->getOrigin() === ConfigHelper::ORIGIN_WP_CONFIG) {
+            $actions['network_active'] = __('Configured in wp-config.php', 'mosparo-integration');
+        } else if (!is_network_admin() && $item->getOrigin() === ConfigHelper::ORIGIN_NETWORK) {
+            $actions['network_active'] = __('Configured in network', 'mosparo-integration');
         }
 
         return sprintf('<strong>%1$s</strong> %2$s', $item->getName(), $this->row_actions($actions, true));
@@ -130,26 +140,37 @@ class ConnectionListTable extends WP_List_Table
         );
     }
 
-    protected function translateDefaults($defaults)
+    protected function translateDefaults($item)
     {
+        $configHelper = ConfigHelper::getInstance();
         $moduleHelper = ModuleHelper::getInstance();
         $strings = [];
 
+        $defaultConnections = $configHelper->getDefaultConnections();
+
         // The general should always be the first default string
-        if (in_array('general', $defaults)) {
-            $strings[] = '<strong>' . __('General', 'mosparo-integration') . '</strong>';
+        if (isset($defaultConnections['general']) && $defaultConnections['general']->getKey() === $item->getKey()) {
+            $strings[] = sprintf('<strong>%s</strong>', __('General', 'mosparo-integration'));
         }
 
-        foreach ($defaults as $default) {
-            if (strpos($default, 'module_') === 0) {
-                $moduleKey = substr($default, 7);
+        foreach ($defaultConnections as $moduleKey => $defaultConnection) {
+            if ($defaultConnection->getKey() === $item->getKey() || $item->isDefaultFor($moduleKey)) {
+                $moduleKey = substr($moduleKey, 7);
                 $module = $moduleHelper->getActiveModule($moduleKey);
 
                 if ($module === null) {
                     continue;
                 }
 
-                $strings[] = $module->getName();
+                if ($defaultConnection->getKey() !== $item->getKey() || $item->isDefaultFor($moduleKey)) {
+                    $strings[] = sprintf(
+                        '<s>%s</s> <i>(%s)</i>',
+                        $module->getName(),
+                        sprintf(__('Overwritten by &laquo;%s&raquo;', 'mosparo-integration'), $defaultConnection->getName())
+                    );
+                } else {
+                    $strings[] = $module->getName();
+                }
             }
         }
 

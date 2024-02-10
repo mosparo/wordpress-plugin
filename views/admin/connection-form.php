@@ -13,7 +13,7 @@
 
     <div class="mosparo-two-columns">
         <div class="left-column">
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+            <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
                 <div>
 
                     <?php
@@ -95,7 +95,12 @@
                             </tr>
                             <?php
                                 $isGeneral = false;
-                                if ($connection->isDefaultFor('general') || $configHelper->getConnectionFor('general') === false) {
+                                $isGeneralEditable = true;
+                                $defaultGeneralConnection = $configHelper->getConnectionFor('general');
+
+                                if ($defaultGeneralConnection !== false && $defaultGeneralConnection->getOrigin() === \MosparoIntegration\Helper\ConfigHelper::ORIGIN_WP_CONFIG) {
+                                    $isGeneralEditable = false;
+                                } else if ($connection->isDefaultFor('general') || $defaultGeneralConnection === false) {
                                     $isGeneral = true;
                                 }
                             ?>
@@ -103,12 +108,17 @@
                                 <th><?php _e('General', 'mosparo-integration'); ?></th>
                                 <td>
                                     <label for="defaultGeneral">
-                                        <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?>>
+                                        <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?> <?php echo !$isGeneralEditable ? 'disabled' : ''; ?>>
                                         <?php _e('Default connection', 'mosparo-integration'); ?>
                                     </label>
                                     <?php if ($isGeneral): ?>
                                         <p class="description">
                                             <?php _e('You cannot unset the default connection. Please configure a new connection and mark it as the default connection.', 'mosparo-integration'); ?>
+                                        </p>
+                                    <?php endif; ?>
+                                    <?php if (!$isGeneralEditable): ?>
+                                        <p class="description">
+                                            <?php _e('You cannot change the default connection since the connection defined in the wp-config.php file is always the default connection.', 'mosparo-integration'); ?>
                                         </p>
                                     <?php endif; ?>
                                 </td>
