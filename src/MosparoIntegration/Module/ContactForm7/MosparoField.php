@@ -103,9 +103,6 @@ class MosparoField
             return strpos($key, '_mosparo_') === false;
         }, ARRAY_FILTER_USE_KEY);
 
-        /*var_dump($formData);
-        exit;*/
-
         // Verify the submission
         $verificationHelper = VerificationHelper::getInstance();
         $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
@@ -185,8 +182,6 @@ class MosparoField
             } else {
                 $value = $submission->get_posted_data($tag->name);
             }
-
-            //var_dump($tag->name, $value);
 
             if ($value !== null) {
                 $formData[$tag->name] = $value;
