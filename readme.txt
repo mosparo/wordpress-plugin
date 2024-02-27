@@ -4,10 +4,10 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.8
+Stable tag: 1.8.1
 License: MIT
 
-The plugin adds the functionality to your website to use mosparo in the WordPress comment and account forms (login, lost password, register) or a form from Contact Form 7, Elementor Form, Everest Forms, Formidable, Gravity Forms, Ninja Forms, or WPForms.
+The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
 	 
 == Description ==
 If you want to protect your forms in WordPress with mosparo, this plugin will help you with this task. The mosparo Integration plugin can add the mosparo box to the WordPress comment and account forms (login, lost password and register) or the forms from the plugins Contact Form 7, Elementor Form, Everest Forms, Formidable, Gravity Forms, Ninja Forms, or WPForms. The Comments module is compatible with the WooCommerce reviews (mosparo Integration v1.8+).
@@ -83,6 +83,11 @@ The origin of a connection will select the connection for a module:
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.8.1 =
+*Release Date: 27th February 2023*
+
+* [Bugfix] Wrong version number generated an issue with the WordPress release management
 
 = 1.8 =
 *Release Date: 27th February 2023*
