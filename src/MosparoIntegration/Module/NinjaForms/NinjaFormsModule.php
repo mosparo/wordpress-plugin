@@ -51,7 +51,7 @@ class NinjaFormsModule extends AbstractModule
         });
 
         add_action('wp_enqueue_scripts', function () use ($pluginDirectoryUrl) {
-            wp_enqueue_script('mosparo-field-validation', $pluginDirectoryUrl . 'assets/module/ninja-forms/js/mosparo.js', ['nf-front-end']);
+            wp_enqueue_script('mosparo-field-validation', $pluginDirectoryUrl . 'assets/module/ninja-forms/js/mosparo.js', ['nf-front-end', 'jquery', 'backbone']);
         });
     }
 }

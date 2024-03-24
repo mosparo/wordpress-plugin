@@ -34,11 +34,6 @@ class FrontendHelper
         add_action('mosparo_integration_refresh_css_url_cache', [$this, 'refreshCssUrlCacheForAllConnections']);
     }
 
-    public function initializeResourceRegistration()
-    {
-        add_action('wp_enqueue_scripts', [$this, 'registerResources']);
-    }
-
     public function refreshCssUrlCacheForAllConnections()
     {
         $configHelper = ConfigHelper::getInstance();
@@ -78,7 +73,7 @@ class FrontendHelper
         wp_enqueue_script(
             'mosparo-integration-mosparo-js',
             $this->getJavaScriptUrl($connection),
-            ['jquery'],
+            [],
             '1.0',
             true
         );
@@ -140,7 +135,20 @@ class FrontendHelper
                 (function () {
                     let initializeMosparo = function () {
                         let id = "mosparo-box-%s";
-                        let formEl = jQuery("#" + id);
+                        if (typeof mosparoInstances[id] !== "undefined") {
+                            return;
+                        }
+                        
+                        let mosparoFieldEl = document.getElementById(id);
+                        let el = mosparoFieldEl;
+                        let formEl = null;
+                        while ((el = el.parentNode) && el !== document) {
+                            if (el.matches("form")) {
+                                formEl = el;
+                                break;
+                            }
+                        }
+                    
                         let options = %s;
                         let resetMosparoField = function () {
                             if (!mosparoInstances[id]) {
@@ -151,16 +159,17 @@ class FrontendHelper
                             mosparoInstances[id].requestSubmitToken();
                         };
                         
-                        if (typeof mosparoInstances[id] !== "undefined") {
-                            return;
-                        }
-                        
                         %s
                         
                         mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
                     };
                     
-                    document.addEventListener("DOMContentLoaded", initializeMosparo);
+                    if (document.readyState !== "loading") {
+                        initializeMosparo();
+                    } else {
+                        document.addEventListener("DOMContentLoaded", initializeMosparo);
+                    }
+                    document.addEventListener("mosparo_integration_initialize_fields", initializeMosparo);
                     
                     %s
                 })();
@@ -183,12 +192,12 @@ class FrontendHelper
         if (function_exists('wpcf7_add_form_tag') && $field instanceof ContactForm7MosparoField) {
             return [
                 'before' => '
-                    if (typeof wpcf7 !== "undefined" && formEl.closest(".wpcf7").length > 0) {
+                    if (typeof wpcf7 !== "undefined" && mosparoFieldEl.closest(".wpcf7")) {
                         if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
                             options.requestSubmitTokenOnInit = false;
                         }
                         
-                        formEl.closest(".wpcf7").on("wpcf7spam", resetMosparoField);
+                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7spam", resetMosparoField);
                     }
                 ',
                 'after' => '',
@@ -198,8 +207,8 @@ class FrontendHelper
         if (defined('WPFORMS_VERSION') && $field instanceof WpFormsMosparoField) {
             return [
                 'before' => '
-                    if (typeof wpforms !== "undefined" && formEl.closest(".wpforms-form").length > 0) {
-                        formEl.closest(".wpforms-form").on("wpformsAjaxSubmitFailed", resetMosparoField);
+                    if (typeof wpforms !== "undefined" && mosparoFieldEl.closest(".wpforms-form")) {
+                        mosparoFieldEl.closest(".wpforms-form").addEventListener("wpformsAjaxSubmitFailed", resetMosparoField);
                     }
                 ',
                 'after' => ''
@@ -210,10 +219,17 @@ class FrontendHelper
             return [
                 'before' => '
                     options.doSubmitFormInvisible = function () {
-                        formEl.parents("form").submit();
-                    };',
+                        formEl.submit();
+                    };
+                    
+                    options.onValidateFormInvisible = function () {
+                        let formId = formEl.getAttribute("data-formid");
+                        window["gf_submitting_" + formId] = false;
+                        jQuery("#gform_ajax_spinner_" + formId).remove();
+                    };
+                    ',
                 'after' => sprintf('
-                    jQuery(document).on("gform_field_added", function(event, form, field) {
+                    document.addEventListener("gform_field_added", function (event, form, field) {
                         if (field["type"] === "mosparo") {
                             initializeMosparo();
                         }
@@ -236,22 +252,17 @@ class FrontendHelper
 
         if (function_exists('elementor_pro_load_plugin') && $field instanceof ElementorFormMosparoField) {
             return [
-                'before' => '',
-                'after' => sprintf('
-                    jQuery(document).ready(function () {
-                        initializeMosparo();
-                    
-                        let id = "mosparo-box-%s";
-                        jQuery("#" + id).parents("form").on("error", function () {
-                            if (!mosparoInstances[id]) {
-                                return;
-                            }
-                            
-                            mosparoInstances[id].resetState();
-                            mosparoInstances[id].requestSubmitToken();
-                        });
+                'before' => '
+                    formEl.addEventListener("error", function () {
+                        if (!mosparoInstances[id]) {
+                            return;
+                        }
+                        
+                        mosparoInstances[id].resetState();
+                        mosparoInstances[id].requestSubmitToken();
                     });
-                ', $instanceId),
+                ',
+                'after' => '',
             ];
         }
 

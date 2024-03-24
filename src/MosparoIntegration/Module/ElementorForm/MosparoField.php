@@ -170,7 +170,7 @@ class MosparoField
         wp_enqueue_script(
             'mosparo-elementor-form-script',
             $this->pluginDirectoryUrl . 'assets/module/elementor-form/js/mosparo.js',
-            ['elementor-editor'],
+            ['elementor-editor', 'jquery'],
             '1.0',
             true
         );
