@@ -1,6 +1,6 @@
 var mosparoInstances = [];
 
-var mosparoFieldController = Marionette.Object.extend( {
+var mosparoFieldController = Marionette.Object.extend({
     initialize: function()
     {
         jQuery(document).on('nfFormReady', function (ev, form) {
@@ -16,6 +16,10 @@ var mosparoFieldController = Marionette.Object.extend( {
                 mosparoOptions.doSubmitFormInvisible = function () {
                     nfRadio.channel('form-' + model.get('formID')).request('submit', formModel);
                 };
+
+                mosparoOptions.onValidateFormInvisible = function () {
+                    nfRadio.channel('form-' + model.get('formID')).trigger('submit:failed', {});
+                }
 
                 let id = "mosparo-box-" + model.get('id');
                 mosparoInstances[id] = new mosparo(id, model.get('host'), model.get('uuid'), model.get('publicKey'), mosparoOptions);
@@ -89,11 +93,19 @@ var mosparoFieldController = Marionette.Object.extend( {
             return;
         }
 
+        let id = jQuery('#nf-form-' + model.get('id') + '-cont .mosparo__container').prop('id');
+        let mosparoInstance = mosparoInstances[id];
+        if (!mosparoInstance) {
+            return;
+        }
+
         let el = jQuery('#mosparo-box-' + model.attributes.id).find('input[type="checkbox"]');
-        if (el[0].checked) {
-            nfRadio.channel('fields').request('remove:error', model.get('id'), 'custom-field-error');
-        } else {
-            nfRadio.channel('fields').request('add:error', model.get('id'), 'custom-field-error');
+        if (!mosparoInstance.invisible) {
+            if (el[0].checked) {
+                nfRadio.channel('fields').request('remove:error', model.get('id'), 'custom-field-error');
+            } else {
+                nfRadio.channel('fields').request('add:error', model.get('id'), 'custom-field-error');
+            }
         }
     },
 
