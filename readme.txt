@@ -85,12 +85,12 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 == Changelog ==
 
 = 1.8.1 =
-*Release Date: 27th February 2023*
+*Release Date: 27th February 2024*
 
 * [Bugfix] Wrong version number generated an issue with the WordPress release management
 
 = 1.8 =
-*Release Date: 27th February 2023*
+*Release Date: 27th February 2024*
 
 * [Enhancement] Added the option configure the mosparo connection in the wp-config.php file
 * [Enhancement] Added the compatibility of the plugin with the WordPress Multisite. Configure connections and enable modules in the network administration.
