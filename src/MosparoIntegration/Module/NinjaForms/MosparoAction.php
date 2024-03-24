@@ -140,6 +140,19 @@ class MosparoAction extends NF_Abstracts_Action
             'email',
         ]);
 
+        // These field types receive the field type as suffix to the field name
+        $typesWithSuffix = [
+            'address',
+            'address2',
+            'city',
+            'email',
+            'firstname',
+            'lastname',
+            'tel',
+            'textbox',
+            'zip',
+        ];
+
         $tokens = ['submitToken' => '', 'validationToken' => ''];
 
         foreach ($nfData['fields'] as $field) {
@@ -155,6 +168,10 @@ class MosparoAction extends NF_Abstracts_Action
             }
 
             $key = sprintf('nf-field-%d', $field['id']);
+            if (in_array($field['type'], $typesWithSuffix)) {
+                $key = sprintf('nf-field-%d-%s', $field['id'], $field['type']);
+            }
+
             if (isset($field['settings']['custom_name_attribute']) && $field['settings']['custom_name_attribute'] != '') {
                 $key = $field['settings']['custom_name_attribute'];
             }
