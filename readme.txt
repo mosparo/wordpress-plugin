@@ -4,7 +4,7 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.4
 Requires PHP: 7.4
-Stable tag: 1.8.1
+Stable tag: 1.9
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -83,6 +83,13 @@ The origin of a connection will select the connection for a module:
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.9 =
+*Release Date: *
+
+* [Change] Replaced the jQuery code with Vanilla JS
+* [Bugfix] Fixed the issue with the verification in Ninja Forms
+* [Bugfix] Fixed the invisible mode in Ninja Forms
 
 = 1.8.1 =
 *Release Date: 27th February 2024*
