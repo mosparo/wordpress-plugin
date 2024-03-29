@@ -85,7 +85,7 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 == Changelog ==
 
 = 1.9 =
-*Release Date: *
+*Release Date: 29th March 2024*
 
 * [Change] Replaced the jQuery code with Vanilla JS
 * [Bugfix] Fixed the issue with the verification in Ninja Forms
