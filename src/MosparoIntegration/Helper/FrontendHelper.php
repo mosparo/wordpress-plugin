@@ -252,6 +252,12 @@ class FrontendHelper
 
         if (function_exists('elementor_pro_load_plugin') && $field instanceof ElementorFormMosparoField) {
             return [
+                // The popup fix searches for hidden popups and skips the initialization of the mosparo box
+                // until the popup is visible. This is required because Elementor removes the popup from the DOM tree.
+                // If mosparo requested the submit token but Elementor removed the popup from the tree, mosparo is
+                // not able to finalize the initialization.
+                // When the popup is opened, the regular initialization script is executed again, and mosparo gets
+                // correctly initialized.
                 'before' => '
                     formEl.addEventListener("error", function () {
                         if (!mosparoInstances[id]) {
@@ -261,6 +267,19 @@ class FrontendHelper
                         mosparoInstances[id].resetState();
                         mosparoInstances[id].requestSubmitToken();
                     });
+                    
+                    let pEl = mosparoFieldEl;
+                    let popupEl = null;
+                    while ((pEl = pEl.parentNode) && pEl !== document) {
+                        if (pEl.matches(\'[data-elementor-type="popup"]\')) {
+                            popupEl = pEl;
+                            break;
+                        }
+                    }
+                    
+                    if (popupEl !== null && popupEl.parentNode.matches("body")) {
+                        return;
+                    }
                 ',
                 'after' => '',
             ];
