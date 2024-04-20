@@ -17,12 +17,12 @@ class EverestFormsModule extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return class_exists('EVF_Form_Fields');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
-    {
-        if (!class_exists('EVF_Form_Fields')) {
-            return;
-        }
-        
+    {        
         add_filter('everest_forms_fields', [$this, 'addFieldType']);
 
         add_action('wp_enqueue_scripts', function () use ($pluginDirectoryUrl) {

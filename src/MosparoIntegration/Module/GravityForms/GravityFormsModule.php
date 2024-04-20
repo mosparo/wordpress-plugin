@@ -18,12 +18,12 @@ class GravityFormsModule extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return class_exists('GFCommon');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
-        if (!class_exists('GFCommon')) {
-            return;
-        }
-
         GF_Fields::register(new MosparoField());
     }
 }

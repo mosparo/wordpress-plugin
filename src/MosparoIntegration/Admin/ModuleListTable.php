@@ -59,7 +59,7 @@ class ModuleListTable extends WP_List_Table
                 foreach ($item->getDependencies() as $dependency) {
                     $html .= '- <a href="' . $dependency['url'] . '" target="_blank">' . $dependency['name'] . '</a><br />';
                 }
-
+                
                 return $html;
             default:
                 return '';
@@ -88,6 +88,7 @@ class ModuleListTable extends WP_List_Table
         $adminHelper = AdminHelper::getInstance();
         $configHelper = ConfigHelper::getInstance();
 
+        $actions = [];
         if ($configHelper->isModuleActive($item->getKey())) {
             if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
                 $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
@@ -98,12 +99,13 @@ class ModuleListTable extends WP_List_Table
                 $actions['network_active'] = __('Enabled in network', 'mosparo-integration');
             }
         } else {
-            $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'enable', 'module' => $item->getKey()]), 'change-module');
-            $actions = [
-                'enable' => sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration')),
-            ];
+            if (!$item->canInitialize()) {
+                $actions['missing_dependencies'] = __('Missing required extension', 'mosparo-integration');
+            } else {
+                $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'enable', 'module' => $item->getKey()]), 'change-module');
+                $actions['enable'] = sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration'));
+            }
         }
-
         return sprintf('<strong>%1$s</strong> %2$s', $item->getName(), $this->row_actions($actions, true));
     }
 

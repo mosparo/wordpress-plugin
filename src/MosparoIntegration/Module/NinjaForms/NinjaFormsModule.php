@@ -23,6 +23,10 @@ class NinjaFormsModule extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return class_exists('\Ninja_Forms');
+    }
+
     /**
      * Initializes the module
      *
@@ -31,10 +35,6 @@ class NinjaFormsModule extends AbstractModule
      */
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
-        if (!class_exists('\Ninja_Forms')) {
-            return;
-        }
-
         add_filter('ninja_forms_register_fields', function ($fields) {
             $fields['mosparo'] = new MosparoField();
             return $fields;

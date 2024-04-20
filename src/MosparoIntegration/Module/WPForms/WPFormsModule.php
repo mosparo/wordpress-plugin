@@ -17,12 +17,12 @@ class WPFormsModule extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return defined('WPFORMS_VERSION');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
-        if (!defined('WPFORMS_VERSION')) {
-            return;
-        }
-        
         new MosparoField();
     }
 }

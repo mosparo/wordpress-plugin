@@ -17,12 +17,12 @@ class ElementorFormModule extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return function_exists('elementor_pro_load_plugin');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
-        if (!function_exists('elementor_pro_load_plugin')) {
-            return;
-        }
-
         $mosparoElementorField = MosparoField::getInstance($pluginDirectoryUrl);
         $mosparoElementorField->registerHooks();
     }

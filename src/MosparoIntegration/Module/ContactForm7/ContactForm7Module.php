@@ -17,13 +17,14 @@ class ContactForm7Module extends AbstractModule
         ];
     }
 
+    public function canInitialize() {
+        return function_exists('wpcf7_add_form_tag');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
-    {
-        if (!function_exists('wpcf7_add_form_tag')) {
-            return;
-        }
-        
+    {        
         $mosparoCf7Field = MosparoField::getInstance();
         $mosparoCf7Field->registerHooks();
     }
+
 }
