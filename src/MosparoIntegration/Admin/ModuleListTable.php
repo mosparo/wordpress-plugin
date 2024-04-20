@@ -92,9 +92,11 @@ class ModuleListTable extends WP_List_Table
         if ($configHelper->isModuleActive($item->getKey())) {
             if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
                 $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
-                $actions = [
-                    'disable' => sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration')),
-                ];
+                $actions['disable'] = sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration'));
+                if (!empty($item->getSettings())) {
+                    $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'module-settings', 'module' => $item->getKey()]), 'change-module');
+                    $actions['settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
+                }
             } else {
                 $actions['network_active'] = __('Enabled in network', 'mosparo-integration');
             }

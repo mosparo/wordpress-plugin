@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Helper;
 
+use MosparoIntegration\Module\AbstractModule;
 use MosparoIntegration\Entity\Connection;
 
 class ConfigHelper
@@ -258,7 +259,58 @@ class ConfigHelper
         $moduleIndex = array_search($moduleKey, $this->config['modules']);
         if ($moduleIndex !== false) {
             unset($this->config['modules'][$moduleIndex]);
+            //Also remove module settings on disable
+            unset($this->config['modules-settings'][$moduleKey]);
         }
+    }
+
+    public function getTypedValue($value, $type = 'text') {
+        switch ($type) {
+        case "boolean":
+            return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+        case "number":
+            return filter_var($value, FILTER_VALIDATE_INT, $options = array('options' => array('default' => 0)));
+        case "string":
+        case "text":
+        default:
+            break;
+        }
+        return strval($value);
+    }
+
+    public function loadModuleConfiguration(AbstractModule $module) {
+        $isMultisite = is_multisite();
+        $isNetworkAdminPage = is_network_admin();
+        $settings = $module->getSettings();
+
+        foreach ($settings as $key => $setting) {
+            $v = null;
+            if (isset($this->config['modules-settings'][$module->getKey()][$key])) {
+                $v = $this->config['modules-settings'][$module->getKey()][$key];
+            }
+            if ($v !== null) {
+                $settings[$key]['value'] = $this->getTypedValue($v, $setting['type']);
+            }
+        }
+        return $module->setSettings(apply_filters('mosparo_integration_filter_module_settings', $settings, $module->getKey()));
+    }
+
+    public function saveModuleConfiguration(AbstractModule $module) {
+        if (!isset($this->config['modules-settings'])) {
+            $this->config['modules-settings'] = [];
+        }
+        if (!isset($this->config['modules-settings'][$module->getKey()])) {
+            $this->config['modules-settings'][$module->getKey()] = [];
+        }
+        foreach ($module->getSettings() as $key => $setting) {
+            $formKey = $module->getKey() . '_' . $key;
+            $v = '';
+            if (isset($_REQUEST[$formKey])) {
+                $v = $_REQUEST[$formKey];
+            }
+            $this->config['modules-settings'][$module->getKey()][$key] = $v;
+        }
+        $this->saveConfiguration();
     }
 
     public function loadConfiguration()

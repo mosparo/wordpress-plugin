@@ -38,6 +38,24 @@ abstract class AbstractModule
         return $this->dependencies;
     }
 
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
+
+    public function setSettings(array $settings): array
+    {
+        $this->settings = $settings;
+        return $this->settings;
+    }
+
+    public function getSetting(string $key): mixed
+    {
+        if (isset($this->settings[$key]['value'])) {
+            return $this->settings[$key]['value'];
+        }
+        return null;
+    }
 
     public function canInitialize() {
         return empty($this->dependencies);

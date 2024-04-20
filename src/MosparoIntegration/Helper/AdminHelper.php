@@ -3,6 +3,7 @@
 namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Entity\Connection;
+use MosparoIntegration\Module\AbstractModule;
 
 class AdminHelper
 {
@@ -39,6 +40,7 @@ class AdminHelper
             add_action('network_admin_edit_add-connection', [$this, 'saveSettings']);
             add_action('network_admin_edit_edit-connection', [$this, 'saveSettings']);
             add_action('network_admin_edit_delete-connection', [$this, 'saveSettings']);
+            add_action('network_admin_edit_module-settings', [$this, 'saveSettings']);
         } else {
             add_action('admin_menu', [$this, 'registerSubmenu']);
             add_action('admin_post', [$this, 'saveSettings']);
@@ -107,14 +109,21 @@ class AdminHelper
                 $this->redirectToSettingsPage();
                 return;
             }
-
             $connection = $configHelper->getConnection($connectionKey);
             if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
                 $this->redirectToSettingsPage('general-locked');
                 return;
             }
-
             require_once($this->pluginPath . '/views/admin/connection-delete.php');
+        } else if ($action === 'module-settings') {
+            $moduleHelper = ModuleHelper::getInstance();
+            $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
+            if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
+                $this->redirectToSettingsPage();
+                return;
+            }
+            $module = $moduleHelper->getActiveModule($moduleKey);
+            require_once($this->pluginPath . '/views/admin/module-settings.php');
         } else {
             require_once($this->pluginPath . '/views/admin/settings.php');
         }
@@ -174,7 +183,6 @@ class AdminHelper
                 $modules = [$modules];
             }
             $modules = array_map('sanitize_key', $modules);
-
             $message = '';
             foreach ($modules as $module) {
                 if ($action === 'enable') {
@@ -227,6 +235,7 @@ class AdminHelper
 
                 if (is_multisite() && is_network_admin()) {
                     $connection->setOrigin(ConfigHelper::ORIGIN_NETWORK);
+
                 } else {
                     $connection->setOrigin(ConfigHelper::ORIGIN_LOCAL);
                 }
@@ -300,20 +309,30 @@ class AdminHelper
 
             $configHelper->deleteConnection($connection);
             $configHelper->saveConfiguration();
-
+            
             $this->redirectToSettingsPage('connection-deleted');
+        } else if ($action == 'module-settings') {
+            $moduleHelper = ModuleHelper::getInstance();
+            $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
+            if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
+                $this->redirectToSettingsPage();
+                return;
+            }
+            $module = $moduleHelper->getActiveModule($moduleKey);
+            $configHelper->saveModuleConfiguration($module);
+            $this->redirectToSettingsPage('module-settings-saved');
         } else {
             $this->redirectToSettingsPage();
         }
     }
 
-    protected function verifyNonce($action)
+    protected function verifyNonce($action, $nonceKey = 'save-connection')
     {
-        if (!isset($_POST['save-connection'])) {
+        if (!isset($_POST[$nonceKey])) {
             return false;
         }
 
-        $field  = wp_unslash(sanitize_key($_POST['save-connection']));
+        $field  = wp_unslash(sanitize_key($_POST[$nonceKey]));
 
         return wp_verify_nonce($field, $action);
     }
@@ -347,7 +366,6 @@ class AdminHelper
         if (is_network_admin()) {
             return add_query_arg(['action' => $action], network_admin_url('edit.php'));
         }
-
         return admin_url('admin-post.php');
     }
 
@@ -373,6 +391,8 @@ class AdminHelper
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully disabled.', 'mosparo-integration')));
         } else if ($message === 'css-cache-refreshed') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-integration')));
+        } else if ($message === 'module-settings-saved') {
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module configuration was successfully saved.', 'mosparo-integration')));
         }
     }
 
