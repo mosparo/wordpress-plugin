@@ -2,7 +2,7 @@
     <h1 class="mosparo-header">
         <?php echo esc_html(get_admin_page_title()); ?>
         &ndash;
-        <?php if ($action === 'add-connection'): ?>
+        <?php if ($action === 'mosparo-add-connection'): ?>
             <?php _e('Add connection', 'mosparo-integration'); ?>
         <?php else: ?>
             <?php echo sprintf(__('Edit connection "%s"', 'mosparo-integration'), $connection->getName()); ?>
@@ -27,7 +27,6 @@
                         $publicKey = $connection->getPublicKey();
                         $verifySsl = $connection->shouldVerifySsl();
                     ?>
-                    <input type="hidden" name="mosparo_action" value="<?php echo esc_attr($action); ?>" />
                     <table class="form-table" role="presentation">
                         <tbody>
                             <tr>
@@ -140,7 +139,6 @@
 
                 <p>
                     <?php
-                        wp_nonce_field($action, 'save-connection');
                         submit_button(__('Save connection'), 'primary', 'submit', false);
                     ?>
                 </p>

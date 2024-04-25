@@ -91,11 +91,11 @@ class ModuleListTable extends WP_List_Table
         $actions = [];
         if ($configHelper->isModuleActive($item->getKey())) {
             if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
-                $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'disable', 'module' => $item->getKey()]), 'change-module');
-                $actions['disable'] = sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration'));
+                $url = $adminHelper->buildConfigPostUrl(['action' => 'mosparo-disable-module', 'module' => $item->getKey()]);
+                $actions['mosparo-disable-module'] = sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration'));
                 if (!empty($item->getSettings())) {
-                    $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'module-settings', 'module' => $item->getKey()]), 'change-module');
-                    $actions['settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
+                    $url = $adminHelper->buildConfigPageUrl(['action' => 'mosparo-module-settings', 'module' => $item->getKey()]);
+                    $actions['mosparo-module-settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
                 }
             } else {
                 $actions['network_active'] = __('Enabled in network', 'mosparo-integration');
@@ -104,8 +104,8 @@ class ModuleListTable extends WP_List_Table
             if (!$item->canInitialize()) {
                 $actions['missing_dependencies'] = __('Missing required extension', 'mosparo-integration');
             } else {
-                $url = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'enable', 'module' => $item->getKey()]), 'change-module');
-                $actions['enable'] = sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration'));
+                $url = $adminHelper->buildConfigPosturl(['action' => 'mosparo-enable-module', 'module' => $item->getKey()]);
+                $actions['mosparo-enable-module'] = sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration'));
             }
         }
         return sprintf('<strong>%1$s</strong> %2$s', $item->getName(), $this->row_actions($actions, true));
@@ -144,8 +144,8 @@ class ModuleListTable extends WP_List_Table
     protected function get_bulk_actions()
     {
         return [
-            'enable' => __('Enable', 'mosparo-integration'),
-            'disable' => __('Disable', 'mosparo-integration')
+            'mosparo-enable-module' => __('Enable', 'mosparo-integration'),
+            'mosparo-disable-module' => __('Disable', 'mosparo-integration')
         ];
     }
 

@@ -26,6 +26,15 @@ class AdminHelper
     {
     }
 
+    public function get_bulk_action() {
+        $action = false;
+
+        if (isset($_REQUEST['action2'])) {
+            $action = $_REQUEST['action2'];
+        }
+        return $action;
+    }
+
     public function initializeAdmin($pluginPath, $pluginUrl, $pluginBasename)
     {
         $this->pluginPath = $pluginPath;
@@ -33,18 +42,38 @@ class AdminHelper
 
         add_filter('plugin_action_links_' . $pluginBasename, [$this, 'addPluginLink']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueStyles']);
-        add_action('admin_init', [$this, 'executeAction']);
+
+        $actions = [
+            'mosparo-refresh-css-cache' => [$this, 'actionRefreshCssCache'],
+            'mosparo-add-connection' => [$this, 'actionSaveConnection'],
+            'mosparo-edit-connection' => [$this, 'actionSaveConnection'],
+            'mosparo-delete-connection' => [$this, 'actionDeleteConnection'],
+            'mosparo-enable-module' => [$this, 'actionEnableModule'],
+            'mosparo-disable-module' => [$this, 'actionDisableModule'],
+            'mosparo-module-settings' => [$this, 'actionSaveModuleSettings'],
+        ];
+
+        $action_hook_prefix = 'admin_post_';
 
         if (is_multisite() && is_network_admin()) {
+            $action_hook_prefix = 'network_admin_edit_';
             add_action('network_admin_menu', [$this, 'registerSubmenu']);
-            add_action('network_admin_edit_add-connection', [$this, 'saveSettings']);
-            add_action('network_admin_edit_edit-connection', [$this, 'saveSettings']);
-            add_action('network_admin_edit_delete-connection', [$this, 'saveSettings']);
-            add_action('network_admin_edit_module-settings', [$this, 'saveSettings']);
         } else {
             add_action('admin_menu', [$this, 'registerSubmenu']);
-            add_action('admin_post', [$this, 'saveSettings']);
         }
+        foreach ($actions as $action => $callback) {
+            add_action($action_hook_prefix . $action, function() use ($action, $callback) {
+                if (!$this->get_bulk_action()) {
+                    check_admin_referer($action, 'mosparo-nonce');
+                }
+                $callback($action);
+            });
+        }
+        $bulk_action_handler = function() use ($action_hook_prefix) {
+            check_admin_referer('mosparo-settings-bulk-actions', 'mosparo-nonce');
+            do_action($action_hook_prefix . $this->get_bulk_action());
+        };
+        add_action($action_hook_prefix.'mosparo-settings-bulk-actions', $bulk_action_handler);
     }
 
     function addPluginLink($links)
@@ -91,10 +120,10 @@ class AdminHelper
 
         $configHelper = ConfigHelper::getInstance();
         $action = sanitize_key($_REQUEST['action'] ?? '');
-        if ($action === 'add-connection') {
+        if ($action === 'mosparo-add-connection') {
             $connection = new \MosparoIntegration\Entity\Connection();
             require_once($this->pluginPath . '/views/admin/connection-form.php');
-        } else if ($action === 'edit-connection') {
+        } else if ($action === 'mosparo-edit-connection') {
             $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
             if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey) || !$configHelper->hasAccessToConnection($connectionKey)) {
                 $this->redirectToSettingsPage();
@@ -103,7 +132,7 @@ class AdminHelper
 
             $connection = $configHelper->getConnection($connectionKey);
             require_once($this->pluginPath . '/views/admin/connection-form.php');
-        } else if ($action === 'delete-connection') {
+        } else if ($action === 'mosparo-delete-connection') {
             $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
             if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey) || !$configHelper->hasAccessToConnection($connectionKey)) {
                 $this->redirectToSettingsPage();
@@ -115,7 +144,7 @@ class AdminHelper
                 return;
             }
             require_once($this->pluginPath . '/views/admin/connection-delete.php');
-        } else if ($action === 'module-settings') {
+        } else if ($action === 'mosparo-module-settings') {
             $moduleHelper = ModuleHelper::getInstance();
             $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
             if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
@@ -129,212 +158,188 @@ class AdminHelper
         }
     }
 
-    public function executeAction()
-    {
-        if (!current_user_can( 'manage_options')) {
+    //Single & bulk action handle
+    public function actionRefreshCssCache($action) {
+        $connectionKeys = $_REQUEST['connection'] ?? '';
+        if (!is_array($connectionKeys)) {
+            $connectionKeys = [$connectionKeys];
+        }
+
+        if (!$connectionKeys) {
+            $this->redirectToSettingsPage();
             return;
         }
-
-        if (!isset($_REQUEST['action']) || trim($_REQUEST['action']) === '') {
-            return;
-        }
-
-        $configHelper = ConfigHelper::getInstance();
-        $action = sanitize_key($_REQUEST['action']);
-
-        if ($action === 'refresh-css-cache') {
-            if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'bulk-connections') && !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'refresh-css-cache'))) {
-                wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
-            }
-
-            $connectionKeys = $_REQUEST['connection'] ?? '';
-            if (!is_array($connectionKeys)) {
-                $connectionKeys = [$connectionKeys];
-            }
-
-            if (!$connectionKeys) {
-                $this->redirectToSettingsPage();
-                return;
-            }
-
-            foreach ($connectionKeys as $connectionKey) {
-                if (!$configHelper->hasConnection($connectionKey)) {
-                    continue;
-                }
-
-                $connection = $configHelper->getConnection($connectionKey);
-
-                $frontendHelper = FrontendHelper::getInstance();
-                $frontendHelper->refreshCssUrlCache($connection);
-            }
-
-            $this->redirectToSettingsPage('css-cache-refreshed');
-        } else if ($action === 'enable' || $action === 'disable') {
-            if (!isset($_REQUEST['_wpnonce']) || (!wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'bulk-modules') && !wp_verify_nonce(sanitize_key($_REQUEST['_wpnonce']), 'change-module'))) {
-                wp_die(__('No access.', 'mosparo-integration'), __('mosparo Integration', 'mosparo-integration'));
-            }
-
-            if (!isset($_REQUEST['module'])) {
-                $this->redirectToSettingsPage();
-            }
-
-            $modules = $_REQUEST['module'];
-            if (!is_array($modules)) {
-                $modules = [$modules];
-            }
-            $modules = array_map('sanitize_key', $modules);
-            $message = '';
-            foreach ($modules as $module) {
-                if ($action === 'enable') {
-                    $configHelper->enableModule($module);
-                    $message = 'enabled';
-                } else if ($action === 'disable') {
-                    $configHelper->disableModule($module);
-                    $message = 'disabled';
-                }
-            }
-
-            if (count($modules) > 1) {
-                $message = 'multiple-' . $message;
-            } else {
-                $message = 'one-' . $message;
-            }
-
-            $configHelper->saveConfiguration();
-            $this->redirectToSettingsPage($message);
-        }
-    }
-
-    public function saveSettings()
-    {
-        if (!current_user_can( 'manage_options')) {
-            return;
-        }
-
-        $action = sanitize_key($_POST['mosparo_action'] ?? '');
-        if (!$this->verifyNonce($action)) {
-            return;
-        }
-
         $configHelper = ConfigHelper::getInstance();
 
-        if ($action === 'add-connection' || $action === 'edit-connection') {
-            if ($action === 'add-connection') {
-                $connection = new Connection();
-                $connection->setKey(sanitize_key($_REQUEST['key']));
-
-                // It's not allowed to use mc__wp_config as key since this is the key for the connection
-                // defined in the wp-config.php
-                if (strtolower($connection->getKey()) === 'mc__wp_config') {
-                    $connection->setKey($connection->getKey() . uniqid());
-                }
-
-                if ($connection->getKey() === '') {
-                    $connection->setKey(sanitize_key($_REQUEST['name']));
-                }
-
-                if (is_multisite() && is_network_admin()) {
-                    $connection->setOrigin(ConfigHelper::ORIGIN_NETWORK);
-
-                } else {
-                    $connection->setOrigin(ConfigHelper::ORIGIN_LOCAL);
-                }
-            } else if ($action === 'edit-connection') {
-                $key = sanitize_key($_REQUEST['key']);
-
-                if (!$key || !$configHelper->hasConnection($key)) {
-                    $this->redirectToSettingsPage();
-                    return;
-                }
-
-                $connection = $configHelper->getConnection($key);
-            }
-
-            $connection->setName(sanitize_text_field($_REQUEST['name']));
-            $connection->setHost(sanitize_url($_REQUEST['host']));
-            $connection->setUuid(sanitize_key($_REQUEST['uuid']));
-            $connection->setPublicKey(sanitize_text_field($_REQUEST['publicKey']));
-
-            $defaults = $_REQUEST['defaults'];
-            if (!is_array($defaults)) {
-                $defaults = [];
-            }
-
-            foreach ($defaults as $key => $default) {
-                $defaults[$key] = (sanitize_key($default));
-            }
-
-            if (
-                ($connection->isDefaultFor('general') && !in_array('general', $defaults)) ||
-                $configHelper->getConnectionFor('general') === false
-            ) {
-                $defaults[] = 'general';
-            }
-
-            $configHelper->resetDefaultConnections($defaults);
-            $connection->setDefaults($defaults);
-
-            // Only update the private key if it is not empty
-            if ($_REQUEST['privateKey'] !== '') {
-                $connection->setPrivateKey(sanitize_text_field($_REQUEST['privateKey']));
-            }
-
-            $connection->setVerifySsl(boolval(sanitize_key($_REQUEST['verifySsl'] ?? false)));
-
-            if ($action === 'add-connection') {
-                if ($configHelper->hasConnection($connection->getKey())) {
-                    $connection->setKey($connection->getKey() . '_' . uniqid());
-                }
-            }
-
-            $configHelper->addConnection($connection);
-            $configHelper->saveConfiguration();
-
-            $frontendHelper = FrontendHelper::getInstance();
-            $frontendHelper->clearCssUrlCache($connection);
-
-            $this->redirectToSettingsPage('connection-saved');
-        } else if ($action === 'delete-connection') {
-            $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
-            if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey)) {
-                $this->redirectToSettingsPage();
-                return;
+        foreach ($connectionKeys as $connectionKey) {
+            if (!$configHelper->hasConnection($connectionKey)) {
+                continue;
             }
 
             $connection = $configHelper->getConnection($connectionKey);
-            if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
-                $this->redirectToSettingsPage('general-locked');
-                return;
+
+            $frontendHelper = FrontendHelper::getInstance();
+            $frontendHelper->refreshCssUrlCache($connection);
+        }
+
+        $this->redirectToSettingsPage('css-cache-refreshed');
+    }
+
+    //Single & bulk action handle
+    public function toggleEnableModule($enable) {
+        if (!isset($_REQUEST['module'])) {
+            $this->redirectToSettingsPage();
+        }
+
+        $configHelper = ConfigHelper::getInstance();
+        $modules = $_REQUEST['module'];
+        if (!is_array($modules)) {
+            $modules = [$modules];
+        }
+        $modules = array_map('sanitize_key', $modules);
+        $message = '';
+        foreach ($modules as $module) {
+            if ($enable) {
+                $configHelper->enableModule($module);
+                $message = 'enabled';
+            } else {
+                $configHelper->disableModule($module);
+                $message = 'disabled';
+            }
+        }
+
+        if (count($modules) > 1) {
+            $message = 'multiple-' . $message;
+        } else {
+            $message = 'one-' . $message;
+        }
+
+        $configHelper->saveConfiguration();
+        $this->redirectToSettingsPage($message);
+    }
+
+    public function actionEnableModule() {
+        return $this->toggleEnableModule(true);
+    }
+
+    public function actionDisableModule() {
+        return $this->toggleEnableModule(false);
+    }
+
+    // Add & Edit connection
+    public function actionSaveConnection($action) {
+        $configHelper = ConfigHelper::getInstance();
+
+        if ($action === 'mosparo-add-connection') {
+            $connection = new Connection();
+            $connection->setKey(sanitize_key($_REQUEST['key']));
+
+            // It's not allowed to use mc__wp_config as key since this is the key for the connection
+            // defined in the wp-config.php
+            if (strtolower($connection->getKey()) === 'mc__wp_config') {
+                $connection->setKey($connection->getKey() . uniqid());
             }
 
-            $configHelper->deleteConnection($connection);
-            $configHelper->saveConfiguration();
-            
-            $this->redirectToSettingsPage('connection-deleted');
-        } else if ($action == 'module-settings') {
-            $moduleHelper = ModuleHelper::getInstance();
-            $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
-            if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
+            if ($connection->getKey() === '') {
+                $connection->setKey(sanitize_key($_REQUEST['name']));
+            }
+
+            if (is_multisite() && is_network_admin()) {
+                $connection->setOrigin(ConfigHelper::ORIGIN_NETWORK);
+
+            } else {
+                $connection->setOrigin(ConfigHelper::ORIGIN_LOCAL);
+            }
+        } else if ($action === 'mosparo-edit-connection') {
+            $key = sanitize_key($_REQUEST['key']);
+
+            if (!$key || !$configHelper->hasConnection($key)) {
                 $this->redirectToSettingsPage();
                 return;
             }
-            $module = $moduleHelper->getActiveModule($moduleKey);
-            $configHelper->saveModuleConfiguration($module);
-            $this->redirectToSettingsPage('module-settings-saved');
-        } else {
-            $this->redirectToSettingsPage();
+
+            $connection = $configHelper->getConnection($key);
         }
+
+        $connection->setName(sanitize_text_field($_REQUEST['name']));
+        $connection->setHost(sanitize_url($_REQUEST['host']));
+        $connection->setUuid(sanitize_key($_REQUEST['uuid']));
+        $connection->setPublicKey(sanitize_text_field($_REQUEST['publicKey']));
+
+        $defaults = $_REQUEST['defaults'];
+        if (!is_array($defaults)) {
+            $defaults = [];
+        }
+
+        foreach ($defaults as $key => $default) {
+            $defaults[$key] = (sanitize_key($default));
+        }
+
+        if (
+            ($connection->isDefaultFor('general') && !in_array('general', $defaults)) ||
+                $configHelper->getConnectionFor('general') === false
+        ) {
+            $defaults[] = 'general';
+        }
+
+        $configHelper->resetDefaultConnections($defaults);
+        $connection->setDefaults($defaults);
+
+        // Only update the private key if it is not empty
+        if ($_REQUEST['privateKey'] !== '') {
+            $connection->setPrivateKey(sanitize_text_field($_REQUEST['privateKey']));
+        }
+
+        $connection->setVerifySsl(boolval(sanitize_key($_REQUEST['verifySsl'] ?? false)));
+
+        if ($action === 'mosparo-add-connection') {
+            if ($configHelper->hasConnection($connection->getKey())) {
+                $connection->setKey($connection->getKey() . '_' . uniqid());
+            }
+        }
+
+        $configHelper->addConnection($connection);
+        $configHelper->saveConfiguration();
+
+        $frontendHelper = FrontendHelper::getInstance();
+        $frontendHelper->clearCssUrlCache($connection);
+
+        $this->redirectToSettingsPage('connection-saved');
     }
 
-    protected function verifyNonce($action, $nonceKey = 'save-connection')
-    {
-        if (!isset($_POST[$nonceKey])) {
-            return false;
+    public function actionDeleteConnection($action) {
+        $configHelper = ConfigHelper::getInstance();
+
+        $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
+        if ($connectionKey === '' || !$configHelper->hasConnection($connectionKey)) {
+            $this->redirectToSettingsPage();
+            return;
         }
 
-        $field  = wp_unslash(sanitize_key($_POST[$nonceKey]));
+        $connection = $configHelper->getConnection($connectionKey);
+        if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
+            $this->redirectToSettingsPage('general-locked');
+            return;
+        }
 
-        return wp_verify_nonce($field, $action);
+        $configHelper->deleteConnection($connection);
+        $configHelper->saveConfiguration();
+            
+        $this->redirectToSettingsPage('connection-deleted');
+    }
+
+    public function actionSaveModuleSettings($action) {
+        $configHelper = ConfigHelper::getInstance();
+        $moduleHelper = ModuleHelper::getInstance();
+        $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
+        if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
+            $this->redirectToSettingsPage();
+            return;
+        }
+        $module = $moduleHelper->getActiveModule($moduleKey);
+        $configHelper->saveModuleConfiguration($module);
+
+        $this->redirectToSettingsPage('module-settings-saved');
     }
 
     public function redirectToSettingsPage($message = null)
@@ -363,10 +368,20 @@ class AdminHelper
 
     public function buildConfigPostUrl($action = '')
     {
+        $url = '';
         if (is_network_admin()) {
-            return add_query_arg(['action' => $action], network_admin_url('edit.php'));
+            $url = network_admin_url('edit.php');
+        } else {
+            $url = admin_url('admin-post.php');
         }
-        return admin_url('admin-post.php');
+        $args = [];
+        if ($action && is_string($action)) {
+            $args['action'] = $action;
+        } else if (is_array($action)) {
+            $args = $action;
+            $action = $args['action'];
+        }
+        return wp_nonce_url(add_query_arg($args, $url), $action, 'mosparo-nonce');
     }
 
     public function displayAdminNotice()
@@ -404,7 +419,7 @@ class AdminHelper
         echo '<a href="https://mosparo.io/how-to-use/" class="button button-primary" target="_blank">' . __('Read more', 'mosparo-integration') . '</a>';
 
         if ($withAddButton) {
-            echo '<a href="' . esc_url($this->buildConfigPageUrl(['action' => 'add-connection'])) . '" class="button button-secondary button-space-left">' . __('Add connection', 'mosparo-integration') . '</a>';
+            echo '<a href="' . esc_url($this->buildConfigPageUrl(['action' => 'mosparo-add-connection'])) . '" class="button button-secondary button-space-left">' . __('Add connection', 'mosparo-integration') . '</a>';
         }
 
         echo '</div>';

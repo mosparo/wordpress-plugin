@@ -9,11 +9,10 @@
     <div>
         <h2>
             <?php _e('Connection', 'mosparo-integration'); ?>
-            <a href="<?php echo esc_url($this->buildConfigPageUrl(['action' => 'add-connection'])); ?>" class="page-title-action"><?php _e('Add connection', 'mosparo-integration'); ?></a>
+            <a href="<?php echo esc_url($this->buildConfigPageUrl(['action' => 'mosparo-add-connection'])); ?>" class="page-title-action"><?php _e('Add connection', 'mosparo-integration'); ?></a>
         </h2>
-
-        <form method="post">
-            <input type="hidden" name="page" value="">
+        <?php $action_url = $this->buildConfigPostUrl('mosparo-settings-bulk-actions');?>
+        <form method="post" action="<?php echo esc_url($action_url); ?>">
             <?php
                 $connectionTable = new \MosparoIntegration\Admin\ConnectionListTable();
                 $connectionTable->prepare_items();
@@ -26,8 +25,7 @@
     <div>
         <h2><?php _e('Modules', 'mosparo-integration'); ?></h2>
 
-        <form method="post">
-            <input type="hidden" name="page" value="">
+        <form method="post" action="<?php echo esc_url($action_url); ?>">
             <?php
                 $moduleTable = new \MosparoIntegration\Admin\ModuleListTable();
                 $moduleTable->prepare_items();

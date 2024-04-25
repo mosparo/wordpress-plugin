@@ -75,16 +75,16 @@ class ConnectionListTable extends WP_List_Table
 
         $isSameOrigin = $item->getOrigin() === ConfigHelper::ORIGIN_LOCAL || (is_network_admin() && $item->getOrigin() === ConfigHelper::ORIGIN_NETWORK);
         if ($isSameOrigin) {
-            $editUrl = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'edit-connection', 'connection' => $item->getKey()]), 'edit-connection');
-            $actions['edit'] = sprintf('<a href="%s">%s</a>', $editUrl, __('Edit', 'mosparo-integration'));
+            $editUrl = $adminHelper->buildConfigPageUrl(['action' => 'mosparo-edit-connection', 'connection' => $item->getKey()]);
+            $actions['mosparo-edit-connection'] = sprintf('<a href="%s">%s</a>', $editUrl, __('Edit', 'mosparo-integration'));
         }
 
-        $refreshCssCacheUrl = wp_nonce_url($adminHelper->buildConfigPageUrl(['action' => 'refresh-css-cache', 'connection' => $item->getKey()]), 'refresh-css-cache');
-        $actions['refresh-css-cache'] = sprintf('<a href="%s">%s</a>', $refreshCssCacheUrl, __('Refresh CSS cache', 'mosparo-integration'));
+        $refreshCssCacheUrl = $adminHelper->buildConfigPostUrl(['action' => 'mosparo-refresh-css-cache', 'connection' => $item->getKey()]);
+        $actions['mosparo-refresh-css-cache'] = sprintf('<a href="%s">%s</a>', $refreshCssCacheUrl, __('Refresh CSS cache', 'mosparo-integration'));
 
         if (!$configHelper->isConnectionDefaultConnectionFor($item, 'general') && $isSameOrigin) {
-            $deleteUrl = $adminHelper->buildConfigPageUrl(['action' => 'delete-connection', 'connection' => $item->getKey()]);
-            $actions['delete'] = sprintf('<a href="%s">%s</a>', $deleteUrl, __('Delete', 'mosparo-integration'));
+            $deleteUrl = $adminHelper->buildConfigPostUrl(['action' => 'mosparo-delete-connection', 'connection' => $item->getKey()]);
+            $actions['mosparo-delete-connection'] = sprintf('<a href="%s">%s</a>', $deleteUrl, __('Delete', 'mosparo-integration'));
         }
 
         if ($item->getOrigin() === ConfigHelper::ORIGIN_WP_CONFIG) {
@@ -129,7 +129,7 @@ class ConnectionListTable extends WP_List_Table
     protected function get_bulk_actions()
     {
         return [
-            'refresh-css-cache' => __('Refresh CSS cache', 'mosparo-integration'),
+            'mosparo-refresh-css-cache' => __('Refresh CSS cache', 'mosparo-integration'),
         ];
     }
 

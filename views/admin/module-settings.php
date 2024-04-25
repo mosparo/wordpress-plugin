@@ -42,7 +42,6 @@ $displaySettingRow = function($fieldKey, $field) use (&$settingFieldInputHtml) {
     <div class="mosparo-two-columns">
         <div class="left-column">
             <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
-                <input type="hidden" name="mosparo_action" value="module-settings" />
                 <input type="hidden" name="module" value="<?php echo esc_attr($module->getKey()); ?>" />
 
                 <table class="form-table" role="presentation">
@@ -56,7 +55,6 @@ $displaySettingRow = function($fieldKey, $field) use (&$settingFieldInputHtml) {
                 </table>
                 <p>
                 <?php
-                    wp_nonce_field('module-settings', 'save-connection');
                     submit_button(__('Save module settings', 'mosparo-integration'), 'primary', 'submit', false);
                 ?>
                 </p>
