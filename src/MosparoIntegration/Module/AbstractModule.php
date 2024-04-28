@@ -49,7 +49,7 @@ abstract class AbstractModule
         return $this->settings;
     }
 
-    public function getSetting(string $key): mixed
+    public function getSetting(string $key)
     {
         if (isset($this->settings[$key]['value'])) {
             return $this->settings[$key]['value'];
