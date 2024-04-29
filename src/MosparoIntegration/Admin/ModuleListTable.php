@@ -93,7 +93,7 @@ class ModuleListTable extends WP_List_Table
             if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
                 $url = $adminHelper->buildConfigPostUrl(['action' => 'mosparo-disable-module', 'module' => $item->getKey()]);
                 $actions['mosparo-disable-module'] = sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration'));
-                if (!empty($item->getSettings())) {
+                if ($item->getSettings()) {
                     $url = $adminHelper->buildConfigPageUrl(['action' => 'mosparo-module-settings', 'module' => $item->getKey()]);
                     $actions['mosparo-module-settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
                 }

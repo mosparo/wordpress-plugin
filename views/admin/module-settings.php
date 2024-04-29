@@ -26,7 +26,19 @@ $displaySettingRow = function($fieldKey, $field) use (&$settingFieldInputHtml) {
     $html .= '</td>';
     $html .= '</tr>';
     echo $html;
-}
+};
+
+function form_header($module) {
+    if (!isset($module->getSettings()->getSettingsForm()['header'])) {
+        return;
+    }
+    $form_header = $module->getSettings()->getSettingsForm()['header'];
+    $html = '<h2>';
+    $html .= $form_header;
+    $html .= '</h2>';
+
+    echo $html;
+};
 
 ?>
 
@@ -34,20 +46,21 @@ $displaySettingRow = function($fieldKey, $field) use (&$settingFieldInputHtml) {
     <h1 class="mosparo-header">
         <?php echo esc_html(get_admin_page_title()); ?>
         &ndash;
-        <?php echo sprintf(__('"%s" Configuration', 'mosparo-integration'), $module->getName()); ?>
+        <?php echo sprintf(__('"%s" Module configuration', 'mosparo-integration'), $module->getName()); ?>
     </h1>
 
     <?php $this->displayAdminNotice(); ?>
 
     <div class="mosparo-two-columns">
         <div class="left-column">
+            <?php form_header($module); ?>
             <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
                 <input type="hidden" name="module" value="<?php echo esc_attr($module->getKey()); ?>" />
 
                 <table class="form-table" role="presentation">
                     <tbody>
                     <?php
-                    foreach ( $module->getSettings() as $key => $setting ) {
+                    foreach ( $module->getSettings()->getFields() as $key => $setting ) {
                         $displaySettingRow($module->getKey() . '_' . $key, $setting);
                     }
                     ?>

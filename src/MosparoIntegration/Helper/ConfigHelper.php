@@ -279,32 +279,39 @@ class ConfigHelper
     }
 
     public function loadModuleConfiguration(AbstractModule $module) {
-        $settings = $module->getSettings();
+        $moduleSettings = $module->getSettings();
+        if (!$moduleSettings) {
+            return;
+        }
         $config = $this->config;
         if (is_multisite() && !empty($this->networkConfig)) {
             $config = $this->networkConfig;
         }
-
-        foreach ($settings as $key => $setting) {
+        $fields = $moduleSettings->getFields();
+        foreach ($fields as $key => $setting) {
             $v = null;
             if (isset($config['modules-settings'][$module->getKey()][$key])) {
                 $v = $config['modules-settings'][$module->getKey()][$key];
             }
             if ($v !== null) {
-                $settings[$key]['value'] = $this->getTypedValue($v, $setting['type']);
+                $fields[$key]['value'] = $this->getTypedValue($v, $setting['type']);
             }
         }
-        return $module->setSettings(apply_filters('mosparo_integration_filter_module_settings', $settings, $module->getKey()));
+        return $moduleSettings->setSettings(apply_filters('mosparo_integration_filter_module_settings', $fields, $module->getKey()));
     }
 
     public function saveModuleConfiguration(AbstractModule $module) {
+        $moduleSettings = $module->getSettings();
+        if (!$moduleSettings) {
+            return;
+        }
         if (!isset($this->config['modules-settings'])) {
             $this->config['modules-settings'] = [];
         }
         if (!isset($this->config['modules-settings'][$module->getKey()])) {
             $this->config['modules-settings'][$module->getKey()] = [];
         }
-        foreach ($module->getSettings() as $key => $setting) {
+        foreach ($moduleSettings->getFields() as $key => $setting) {
             $formKey = $module->getKey() . '_' . $key;
             $v = '';
             if (isset($_REQUEST[$formKey])) {
