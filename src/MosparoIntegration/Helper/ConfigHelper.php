@@ -279,14 +279,16 @@ class ConfigHelper
     }
 
     public function loadModuleConfiguration(AbstractModule $module) {
-        $isMultisite = is_multisite();
-        $isNetworkAdminPage = is_network_admin();
         $settings = $module->getSettings();
+        $config = $this->config;
+        if (is_multisite() && !empty($this->networkConfig)) {
+            $config = $this->networkConfig;
+        }
 
         foreach ($settings as $key => $setting) {
             $v = null;
-            if (isset($this->config['modules-settings'][$module->getKey()][$key])) {
-                $v = $this->config['modules-settings'][$module->getKey()][$key];
+            if (isset($config['modules-settings'][$module->getKey()][$key])) {
+                $v = $config['modules-settings'][$module->getKey()][$key];
             }
             if ($v !== null) {
                 $settings[$key]['value'] = $this->getTypedValue($v, $setting['type']);
