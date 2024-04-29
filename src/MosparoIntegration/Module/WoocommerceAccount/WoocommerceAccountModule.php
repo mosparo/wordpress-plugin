@@ -31,11 +31,6 @@ class WoocommerceAccountModule extends AbstractModule
                 'label' => __('Enable Woocommerce lost password form protection', 'mosparo-integration'),
                 'type' => 'boolean',
                 'value' => 'On',
-            ],
-            'resetpassword_form' => [
-                'label' => __('Enable Woocommerce reset password form protection', 'mosparo-integration'),
-                'type' => 'boolean',
-                'value' => 'On',
             ]
         ];
     }
@@ -62,15 +57,11 @@ class WoocommerceAccountModule extends AbstractModule
         }
         if ($this->getSetting('register_form')) {
             add_action('woocommerce_register_form', [$accountForm, 'displayMosparoField']);
-            add_action('register_post', [$accountForm, 'verifyRegisterForm'], 10, 3);
+            add_filter('registration_errors', [$accountForm, 'verifyRegisterForm'], 999, 3);
         }
         if ($this->getSetting('lostpassword_form')) {
             add_action('woocommerce_lostpassword_form', [$accountForm, 'displayMosparoField']);
-            add_action('lostpassword_post', [$accountForm, 'verifyLostPasswordForm'], 10, 2);
+            add_filter('lostpassword_errors', [$accountForm, 'verifyLostPasswordForm'], 999, 2);
         }
-        // if ($this->getSetting('resetpassword_form')) {
-        //     add_action('woocommerce_resetpassword_form', [$accountForm, 'displayMosparoField']);
-        //     add_action('validate_password_reset', [$accountForm, 'verifyWoocommerceResetPasswordForm'], 10, 2);
-        // }
     }
 }
