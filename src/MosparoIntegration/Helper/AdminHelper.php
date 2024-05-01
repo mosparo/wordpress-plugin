@@ -424,7 +424,7 @@ class AdminHelper
         } else if ($message === 'css-cache-refreshed') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-integration')));
         } else if ($message === 'module-settings-saved') {
-            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module configuration was successfully saved.', 'mosparo-integration')));
+            echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module settings were successfully saved.', 'mosparo-integration')));
         }
     }
 

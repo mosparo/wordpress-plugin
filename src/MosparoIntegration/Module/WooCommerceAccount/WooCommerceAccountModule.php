@@ -16,7 +16,7 @@ class WooCommerceAccountModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('WooCommerce Account', 'mosparo-integration');
-        $this->description = __('Protects the WooCommerce account forms like login, register and password reset with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects the WooCommerce account forms like login, register and lost password with mosparo.', 'mosparo-integration');
         $this->dependencies = [
             'woocommerce' => ['name' => __('WooCommerce', 'mosparo-integration'), 'url' => 'https://woocommerce.com/']
         ];

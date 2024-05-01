@@ -15,7 +15,7 @@ class AccountModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Account', 'mosparo-integration');
-        $this->description = __('Protects the account forms like login, register and password reset with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects the account forms like login, register and lost password with mosparo.', 'mosparo-integration');
         $this->dependencies = [];
         $this->settings = new ModuleSettings(
             [
