@@ -92,6 +92,14 @@
                                     </label>
                                 </td>
                             </tr>
+                            <tr>
+                                <th></th>
+                                <td>
+                                    <div class="notice notice-info inline">
+                                        <p><?php _e('If you\'re using a plugin to minimize or optimize your website\'s JavaScript code, please check if you need to add an exception for the mosparo JavaScript file.', 'mosparo-integration'); ?></p>
+                                    </div>
+                                </td>
+                            </tr>
                             <?php
                                 $isGeneral = false;
                                 $isGeneralEditable = true;
