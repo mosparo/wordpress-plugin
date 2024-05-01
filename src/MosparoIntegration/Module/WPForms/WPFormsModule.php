@@ -17,7 +17,8 @@ class WPFormsModule extends AbstractModule
         ];
     }
 
-    public function canInitialize() {
+    public function canInitialize()
+    {
         return defined('WPFORMS_VERSION');
     }
 

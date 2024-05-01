@@ -12,14 +12,14 @@ use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
 use MosparoIntegration\Module\Account\AccountModule;
-use MosparoIntegration\Module\WoocommerceAccount\WoocommerceAccountModule;
+use MosparoIntegration\Module\WoocommerceAccount\WooCommerceAccountModule;
 
 class ModuleHelper
 {
     private static $instance;
     protected static $availableModules = [
         AccountModule::class,
-        WoocommerceAccountModule::class,
+        WooCommerceAccountModule::class,
         CommentsModule::class,
         ContactForm7Module::class,
         ElementorFormModule::class,
@@ -65,10 +65,12 @@ class ModuleHelper
             $module = new $moduleClass();
             if ($configHelper->isModuleActive($module->getKey())) {
                 $configHelper->loadModuleConfiguration($module);
-                //Disable fields display and form validations for managers/admin users
+
+                // Disable fields display and form validations for managers/admin users
                 if (!current_user_can('edit_users')) {
                     $module->initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
                 }
+
                 $this->activeModules[$module->getKey()] = $module;
             }
         }

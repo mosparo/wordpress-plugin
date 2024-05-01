@@ -23,7 +23,8 @@ class NinjaFormsModule extends AbstractModule
         ];
     }
 
-    public function canInitialize() {
+    public function canInitialize()
+    {
         return class_exists('\Ninja_Forms');
     }
 

@@ -18,7 +18,8 @@ class GravityFormsModule extends AbstractModule
         ];
     }
 
-    public function canInitialize() {
+    public function canInitialize()
+    {
         return class_exists('GFCommon');
     }
 

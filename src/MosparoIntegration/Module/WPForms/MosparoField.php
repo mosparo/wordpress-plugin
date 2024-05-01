@@ -45,7 +45,7 @@ class MosparoField extends WPForms_Field
         ], $this);
     }
 
-    public function field_display($field, $deprecated, $form_data)
+    public function field_display($field, $deprecated, $formData)
     {
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_wpforms');

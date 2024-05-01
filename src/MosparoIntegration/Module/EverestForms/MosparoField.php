@@ -31,17 +31,15 @@ class MosparoField extends EVF_Form_Fields
         parent::__construct();
     }
 
-
-
     /**
      * @inheritDoc
      */
-    public function field_prefill_value_property($properties, $field, $form_data)
+    public function field_prefill_value_property($properties, $field, $formData)
     {
-        $properties = parent::field_prefill_value_property($properties, $field, $form_data);
+        $properties = parent::field_prefill_value_property($properties, $field, $formData);
 
         // Process only for current field.
-        if ( $this->type !== $field['type'] ) {
+        if ($this->type !== $field['type']) {
             return $properties;
         }
 
@@ -55,7 +53,7 @@ class MosparoField extends EVF_Form_Fields
     /**
      * @inheritDoc
      */
-    public function field_display($field, $field_atts, $form_data)
+    public function field_display($field, $fieldAtts, $formData)
     {
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_everest-forms');

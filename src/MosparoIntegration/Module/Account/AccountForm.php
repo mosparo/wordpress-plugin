@@ -8,7 +8,7 @@ use MosparoIntegration\Helper\VerificationHelper;
 use MosparoIntegration\Module\AbstractModule;
 use WP_Error;
 
-//Wordpress + Woocommerce accounts forms
+//Wordpress + WooCommerce accounts forms
 class AccountForm
 {
     private static $instance;
@@ -32,14 +32,16 @@ class AccountForm
     }
 
     //Wordpress or woocommerce mutual exclusion for same hooks
-    public function canProcessRequest($woocommerce_nonce) {
+    public function canProcessRequest($woocommerceNonce)
+    {
         $bool = true;
 
-        if ($this->isWoocommerceRequest($woocommerce_nonce)) {
+        if ($this->isWoocommerceRequest($woocommerceNonce)) {
             $bool = ($this->module->getKey() == 'woocommerceaccount');
         } else {
             $bool = ($this->module->getKey() == 'account');
         }
+
         return $bool;
     }
 
@@ -50,26 +52,29 @@ class AccountForm
             echo __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration');
             return;
         }
+
         $frontendHelper = FrontendHelper::getInstance();
         echo $frontendHelper->generateField($connection);
     }
 
-    public function verifyLoginForm($user_or_error)
+    public function verifyLoginForm($userOrError)
     {
-        if (is_wp_error($user_or_error) ||
+        if (is_wp_error($userOrError) ||
             !$this->canProcessRequest('woocommerce-login-nonce')) {
-            return $user_or_error;
+            return $userOrError;
         }
+
         $connection = ConfigHelper::getInstance()->getConnectionFor($this->module->getDefaultKey(), true);
         if ($connection === false) {
             return new WP_Error('mosparo_integration_general_error',
                                 __('A general error occurred: no available connection', 'mosparo-integration')
             );
         }
+
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_'.$this->module->getKey().'_login_form_data', []);
+        $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_login_form_data', []);
 
         $verificationHelper = VerificationHelper::getInstance();
         $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
@@ -90,7 +95,7 @@ class AccountForm
                 __('Verification failed which means the form contains spam.', 'mosparo-integration')
             );
         }
-        return $user_or_error;
+        return $userOrError;
     }
 
     public function verifyRegisterForm(WP_Error $errors, $login, $email)
@@ -111,7 +116,7 @@ class AccountForm
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_'.$this->module->getKey().'_register_form_data', [
+        $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_register_form_data', [
             'user_login' => sanitize_user($_REQUEST['user_login']),
             'user_email' => sanitize_email($_REQUEST['user_email']),
         ]);
@@ -139,7 +144,7 @@ class AccountForm
         return $errors;
     }
 
-    public function verifyLostPasswordForm(WP_Error $errors, $user_data)
+    public function verifyLostPasswordForm(WP_Error $errors, $userData)
     {
         if ($errors->has_errors()
             || !$this->canProcessRequest('woocommerce-lost-password-nonce')) {
@@ -157,7 +162,7 @@ class AccountForm
         $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
         $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_'.$this->module->getKey().'_lost_password_form_data', [
+        $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_lost_password_form_data', [
             'user_login' => sanitize_user($_REQUEST['user_login']),
         ]);
 

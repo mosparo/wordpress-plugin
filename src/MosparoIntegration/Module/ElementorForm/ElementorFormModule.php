@@ -17,7 +17,8 @@ class ElementorFormModule extends AbstractModule
         ];
     }
 
-    public function canInitialize() {
+    public function canInitialize()
+    {
         return function_exists('elementor_pro_load_plugin');
     }
 

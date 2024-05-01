@@ -41,9 +41,9 @@ class AccountModule extends AbstractModule
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         $accountForm = new AccountForm($this);
-        add_filter('mosparo_integration_'.$this->getKey().'_login_form_data', function($form_data) {
-            $form_data['log'] = sanitize_user($_REQUEST['log']);
-            return $form_data;
+        add_filter('mosparo_integration_' . $this->getKey() . '_login_form_data', function($formData) {
+            $formData['log'] = sanitize_user($_REQUEST['log']);
+            return $formData;
         }, 1, 1);
         add_action('login_head', function () use ($pluginDirectoryUrl) {
             if (!wp_style_is('mosparo-integration-user-form'))  {

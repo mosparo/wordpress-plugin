@@ -23,7 +23,7 @@ class MosparoField extends FrmFieldType
 
         $input = $this->input_html();
 
-        $default_html = <<<DEFAULT_HTML
+        $defaultHtml = <<<DEFAULT_HTML
 <div id="frm_field_[id]_container" class="frm_form_field form-field [required_class][error_class]">
     $input
     [if description]<div class="frm_description" id="frm_desc_field_[key]">[description]</div>[/if description]
@@ -31,7 +31,7 @@ class MosparoField extends FrmFieldType
 </div>
 DEFAULT_HTML;
 
-        return $default_html;
+        return $defaultHtml;
     }
 
     /**
@@ -55,7 +55,7 @@ DEFAULT_HTML;
     /**
      * @inheritdoc
      */
-    public function front_field_input($args, $shortcode_atts)
+    public function front_field_input($args, $shortcodeAtts)
     {
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_formidable');

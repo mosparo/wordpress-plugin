@@ -3,7 +3,6 @@
 namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Entity\Connection;
-use MosparoIntegration\Module\AbstractModule;
 
 class AdminHelper
 {
@@ -26,7 +25,7 @@ class AdminHelper
     {
     }
 
-    public function get_bulk_action() {
+    public function getBulkAction() {
         $action = false;
 
         if (isset($_REQUEST['action2'])) {
@@ -53,27 +52,28 @@ class AdminHelper
             'mosparo-module-settings' => [$this, 'actionSaveModuleSettings'],
         ];
 
-        $action_hook_prefix = 'admin_post_';
+        $actionHookPrefix = 'admin_post_';
 
         if (is_multisite() && is_network_admin()) {
-            $action_hook_prefix = 'network_admin_edit_';
+            $actionHookPrefix = 'network_admin_edit_';
             add_action('network_admin_menu', [$this, 'registerSubmenu']);
         } else {
             add_action('admin_menu', [$this, 'registerSubmenu']);
         }
+
         foreach ($actions as $action => $callback) {
-            add_action($action_hook_prefix . $action, function() use ($action, $callback) {
-                if (!$this->get_bulk_action()) {
+            add_action($actionHookPrefix . $action, function() use ($action, $callback) {
+                if (!$this->getBulkAction()) {
                     check_admin_referer($action, 'mosparo-nonce');
                 }
                 $callback($action);
             });
         }
-        $bulk_action_handler = function() use ($action_hook_prefix) {
+
+        add_action($actionHookPrefix . 'mosparo-settings-bulk-actions', function() use ($actionHookPrefix) {
             check_admin_referer('mosparo-settings-bulk-actions', 'mosparo-nonce');
-            do_action($action_hook_prefix . $this->get_bulk_action());
-        };
-        add_action($action_hook_prefix.'mosparo-settings-bulk-actions', $bulk_action_handler);
+            do_action($actionHookPrefix . $this->getBulkAction());
+        });
     }
 
     function addPluginLink($links)
@@ -119,6 +119,7 @@ class AdminHelper
         }
 
         $configHelper = ConfigHelper::getInstance();
+
         $action = sanitize_key($_REQUEST['action'] ?? '');
         if ($action === 'mosparo-add-connection') {
             $connection = new \MosparoIntegration\Entity\Connection();
@@ -131,6 +132,7 @@ class AdminHelper
             }
 
             $connection = $configHelper->getConnection($connectionKey);
+
             require_once($this->pluginPath . '/views/admin/connection-form.php');
         } else if ($action === 'mosparo-delete-connection') {
             $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
@@ -138,11 +140,13 @@ class AdminHelper
                 $this->redirectToSettingsPage();
                 return;
             }
+
             $connection = $configHelper->getConnection($connectionKey);
             if ($configHelper->isConnectionDefaultConnectionFor($connection, 'general')) {
                 $this->redirectToSettingsPage('general-locked');
                 return;
             }
+
             require_once($this->pluginPath . '/views/admin/connection-delete.php');
         } else if ($action === 'mosparo-module-settings') {
             $moduleHelper = ModuleHelper::getInstance();
@@ -151,7 +155,9 @@ class AdminHelper
                 $this->redirectToSettingsPage();
                 return;
             }
+
             $module = $moduleHelper->getActiveModule($moduleKey);
+
             require_once($this->pluginPath . '/views/admin/module-settings.php');
         } else {
             require_once($this->pluginPath . '/views/admin/settings.php');
@@ -159,7 +165,8 @@ class AdminHelper
     }
 
     //Single & bulk action handle
-    public function actionRefreshCssCache($action) {
+    public function actionRefreshCssCache($action)
+    {
         $connectionKeys = $_REQUEST['connection'] ?? '';
         if (!is_array($connectionKeys)) {
             $connectionKeys = [$connectionKeys];
@@ -169,6 +176,7 @@ class AdminHelper
             $this->redirectToSettingsPage();
             return;
         }
+
         $configHelper = ConfigHelper::getInstance();
 
         foreach ($connectionKeys as $connectionKey) {
@@ -186,7 +194,8 @@ class AdminHelper
     }
 
     //Single & bulk action handle
-    public function toggleEnableModule($enable) {
+    public function toggleEnableModule($enable)
+    {
         if (!isset($_REQUEST['module'])) {
             $this->redirectToSettingsPage();
         }
@@ -196,6 +205,7 @@ class AdminHelper
         if (!is_array($modules)) {
             $modules = [$modules];
         }
+
         $modules = array_map('sanitize_key', $modules);
         $message = '';
         foreach ($modules as $module) {
@@ -218,16 +228,19 @@ class AdminHelper
         $this->redirectToSettingsPage($message);
     }
 
-    public function actionEnableModule() {
-        return $this->toggleEnableModule(true);
+    public function actionEnableModule()
+    {
+        $this->toggleEnableModule(true);
     }
 
-    public function actionDisableModule() {
-        return $this->toggleEnableModule(false);
+    public function actionDisableModule()
+    {
+        $this->toggleEnableModule(false);
     }
 
     // Add & Edit connection
-    public function actionSaveConnection($action) {
+    public function actionSaveConnection($action)
+    {
         $configHelper = ConfigHelper::getInstance();
 
         if ($action === 'mosparo-add-connection') {
@@ -277,7 +290,7 @@ class AdminHelper
 
         if (
             ($connection->isDefaultFor('general') && !in_array('general', $defaults)) ||
-                $configHelper->getConnectionFor('general') === false
+            $configHelper->getConnectionFor('general') === false
         ) {
             $defaults[] = 'general';
         }
@@ -307,7 +320,8 @@ class AdminHelper
         $this->redirectToSettingsPage('connection-saved');
     }
 
-    public function actionDeleteConnection($action) {
+    public function actionDeleteConnection($action)
+    {
         $configHelper = ConfigHelper::getInstance();
 
         $connectionKey = sanitize_key($_REQUEST['connection'] ?? '');
@@ -328,14 +342,17 @@ class AdminHelper
         $this->redirectToSettingsPage('connection-deleted');
     }
 
-    public function actionSaveModuleSettings($action) {
+    public function actionSaveModuleSettings($action)
+    {
         $configHelper = ConfigHelper::getInstance();
         $moduleHelper = ModuleHelper::getInstance();
+
         $moduleKey = sanitize_key($_REQUEST['module'] ?? '');
         if (empty($moduleKey) || !$moduleHelper->getActiveModule($moduleKey)) {
             $this->redirectToSettingsPage();
             return;
         }
+
         $module = $moduleHelper->getActiveModule($moduleKey);
         $configHelper->saveModuleConfiguration($module);
 
