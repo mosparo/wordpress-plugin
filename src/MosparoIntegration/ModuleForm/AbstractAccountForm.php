@@ -1,6 +1,6 @@
 <?php
 
-namespace MosparoIntegration\Module\Account;
+namespace MosparoIntegration\ModuleForm;
 
 use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\FrontendHelper;
@@ -8,20 +8,25 @@ use MosparoIntegration\Helper\VerificationHelper;
 use MosparoIntegration\Module\AbstractModule;
 use WP_Error;
 
-//Wordpress + WooCommerce accounts forms
-class AccountForm
+/**
+ * Abstract account form for the WordPress and WooCommerce account forms.
+ */
+abstract class AbstractAccountForm
 {
-    private static $instance;
-
-    private AbstractModule $module;
+    protected AbstractModule $module;
 
     public function __construct(AbstractModule $module)
     {
         $this->module = $module;
     }
 
-    //Checks that woocommerce-specific nonce values are present in POST request
-    //Nonce checks have already been done at this point, only checks presence of token
+    /**
+     * Checks that woocommerce-specific nonce values are present in POST request
+     * Nonce checks have already been done at this point, only checks presence of token
+     *
+     * @var string $nonce
+     * @return bool
+     */
     public function isWoocommerceRequest($nonce) {
         $iswoo = false;
 
@@ -31,18 +36,21 @@ class AccountForm
         return $iswoo;
     }
 
-    //Wordpress or woocommerce mutual exclusion for same hooks
+    /**
+     * WordPress or WooCommerce mutual exclusion for same hooks
+     *
+     * @param string $woocommerceNonce
+     * @return bool
+     */
     public function canProcessRequest($woocommerceNonce)
     {
-        $bool = true;
-
         if ($this->isWoocommerceRequest($woocommerceNonce)) {
-            $bool = ($this->module->getKey() == 'woocommerceaccount');
+            return ($this->module->getKey() == 'woocommerceaccount');
         } else {
-            $bool = ($this->module->getKey() == 'account');
+            return ($this->module->getKey() == 'account');
         }
 
-        return $bool;
+        return true;
     }
 
     public function displayMosparoField()
@@ -59,15 +67,14 @@ class AccountForm
 
     public function verifyLoginForm($userOrError)
     {
-        if (is_wp_error($userOrError) ||
-            !$this->canProcessRequest('woocommerce-login-nonce')) {
+        if (is_wp_error($userOrError) || !$this->canProcessRequest('woocommerce-login-nonce')) {
             return $userOrError;
         }
 
         $connection = ConfigHelper::getInstance()->getConnectionFor($this->module->getDefaultKey(), true);
         if ($connection === false) {
             return new WP_Error('mosparo_integration_general_error',
-                                __('A general error occurred: no available connection', 'mosparo-integration')
+                __('A general error occurred: no available connection', 'mosparo-integration')
             );
         }
 
@@ -95,6 +102,7 @@ class AccountForm
                 __('Verification failed which means the form contains spam.', 'mosparo-integration')
             );
         }
+
         return $userOrError;
     }
 
@@ -104,12 +112,14 @@ class AccountForm
             !$this->canProcessRequest('woocommerce-register-nonce')) {
             return $errors;
         }
+
         $connection = ConfigHelper::getInstance()->getConnectionFor($this->module->getDefaultKey(), true);
         if ($connection === false) {
             $errors->add(
                 'mosparo_integration_general_error',
                 __('A general error occurred: no available connection', 'mosparo-integration')
             );
+
             return $errors;
         }
 
@@ -128,6 +138,7 @@ class AccountForm
                 'mosparo_integration_general_error',
                 sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage())
             );
+
             return $errors;
         }
 
@@ -146,16 +157,26 @@ class AccountForm
 
     public function verifyLostPasswordForm(WP_Error $errors, $userData)
     {
-        if ($errors->has_errors()
-            || !$this->canProcessRequest('woocommerce-lost-password-nonce')) {
+        $user_id = isset($_POST['user_id']) ? (int) $_POST['user_id'] : 0;
+
+        // If the user can edit the user, this method is called from an admin and therefore no verification required.
+        // This is the case, because in the edit user form in the backend we cannot show the mosparo box, so validation
+        // of the form is not possible at all (and not required).
+        if (current_user_can('edit_user', $user_id)) {
             return $errors;
         }
+
+        if ($errors->has_errors() || !$this->canProcessRequest('woocommerce-lost-password-nonce')) {
+            return $errors;
+        }
+
         $connection = ConfigHelper::getInstance()->getConnectionFor($this->module->getDefaultKey(), true);
         if ($connection === false) {
             $errors->add(
                 'mosparo_integration_general_error',
                 __('A general error occurred: no available connection', 'mosparo-integration')
             );
+
             return $errors;
         }
 
@@ -173,6 +194,7 @@ class AccountForm
                 'mosparo_integration_general_error',
                 sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage())
             );
+
             return $errors;
         }
 
@@ -186,6 +208,7 @@ class AccountForm
                 __('Verification failed which means the form contains spam.', 'mosparo-integration')
             );
         }
+
         return $errors;
     }
 

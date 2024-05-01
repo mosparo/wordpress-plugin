@@ -12,7 +12,7 @@ use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
 use MosparoIntegration\Module\Account\AccountModule;
-use MosparoIntegration\Module\WoocommerceAccount\WooCommerceAccountModule;
+use MosparoIntegration\Module\WooCommerceAccount\WooCommerceAccountModule;
 
 class ModuleHelper
 {
@@ -67,7 +67,7 @@ class ModuleHelper
                 $configHelper->loadModuleConfiguration($module);
 
                 // Disable fields display and form validations for managers/admin users
-                if (!current_user_can('edit_users')) {
+                if ($module->canInitialize()) {
                     $module->initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
                 }
 

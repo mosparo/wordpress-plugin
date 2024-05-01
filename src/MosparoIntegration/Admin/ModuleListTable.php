@@ -93,12 +93,14 @@ class ModuleListTable extends WP_List_Table
             if ($configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_LOCAL) {
                 $url = $adminHelper->buildConfigPostUrl(['action' => 'mosparo-disable-module', 'module' => $item->getKey()]);
                 $actions['mosparo-disable-module'] = sprintf('<a href="%s">%s</a>', $url, __('Disable', 'mosparo-integration'));
-                if ($item->getSettings()) {
-                    $url = $adminHelper->buildConfigPageUrl(['action' => 'mosparo-module-settings', 'module' => $item->getKey()]);
-                    $actions['mosparo-module-settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
-                }
             } else {
                 $actions['network_active'] = __('Enabled in network', 'mosparo-integration');
+            }
+
+            // The user should be able to edit the module settings on both levels (network admin and website admin).
+            if ($item->getSettings()) {
+                $url = $adminHelper->buildConfigPageUrl(['action' => 'mosparo-module-settings', 'module' => $item->getKey()]);
+                $actions['mosparo-module-settings'] = sprintf('<a href="%s">%s</a>', $url, __('Settings', 'mosparo-integration'));
             }
         } else {
             if (!$item->canInitialize()) {

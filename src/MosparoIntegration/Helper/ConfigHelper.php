@@ -287,17 +287,24 @@ class ConfigHelper
             return [];
         }
 
-        $config = $this->config;
-        if (is_multisite() && !empty($this->networkConfig)) {
-            $config = $this->networkConfig;
+        $moduleConfig = [];
+
+        // First, load the network config and set it in the array
+        if (is_multisite() && !empty($this->networkConfig) && isset($this->networkConfig['modules-settings'][$module->getKey()])) {
+            $moduleConfig = $this->networkConfig['modules-settings'][$module->getKey()];
+        }
+
+        // Secondly, if we have website settings, merge them with the network settings and override the network settings
+        if (isset($this->config['modules-settings'][$module->getKey()])) {
+            $moduleConfig = array_merge($moduleConfig, $this->config['modules-settings'][$module->getKey()]);
         }
 
         $fields = $moduleSettings->getFields();
         foreach ($fields as $key => $setting) {
             $v = null;
 
-            if (isset($config['modules-settings'][$module->getKey()][$key])) {
-                $v = $config['modules-settings'][$module->getKey()][$key];
+            if (isset($moduleConfig[$key])) {
+                $v = $moduleConfig[$key];
             }
 
             if ($v !== null) {

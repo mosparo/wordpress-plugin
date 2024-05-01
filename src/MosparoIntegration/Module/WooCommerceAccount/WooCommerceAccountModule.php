@@ -5,6 +5,9 @@ namespace MosparoIntegration\Module\WooCommerceAccount;
 use MosparoIntegration\Module\AbstractModule;
 use MosparoIntegration\Module\ModuleSettings;
 use MosparoIntegration\Module\Account\AccountForm;
+use MosparoIntegration\ModuleForm\AccountLoginForm;
+use MosparoIntegration\ModuleForm\AccountLostPasswordForm;
+use MosparoIntegration\ModuleForm\AccountRegisterForm;
 
 class WooCommerceAccountModule extends AbstractModule
 {
@@ -59,21 +62,22 @@ class WooCommerceAccountModule extends AbstractModule
             }
         });
 
-        $accountForm = new AccountForm($this);
-
         if ($this->getSettings()->getFieldValue('login_form')) {
-            add_action('woocommerce_login_form', [$accountForm, 'displayMosparoField']);
-            add_filter('wp_authenticate_user', [$accountForm, 'verifyLoginForm'], 10, 1);
+            $loginForm = new AccountLoginForm($this);
+            add_action('woocommerce_login_form', [$loginForm, 'displayMosparoField']);
+            add_filter('wp_authenticate_user', [$loginForm, 'verifyLoginForm'], 10, 1);
         }
 
         if ($this->getSettings()->getFieldValue('register_form')) {
-            add_action('woocommerce_register_form', [$accountForm, 'displayMosparoField']);
-            add_filter('registration_errors', [$accountForm, 'verifyRegisterForm'], 999, 3);
+            $registerForm = new AccountRegisterForm($this);
+            add_action('woocommerce_register_form', [$registerForm, 'displayMosparoField']);
+            add_filter('registration_errors', [$registerForm, 'verifyRegisterForm'], 999, 3);
         }
 
         if ($this->getSettings()->getFieldValue('lostpassword_form')) {
-            add_action('woocommerce_lostpassword_form', [$accountForm, 'displayMosparoField']);
-            add_filter('lostpassword_errors', [$accountForm, 'verifyLostPasswordForm'], 999, 2);
+            $lostPasswordForm = new AccountLostPasswordForm($this);
+            add_action('woocommerce_lostpassword_form', [$lostPasswordForm, 'displayMosparoField']);
+            add_filter('lostpassword_errors', [$lostPasswordForm, 'verifyLostPasswordForm'], 999, 2);
         }
     }
 }
