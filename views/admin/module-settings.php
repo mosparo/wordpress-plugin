@@ -55,7 +55,7 @@ function mosparoModuleSettingsFormHeader($module)
     <h1 class="mosparo-header">
         <?php echo esc_html(get_admin_page_title()); ?>
         &ndash;
-        <?php echo sprintf(__('"%s" Module configuration', 'mosparo-integration'), $module->getName()); ?>
+        <?php echo sprintf(__('%s &ndash; Module settings', 'mosparo-integration'), $module->getName()); ?>
     </h1>
 
     <?php $this->displayAdminNotice(); ?>
