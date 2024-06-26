@@ -11,7 +11,7 @@ use WP_Error;
  */
 class AccountRegisterForm extends AbstractAccountForm
 {
-    public function verifyRegisterForm(WP_Error $errors, $login, $email)
+    public function verifyRegisterForm(WP_Error $errors)
     {
         if ($errors->has_errors() ||
             !$this->canProcessRequest('woocommerce-register-nonce')) {
@@ -28,12 +28,12 @@ class AccountRegisterForm extends AbstractAccountForm
             return $errors;
         }
 
-        $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
-        $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
+        $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
         $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_register_form_data', [
-            'user_login' => sanitize_user($_REQUEST['user_login']),
-            'user_email' => sanitize_email($_REQUEST['user_email']),
+            'user_login' => sanitize_user($_POST['user_login'] ?? ''),
+            'user_email' => sanitize_email($_POST['user_email'] ?? ''),
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();

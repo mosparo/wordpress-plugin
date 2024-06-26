@@ -60,30 +60,23 @@ function mosparoModuleSettingsFormHeader($module)
 
     <?php $this->displayAdminNotice(); ?>
 
-    <div class="mosparo-two-columns">
-        <div class="left-column">
-            <?php mosparoModuleSettingsFormHeader($module); ?>
-            <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
-                <input type="hidden" name="module" value="<?php echo esc_attr($module->getKey()); ?>" />
+    <?php mosparoModuleSettingsFormHeader($module); ?>
+    <form method="post" action="<?php echo esc_url($this->buildConfigPostUrl($action)); ?>">
+        <input type="hidden" name="module" value="<?php echo esc_attr($module->getKey()); ?>" />
 
-                <table class="form-table" role="presentation">
-                    <tbody>
-                    <?php
-                    foreach ( $module->getSettings()->getFields() as $key => $setting ) {
-                        mosparoModuleSettingsDisplayRow($configHelper, $module->getKey() . '_' . $key, $setting);
-                    }
-                    ?>
-                    </tbody>
-                </table>
-                <p>
-                <?php
-                    submit_button(__('Save module settings', 'mosparo-integration'), 'primary', 'submit', false);
-                ?>
-                </p>
-            </form>
-        </div>
-        <div class="right-column">
-            <?php $this->displayHowToUseBox(false); ?>
-        </div>
-    </div>
+        <table class="form-table" role="presentation">
+            <tbody>
+            <?php
+            foreach ( $module->getSettings()->getFields() as $key => $setting ) {
+                mosparoModuleSettingsDisplayRow($configHelper, $module->getKey() . '_' . $key, $setting);
+            }
+            ?>
+            </tbody>
+        </table>
+        <p>
+        <?php
+            submit_button(__('Save module settings', 'mosparo-integration'), 'primary', 'submit', false);
+        ?>
+        </p>
+    </form>
 </div>

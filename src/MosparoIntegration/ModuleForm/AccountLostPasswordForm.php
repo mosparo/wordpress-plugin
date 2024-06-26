@@ -13,12 +13,12 @@ class AccountLostPasswordForm extends AbstractAccountForm
 {
     public function verifyLostPasswordForm(WP_Error $errors, $userData)
     {
-        $user_id = isset($_POST['user_id']) ? (int) $_POST['user_id'] : 0;
+        $userId = isset($_POST['user_id']) ? (int) $_POST['user_id'] : 0;
 
         // If the user can edit the user, this method is called from an admin and therefore no verification required.
         // This is the case, because in the edit user form in the backend we cannot show the mosparo box, so validation
         // of the form is not possible at all (and not required).
-        if (current_user_can('edit_user', $user_id)) {
+        if ($userId && current_user_can('edit_user', $userId)) {
             return $errors;
         }
 

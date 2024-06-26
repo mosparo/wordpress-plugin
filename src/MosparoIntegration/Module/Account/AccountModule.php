@@ -63,13 +63,13 @@ class AccountModule extends AbstractModule
         if ($this->getSettings()->getFieldValue('register_form')) {
             $registerForm = new AccountRegisterForm($this);
             add_action('register_form', [$registerForm, 'displayMosparoField'], 10, 1);
-            add_filter('registration_errors', [$registerForm, 'verifyRegisterForm'], 999, 3);
+            add_filter('registration_errors', [$registerForm, 'verifyRegisterForm'], 999, 1);
         }
 
         if ($this->getSettings()->getFieldValue('lostpassword_form')) {
             $lostPasswordForm = new AccountLostPasswordForm($this);
             add_action('lostpassword_form', [$lostPasswordForm, 'displayMosparoField'], 10, 1);
-            add_action('lostpassword_errors', [$lostPasswordForm, 'verifyLostPasswordForm'], 999, 2);
+            add_action('lostpassword_post', [$lostPasswordForm, 'verifyLostPasswordForm'], 999, 2);
         }
     }
 
