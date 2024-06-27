@@ -30,7 +30,7 @@
                     <table class="form-table" role="presentation">
                         <tbody>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="key"><?php _e('Key', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -41,7 +41,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="name"><?php _e('Name', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -49,7 +49,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="host"><?php _e('Host', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -57,7 +57,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="uuid"><?php _e('Unique identification number', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -65,7 +65,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="publicKey"><?php _e('Public Key', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -73,7 +73,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>
+                                <th scope="row">
                                     <label for="privateKey"><?php _e('Private Key', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
@@ -112,12 +112,15 @@
                                 }
                             ?>
                             <tr>
-                                <th><?php _e('General', 'mosparo-integration'); ?></th>
+                                <th scope="row"><?php _e('General', 'mosparo-integration'); ?></th>
                                 <td>
-                                    <label for="defaultGeneral">
-                                        <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?> <?php echo !$isGeneralEditable ? 'disabled' : ''; ?>>
-                                        <?php _e('Default connection', 'mosparo-integration'); ?>
-                                    </label>
+                                    <fieldset>
+                                        <legend class="screen-reader-text"><span><?php _e('General', 'mosparo-integration'); ?></span></legend>
+                                        <label for="defaultGeneral">
+                                            <input name="defaults[]" type="checkbox" id="defaultGeneral" value="general" <?php echo $isGeneral ? 'checked disabled' : ''; ?> <?php echo !$isGeneralEditable ? 'disabled' : ''; ?>>
+                                            <?php _e('Default connection', 'mosparo-integration'); ?>
+                                        </label>
+                                    </fieldset>
                                     <?php if ($isGeneral): ?>
                                         <p class="description">
                                             <?php _e('You cannot unset the default connection. Please configure a new connection and mark it as the default connection.', 'mosparo-integration'); ?>
@@ -132,12 +135,15 @@
                             </tr>
                             <?php foreach ($moduleHelper->getActiveModules() as $module): ?>
                                 <tr>
-                                    <th><?php echo $module->getName(); ?></th>
+                                    <th scope="row"><?php echo $module->getName(); ?></th>
                                     <td>
-                                        <label for="default_<?php echo $module->getDefaultKey(); ?>">
-                                            <input name="defaults[]" type="checkbox" id="default_<?php echo $module->getDefaultKey(); ?>" value="<?php echo $module->getDefaultKey(); ?>" <?php echo $connection->isDefaultFor($module->getDefaultKey()) ? 'checked' : ''; ?>>
-                                            <?php echo sprintf(__('Default connection for %s', 'mosparo-integration'), $module->getName()); ?>
-                                        </label>
+                                        <fieldset>
+                                            <legend class="screen-reader-text"><span><?php echo $module->getName(); ?></span></legend>
+                                            <label for="default_<?php echo $module->getDefaultKey(); ?>">
+                                                <input name="defaults[]" type="checkbox" id="default_<?php echo $module->getDefaultKey(); ?>" value="<?php echo $module->getDefaultKey(); ?>" <?php echo $connection->isDefaultFor($module->getDefaultKey()) ? 'checked' : ''; ?>>
+                                                <?php echo sprintf(__('Default connection for %s', 'mosparo-integration'), $module->getName()); ?>
+                                            </label>
+                                        </fieldset>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
