@@ -22,23 +22,26 @@ class WooCommerceAccountModule extends AbstractModule
         $this->settings = new ModuleSettings(
             [
                 'login_form' => [
-                    'label' => __('Woocommerce login form', 'mosparo-integration'),
+                    'label' => __('Login form', 'mosparo-integration'),
+                    'description' => __('Protect the WooCommerce login form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ],
                 'register_form' => [
-                    'label' => __('Woocommerce registration form', 'mosparo-integration'),
+                    'label' => __('Registration form', 'mosparo-integration'),
+                    'description' => __('Protect the WooCommerce registration form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ],
                 'lostpassword_form' => [
-                    'label' => __('Woocommerce lost password form', 'mosparo-integration'),
+                    'label' => __('Lost password form', 'mosparo-integration'),
+                    'description' => __('Protect the WooCommerce lost password form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ]
             ],
             [
-                'header' => __('Please choose which WooCommerce forms you want to protect with mosparo.', 'mosparo-integration'),
+                'header' => __('Please choose which WooCommerce account forms you want to protect with mosparo.', 'mosparo-integration'),
             ]
         );
     }

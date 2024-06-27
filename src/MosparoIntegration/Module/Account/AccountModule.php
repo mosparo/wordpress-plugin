@@ -15,28 +15,31 @@ class AccountModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Account', 'mosparo-integration');
-        $this->description = __('Protects the account forms like login, register and lost password with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects the WordPress account forms like login, register and lost password with mosparo.', 'mosparo-integration');
         $this->dependencies = [];
         $this->settings = new ModuleSettings(
             [
                 'login_form' => [
-                    'label' => __('WordPress login form', 'mosparo-integration'),
+                    'label' => __('Login form', 'mosparo-integration'),
+                    'description' => __('Protect the WordPress login form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ],
                 'register_form' => [
-                    'label' => __('WordPress registration form', 'mosparo-integration'),
+                    'label' => __('Registration form', 'mosparo-integration'),
+                    'description' => __('Protect the WordPress registration form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ],
                 'lostpassword_form' => [
-                    'label' => __('WordPress lost password form', 'mosparo-integration'),
+                    'label' => __('Lost password form', 'mosparo-integration'),
+                    'description' => __('Protect the WordPress lost password form with mosparo', 'mosparo-integration'),
                     'type' => 'boolean',
                     'value' => true,
                 ]
             ],
             [
-                'header' => __('Please choose which account forms you want to protect with mosparo.', 'mosparo-integration'),
+                'header' => __('Please choose which WordPress account forms you want to protect with mosparo.', 'mosparo-integration'),
             ]
         );
     }
