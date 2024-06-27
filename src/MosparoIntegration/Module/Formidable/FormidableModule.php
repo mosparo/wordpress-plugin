@@ -19,12 +19,13 @@ class FormidableModule extends AbstractModule
         ];
     }
 
+    public function canInitialize()
+    {
+        return function_exists('load_formidable_forms');
+    }
+
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
-        if (!function_exists('load_formidable_forms')) {
-            return;
-        }
-
         add_filter('frm_available_fields', [$this, 'addFieldType']);
         add_filter('frm_get_field_type_class', [$this, 'getFieldClass'], 10, 2);
         add_filter('frm_validate_entry', [$this, 'validateForm'], 10, 3);
