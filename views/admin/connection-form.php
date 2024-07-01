@@ -34,7 +34,7 @@
                                     <label for="key"><?php _e('Key', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
-                                    <input name="key" type="text" id="key" value="<?php echo esc_attr($key); ?>" class="regular-text code" <?php if ($action === 'edit-connection'): ?>readonly<?php endif; ?>>
+                                    <input name="key" type="text" id="key" value="<?php echo esc_attr($key); ?>" class="regular-text code" <?php if ($action === 'mosparo-edit-connection'): ?>readonly<?php endif; ?>>
                                     <p class="description">
                                         <?php _e('The key is an internal identifier and can only contain lowercase alphanumeric characters, dashes, and underscores.', 'mosparo-integration'); ?>
                                     </p>
@@ -77,7 +77,7 @@
                                     <label for="privateKey"><?php _e('Private Key', 'mosparo-integration'); ?></label>
                                 </th>
                                 <td>
-                                    <input name="privateKey" type="text" id="privateKey" value="" class="regular-text code" <?php echo ($action === 'add-connection') ? 'required' : ''; ?>>
+                                    <input name="privateKey" type="text" id="privateKey" value="" class="regular-text code" <?php echo ($action === 'mosparo-add-connection') ? 'required' : ''; ?>>
                                     <p class="description">
                                         <?php _e('Please leave this field empty if you don\'t want to change the private key.', 'mosparo-integration'); ?>
                                     </p>
