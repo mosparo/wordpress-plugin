@@ -334,11 +334,11 @@ class ConfigHelper
             $formKey = $module->getKey() . '_' . $key;
             $v = '';
 
-            if (isset($_REQUEST[$formKey])) {
-                $v = $_REQUEST[$formKey];
+            if (isset($_POST[$formKey])) {
+                $v = sanitize_text_field($_POST[$formKey]);
             }
 
-            $this->config['modules-settings'][$module->getKey()][$key] = $v;
+            $this->config['modules-settings'][$module->getKey()][$key] = $this->getTypedValue($v, $setting['type']);
         }
 
         $this->saveConfiguration();
