@@ -104,7 +104,7 @@ class ModuleListTable extends WP_List_Table
             }
         } else {
             if (!$item->canInitialize()) {
-                $actions['missing_dependencies'] = __('Missing required extension', 'mosparo-integration');
+                $actions['missing_dependencies'] = __('Missing required plugin', 'mosparo-integration');
             } else {
                 $url = $adminHelper->buildConfigPosturl(['action' => 'mosparo-enable-module', 'module' => $item->getKey()]);
                 $actions['mosparo-enable-module'] = sprintf('<a href="%s">%s</a>', $url, __('Enable', 'mosparo-integration'));
