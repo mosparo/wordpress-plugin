@@ -195,9 +195,8 @@ class MosparoField
         [ $formData, $requiredFields, $verifiableFields ] = $this->getFormData($record);
 
         // We have to access directly the global $_POST variable to get the tokens
-        $sentData = $_POST;
-        $submitToken = trim(sanitize_text_field($sentData['_mosparo_submitToken'] ?? ''));
-        $validationToken = trim(sanitize_text_field($sentData['_mosparo_validationToken'] ?? ''));
+        $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
