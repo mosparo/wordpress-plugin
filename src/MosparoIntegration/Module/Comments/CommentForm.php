@@ -77,7 +77,7 @@ class CommentForm
 
         // Add the rating field from the WooCommerce reviews to the form data
         if ($commentData['comment_type'] === 'review' && isset($_POST['rating'])) {
-            $formData['rating'] = $_POST['rating'];
+            $formData['rating'] = (int) $_POST['rating'];
         }
 
         $formData = apply_filters('mosparo_integration_comments_form_data', $formData);
