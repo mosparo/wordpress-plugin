@@ -29,8 +29,9 @@ class AdminHelper
         $action = false;
 
         if (isset($_REQUEST['action2'])) {
-            $action = $_REQUEST['action2'];
+            $action = sanitize_key($_REQUEST['action2']);
         }
+
         return $action;
     }
 
@@ -66,6 +67,7 @@ class AdminHelper
                 if (!$this->getBulkAction()) {
                     check_admin_referer($action, 'mosparo-nonce');
                 }
+
                 $callback($action);
             });
         }
@@ -245,7 +247,7 @@ class AdminHelper
 
         if ($action === 'mosparo-add-connection') {
             $connection = new Connection();
-            $connection->setKey(sanitize_key($_REQUEST['key']));
+            $connection->setKey(sanitize_key($_POST['key']));
 
             // It's not allowed to use mc__wp_config as key since this is the key for the connection
             // defined in the wp-config.php
@@ -254,7 +256,7 @@ class AdminHelper
             }
 
             if ($connection->getKey() === '') {
-                $connection->setKey(sanitize_key($_REQUEST['name']));
+                $connection->setKey(sanitize_key($_POST['name']));
             }
 
             if (is_multisite() && is_network_admin()) {
@@ -264,7 +266,7 @@ class AdminHelper
                 $connection->setOrigin(ConfigHelper::ORIGIN_LOCAL);
             }
         } else if ($action === 'mosparo-edit-connection') {
-            $key = sanitize_key($_REQUEST['key']);
+            $key = sanitize_key($_POST['key']);
 
             if (!$key || !$configHelper->hasConnection($key)) {
                 $this->redirectToSettingsPage();
@@ -274,12 +276,12 @@ class AdminHelper
             $connection = $configHelper->getConnection($key);
         }
 
-        $connection->setName(sanitize_text_field($_REQUEST['name']));
-        $connection->setHost(sanitize_url($_REQUEST['host']));
-        $connection->setUuid(sanitize_key($_REQUEST['uuid']));
-        $connection->setPublicKey(sanitize_text_field($_REQUEST['publicKey']));
+        $connection->setName(sanitize_text_field($_POST['name']));
+        $connection->setHost(sanitize_url($_POST['host']));
+        $connection->setUuid(sanitize_key($_POST['uuid']));
+        $connection->setPublicKey(sanitize_text_field($_POST['publicKey']));
 
-        $defaults = $_REQUEST['defaults'];
+        $defaults = $_POST['defaults'];
         if (!is_array($defaults)) {
             $defaults = [];
         }
@@ -299,11 +301,11 @@ class AdminHelper
         $connection->setDefaults($defaults);
 
         // Only update the private key if it is not empty
-        if ($_REQUEST['privateKey'] !== '') {
-            $connection->setPrivateKey(sanitize_text_field($_REQUEST['privateKey']));
+        if ($_POST['privateKey'] !== '') {
+            $connection->setPrivateKey(sanitize_text_field($_POST['privateKey']));
         }
 
-        $connection->setVerifySsl(boolval(sanitize_key($_REQUEST['verifySsl'] ?? false)));
+        $connection->setVerifySsl(boolval(sanitize_key($_POST['verifySsl'] ?? false)));
 
         if ($action === 'mosparo-add-connection') {
             if ($configHelper->hasConnection($connection->getKey())) {
