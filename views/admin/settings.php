@@ -11,7 +11,11 @@
             <?php _e('Connection', 'mosparo-integration'); ?>
             <a href="<?php echo esc_url($this->buildConfigPageUrl(['action' => 'mosparo-add-connection'])); ?>" class="page-title-action"><?php _e('Add connection', 'mosparo-integration'); ?></a>
         </h2>
-        <?php $action_url = $this->buildConfigPostUrl(null); ?>
+        <?php
+            // The action "mosparo-bulk-action" is required, because the admin file "wp-admin/network/edit.php"
+            // redirects to the start page without an action value in the query ($_GET['action']).
+            $action_url = $this->buildConfigPostUrl('mosparo-settings-bulk-actions', false);
+        ?>
         <form method="post" action="<?php echo esc_url($action_url); ?>">
             <?php
                 $connectionTable = new \MosparoIntegration\Admin\ConnectionListTable();

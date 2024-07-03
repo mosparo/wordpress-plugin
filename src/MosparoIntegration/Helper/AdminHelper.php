@@ -79,6 +79,24 @@ class AdminHelper
                 $callback($action);
             });
         }
+
+        add_action($actionHookPrefix . 'mosparo-settings-bulk-actions', function() use ($actionHookPrefix, $helper) {
+            // The $_GET['action'] parameter is always 'mosparo-settings-bulk-actions',
+            // so we're always using the $_POST['action'] parameter.
+            $action = $_POST['action'] ?? false;
+            if (!$action || !$helper->isBulkAction()) {
+                return;
+            }
+
+            $connections = $_POST['connection'] ?? false;
+            $modules = $_POST['module'] ?? false;
+            if (!$connections && !$modules) {
+                // Redirect back to the settings page if no connection or module was selected
+                $this->redirectToSettingsPage();
+            }
+
+            do_action($actionHookPrefix . $action);
+        });
     }
 
     function addPluginLink($links)
@@ -213,27 +231,47 @@ class AdminHelper
         }
 
         $configHelper = ConfigHelper::getInstance();
-        $modules = $_REQUEST['module'];
-        if (!is_array($modules)) {
-            $modules = [$modules];
+        $moduleKeys = $_REQUEST['module'];
+        if (!is_array($moduleKeys)) {
+            $moduleKeys = [$moduleKeys];
         }
 
-        $modules = array_map('sanitize_key', $modules);
-        $message = '';
-        foreach ($modules as $module) {
-            if ($enable) {
-                $configHelper->enableModule($module);
-                $message = 'enabled';
-            } else {
-                $configHelper->disableModule($module);
-                $message = 'disabled';
+        $moduleHelper = ModuleHelper::getInstance();
+
+        $moduleKeys = array_map('sanitize_key', $moduleKeys);
+        $messageChangeType = '';
+        $numberOfAdjustedModules = 0;
+        foreach ($moduleKeys as $moduleKey) {
+            $module = $moduleHelper->getModule($moduleKey);
+            if (!$module) {
+                continue;
             }
+
+            if ($enable) {
+                if (!$module->canInitialize() || $configHelper->isModuleActive($moduleKey)) {
+                    continue;
+                }
+
+                $configHelper->enableModule($moduleKey);
+                $messageChangeType = 'enabled';
+            } else {
+                if (!$configHelper->isModuleActive($moduleKey)) {
+                    continue;
+                }
+
+                $configHelper->disableModule($moduleKey);
+                $messageChangeType = 'disabled';
+            }
+
+            $numberOfAdjustedModules++;
         }
 
-        if (count($modules) > 1) {
-            $message = 'multiple-' . $message;
-        } else {
-            $message = 'one-' . $message;
+        // Show no message if no module was changed
+        $message = null;
+        if ($numberOfAdjustedModules === 1) {
+            $message = 'one-' . $messageChangeType;
+        } else if ($numberOfAdjustedModules > 1) {
+            $message = 'multiple-' . $messageChangeType;
         }
 
         $configHelper->saveConfiguration();
@@ -395,7 +433,7 @@ class AdminHelper
         return add_query_arg($args, $settingsUrl);
     }
 
-    public function buildConfigPostUrl($action = '')
+    public function buildConfigPostUrl($action = '', $addNonce = true)
     {
         if (is_network_admin()) {
             $url = network_admin_url('edit.php');
@@ -411,7 +449,7 @@ class AdminHelper
             $action = $args['action'];
         }
 
-        if (!$action) {
+        if (!$action || !$addNonce) {
             return add_query_arg($args, $url);
         }
 

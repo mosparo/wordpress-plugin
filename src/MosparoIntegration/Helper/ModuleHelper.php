@@ -44,12 +44,25 @@ class ModuleHelper
     {
     }
 
+    public function getModule($moduleKey): ?AbstractModule
+    {
+        $modules = $this->getModules();
+
+        foreach ($modules as $module) {
+            if ($module->getKey() === $moduleKey) {
+                return $module;
+            }
+        }
+
+        return null;
+    }
+
     public function getActiveModules()
     {
         return $this->activeModules;
     }
 
-    public function getActiveModule($moduleKey) : ?AbstractModule
+    public function getActiveModule($moduleKey): ?AbstractModule
     {
         if (!isset($this->activeModules[$moduleKey])) {
             return null;
