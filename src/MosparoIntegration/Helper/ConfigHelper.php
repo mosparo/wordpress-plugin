@@ -312,7 +312,9 @@ class ConfigHelper
             }
         }
 
-        return $moduleSettings->setSettings(apply_filters('mosparo_integration_filter_module_settings', $fields, $module->getKey()));
+        $moduleSettings->setSettings(apply_filters('mosparo_integration_filter_module_settings', $fields, $module->getKey()));
+
+        return $moduleSettings->getSettings();
     }
 
     public function saveModuleConfiguration(AbstractModule $module)

@@ -28,14 +28,18 @@ class ModuleSettings
         if (isset($this->settings[$key]['value'])) {
             return $this->settings[$key]['value'];
         }
+
         return null;
     }
 
-    public function setSettings(array $fields): array
+    public function setSettings(array $fields)
     {
         $this->settings = $fields;
-        return $this->settings;
     }
 
+    public function getSettings(): array
+    {
+        return $this->settings;
+    }
 }
 
