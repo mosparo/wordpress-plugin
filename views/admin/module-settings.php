@@ -12,7 +12,7 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
             if (isset($field['description'])) {
                 $html .= '<fieldset>';
                 $html .= '<legend class="screen-reader-text"><span>' . $field['label'] . '</span></legend>';
-                $html .= '<label for="' . esc_attr($fieldKey) . '">' . $checkboxHtml . $field['description'] . '</label>';
+                $html .= '<label for="' . esc_attr($fieldKey) . '">' . $checkboxHtml . esc_html($field['description']) . '</label>';
                 $html .= '</fieldset>';
             } else {
                 $html .= $checkboxHtml;
@@ -26,7 +26,7 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
             $html .= '<input type="' . esc_attr($field['type']) . '" name="' . esc_attr($fieldKey) . '" id="' . esc_attr($fieldKey) . '" value="' . esc_attr($configHelper->getTypedValue($field['value'], $field['type'])) . '" /> ';
 
             if (isset($field['description'])) {
-                $html .= '<p class="description">' . $field['description'] . '</p>';
+                $html .= '<p class="description">' . esc_html($field['description']) . '</p>';
             }
     }
 
@@ -35,9 +35,9 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
 
 function mosparoModuleSettingsDisplayRow(ConfigHelper $configHelper, $fieldKey, $field)
 {
-    $labelHtml = '<th><label for="' . esc_attr($fieldKey) . '">'.$field['label'].'</label></th>';
+    $labelHtml = '<th><label for="' . esc_attr($fieldKey) . '">' . esc_html($field['label']) . '</label></th>';
     if ($field['type'] === 'boolean') {
-        $labelHtml = '<th scope="row">' . $field['label'] . '</th>';
+        $labelHtml = '<th scope="row">' . esc_html($field['label']) . '</th>';
     }
 
     $html = '<tr>';
@@ -58,7 +58,7 @@ function mosparoModuleSettingsFormHeader($module)
 
     $formHeader = $module->getSettings()->getSettingsForm()['header'];
     $html = '<h2>';
-    $html .= $formHeader;
+    $html .= esc_html($formHeader);
     $html .= '</h2>';
 
     echo $html;
@@ -82,9 +82,9 @@ function mosparoModuleSettingsFormHeader($module)
         <table class="form-table" role="presentation">
             <tbody>
             <?php
-            foreach ( $module->getSettings()->getFields() as $key => $setting ) {
-                mosparoModuleSettingsDisplayRow($configHelper, $module->getKey() . '_' . $key, $setting);
-            }
+                foreach ($module->getSettings()->getFields() as $key => $setting) {
+                    mosparoModuleSettingsDisplayRow($configHelper, $module->getKey() . '_' . $key, $setting);
+                }
             ?>
             </tbody>
         </table>
