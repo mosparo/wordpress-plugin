@@ -164,4 +164,21 @@ class ModuleListTable extends WP_List_Table
             '<input type="checkbox" name="module[]" value="%s" %s />', $item->getKey(), $disabled
         );
     }
+
+    /**
+     * Replace the IDs for the HTML elements in the table since WordPress originally only allows one table per page.
+     *
+     * @param $which
+     * @return void
+     */
+    protected function bulk_actions($which = '')
+    {
+        ob_start(function ($buffer) {
+            return str_replace(['bulk-action-', 'doaction'], ['modules_bulk-action-', 'modules_doaction'], $buffer);
+        });
+
+        parent::bulk_actions($which);
+
+        ob_end_flush();
+    }
 }

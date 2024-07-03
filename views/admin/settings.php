@@ -11,7 +11,7 @@
             <?php _e('Connection', 'mosparo-integration'); ?>
             <a href="<?php echo esc_url($this->buildConfigPageUrl(['action' => 'mosparo-add-connection'])); ?>" class="page-title-action"><?php _e('Add connection', 'mosparo-integration'); ?></a>
         </h2>
-        <?php $action_url = $this->buildConfigPostUrl('mosparo-settings-bulk-actions');?>
+        <?php $action_url = $this->buildConfigPostUrl(null); ?>
         <form method="post" action="<?php echo esc_url($action_url); ?>">
             <?php
                 $connectionTable = new \MosparoIntegration\Admin\ConnectionListTable();

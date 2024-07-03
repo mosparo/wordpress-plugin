@@ -25,14 +25,23 @@ class AdminHelper
     {
     }
 
-    public function getBulkAction() {
-        $action = false;
+    protected function isBulkAction()
+    {
+        return (isset($_REQUEST['action']) && isset($_REQUEST['action2']) && $_REQUEST['action2'] !== '-1' && $_REQUEST['action'] === $_REQUEST['action2']);
+    }
 
-        if (isset($_REQUEST['action2'])) {
-            $action = sanitize_key($_REQUEST['action2']);
+    protected function verifyNonce($action)
+    {
+        // Do not replace this `if-elseif-else` with a `if (isBulkAction)-else` or remember to verify
+        // the `else` within the `if (isBulkAction)` to make sure that it's not possible to bypass the
+        // nonce verification.
+        if ($this->isBulkAction() && isset($_REQUEST['connection'])) {
+            return check_admin_referer('bulk-connections');
+        } else if ($this->isBulkAction() && isset($_REQUEST['module'])) {
+            return check_admin_referer('bulk-modules');
+        } else {
+            return check_admin_referer($action, 'mosparo-nonce');
         }
-
-        return $action;
     }
 
     public function initializeAdmin($pluginPath, $pluginUrl, $pluginBasename)
@@ -41,7 +50,7 @@ class AdminHelper
         $this->pluginUrl = $pluginUrl;
 
         add_filter('plugin_action_links_' . $pluginBasename, [$this, 'addPluginLink']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueStyles']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueStylesAndScripts']);
 
         $actions = [
             'mosparo-refresh-css-cache' => [$this, 'actionRefreshCssCache'],
@@ -62,20 +71,14 @@ class AdminHelper
             add_action('admin_menu', [$this, 'registerSubmenu']);
         }
 
+        $helper = $this;
         foreach ($actions as $action => $callback) {
-            add_action($actionHookPrefix . $action, function() use ($action, $callback) {
-                if (!$this->getBulkAction()) {
-                    check_admin_referer($action, 'mosparo-nonce');
-                }
+            add_action($actionHookPrefix . $action, function() use ($action, $callback, $helper) {
+                $helper->verifyNonce($action);
 
                 $callback($action);
             });
         }
-
-        add_action($actionHookPrefix . 'mosparo-settings-bulk-actions', function() use ($actionHookPrefix) {
-            check_admin_referer('mosparo-settings-bulk-actions', 'mosparo-nonce');
-            do_action($actionHookPrefix . $this->getBulkAction());
-        });
     }
 
     function addPluginLink($links)
@@ -104,13 +107,20 @@ class AdminHelper
         );
     }
 
-    public function enqueueStyles()
+    public function enqueueStylesAndScripts()
     {
         wp_enqueue_style(
             'mosparo-integration-admin-css',
             $this->pluginUrl . '/assets/css/mosparo-admin.css',
             [],
             '1.0'
+        );
+
+        wp_enqueue_script(
+            'mosparo-admin',
+            $this->pluginUrl . '/assets/js/mosparo-admin.js',
+            ['jquery',  'utils'],
+            '1.0',
         );
     }
 
@@ -387,12 +397,12 @@ class AdminHelper
 
     public function buildConfigPostUrl($action = '')
     {
-        $url = '';
         if (is_network_admin()) {
             $url = network_admin_url('edit.php');
         } else {
             $url = admin_url('admin-post.php');
         }
+
         $args = [];
         if ($action && is_string($action)) {
             $args['action'] = $action;
@@ -400,6 +410,11 @@ class AdminHelper
             $args = $action;
             $action = $args['action'];
         }
+
+        if (!$action) {
+            return add_query_arg($args, $url);
+        }
+
         return wp_nonce_url(add_query_arg($args, $url), $action, 'mosparo-nonce');
     }
 
