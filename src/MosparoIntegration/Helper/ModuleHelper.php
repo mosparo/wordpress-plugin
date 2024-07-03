@@ -19,7 +19,6 @@ class ModuleHelper
     private static $instance;
     protected static $availableModules = [
         AccountModule::class,
-        WooCommerceAccountModule::class,
         CommentsModule::class,
         ContactForm7Module::class,
         ElementorFormModule::class,
@@ -27,6 +26,7 @@ class ModuleHelper
         FormidableModule::class,
         GravityFormsModule::class,
         NinjaFormsModule::class,
+        WooCommerceAccountModule::class,
         WPFormsModule::class,
     ];
     protected $activeModules = [];
