@@ -259,7 +259,7 @@ class ConfigHelper
         $moduleIndex = array_search($moduleKey, $this->config['modules']);
         if ($moduleIndex !== false) {
             unset($this->config['modules'][$moduleIndex]);
-            //Also remove module settings on disable
+            // Also remove module settings on disable
             unset($this->config['modules-settings'][$moduleKey]);
         }
     }
