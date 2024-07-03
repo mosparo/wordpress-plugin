@@ -24,10 +24,12 @@ class AccountLoginForm extends AbstractAccountForm
             );
         }
 
-        $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
-        $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
+        $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
-        $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_login_form_data', []);
+        $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_login_form_data', [
+            'log' => sanitize_user($_POST['log']),
+        ]);
 
         $verificationHelper = VerificationHelper::getInstance();
         $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);

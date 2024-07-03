@@ -36,11 +36,11 @@ class AccountLostPasswordForm extends AbstractAccountForm
             return $errors;
         }
 
-        $submitToken = trim(sanitize_text_field($_REQUEST['_mosparo_submitToken'] ?? ''));
-        $validationToken = trim(sanitize_text_field($_REQUEST['_mosparo_validationToken'] ?? ''));
+        $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
+        $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
         $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_lost_password_form_data', [
-            'user_login' => sanitize_user($_REQUEST['user_login']),
+            'user_login' => sanitize_user($_POST['user_login']),
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
