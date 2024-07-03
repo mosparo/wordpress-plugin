@@ -13,8 +13,7 @@ class AccountRegisterForm extends AbstractAccountForm
 {
     public function verifyRegisterForm(WP_Error $errors)
     {
-        if ($errors->has_errors() ||
-            !$this->canProcessRequest('woocommerce-register-nonce')) {
+        if ($errors->has_errors() || !$this->canProcessRequest('woocommerce-register-nonce')) {
             return $errors;
         }
 
