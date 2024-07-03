@@ -176,7 +176,7 @@ class AdminHelper
         }
     }
 
-    //Single & bulk action handle
+    // Single & bulk action handle
     public function actionRefreshCssCache($action)
     {
         $connectionKeys = $_REQUEST['connection'] ?? '';
@@ -205,7 +205,7 @@ class AdminHelper
         $this->redirectToSettingsPage('css-cache-refreshed');
     }
 
-    //Single & bulk action handle
+    // Single & bulk action handle
     public function toggleEnableModule($enable)
     {
         if (!isset($_REQUEST['module'])) {
