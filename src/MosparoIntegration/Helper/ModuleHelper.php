@@ -66,7 +66,6 @@ class ModuleHelper
             if ($configHelper->isModuleActive($module->getKey())) {
                 $configHelper->loadModuleConfiguration($module);
 
-                // Disable fields display and form validations for managers/admin users
                 if ($module->canInitialize()) {
                     $module->initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
                 }
