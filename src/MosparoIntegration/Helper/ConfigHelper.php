@@ -270,7 +270,7 @@ class ConfigHelper
             case "boolean":
                 return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
             case "number":
-                return filter_var($value, FILTER_VALIDATE_INT, $options = array('options' => array('default' => 0)));
+                return filter_var($value, FILTER_VALIDATE_INT, ['options' => ['default' => 0]]);
             case "string":
             case "text":
             default:
