@@ -84,15 +84,16 @@ class AdminHelper
             // The $_GET['action'] parameter is always 'mosparo-settings-bulk-actions',
             // so we're always using the $_POST['action'] parameter.
             $action = $_POST['action'] ?? false;
-            if (!$action || !$helper->isBulkAction()) {
-                return;
-            }
-
             $connections = $_POST['connection'] ?? false;
             $modules = $_POST['module'] ?? false;
-            if (!$connections && !$modules) {
-                // Redirect back to the settings page if no connection or module was selected
+            if (!$action || $action === '-1' || (!$connections && !$modules)) {
+                // Redirect back to the settings page if no action was chosen or no connection or module was selected
                 $this->redirectToSettingsPage();
+            }
+
+            // If it's not a bulk action, let the other actions take over.
+            if (!$helper->isBulkAction()) {
+                return;
             }
 
             do_action($actionHookPrefix . $action);
