@@ -47,7 +47,7 @@ class AccountModule extends AbstractModule
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
         add_action('login_head', function () use ($pluginDirectoryUrl) {
-            if (!wp_style_is('mosparo-integration-user-form'))  {
+            if (!wp_style_is('mosparo-integration-user-form')) {
                 wp_enqueue_style('mosparo-integration-user-form', $pluginDirectoryUrl . 'assets/module/user/css/login.css');
             }
         });
