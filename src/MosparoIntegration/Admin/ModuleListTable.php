@@ -156,7 +156,10 @@ class ModuleListTable extends WP_List_Table
         $configHelper = ConfigHelper::getInstance();
 
         $disabled = '';
-        if ($configHelper->isModuleActive($item->getKey()) && $configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_NETWORK) {
+        if (
+            !$item->canInitialize() ||
+            ($configHelper->isModuleActive($item->getKey()) && $configHelper->getOriginOfModuleActivation($item->getKey()) === ConfigHelper::ORIGIN_NETWORK)
+        ) {
             $disabled = 'disabled';
         }
 
