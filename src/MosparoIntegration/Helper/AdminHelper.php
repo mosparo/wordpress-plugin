@@ -3,6 +3,7 @@
 namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Entity\Connection;
+use WP_Error;
 
 class AdminHelper
 {
@@ -218,7 +219,11 @@ class AdminHelper
             $connection = $configHelper->getConnection($connectionKey);
 
             $frontendHelper = FrontendHelper::getInstance();
-            $frontendHelper->refreshCssUrlCache($connection);
+            $result = $frontendHelper->refreshCssUrlCache($connection);
+
+            if ($result !== true && $result instanceof WP_Error) {
+                $this->redirectToSettingsPage('refresh-css-cache-error', ['connection' => $connectionKey, 'error' => base64_encode(json_encode($result->get_error_messages()))]);
+            }
         }
 
         $this->redirectToSettingsPage('css-cache-refreshed');
@@ -410,9 +415,8 @@ class AdminHelper
         $this->redirectToSettingsPage('module-settings-saved');
     }
 
-    public function redirectToSettingsPage($message = null)
+    public function redirectToSettingsPage($message = null, array $args = [])
     {
-        $args = [];
         if ($message !== null) {
             $args['message'] = $message;
         }
@@ -479,6 +483,30 @@ class AdminHelper
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module was successfully disabled.', 'mosparo-integration')));
         } else if ($message === 'css-cache-refreshed') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The CSS cache was refreshed successfully.', 'mosparo-integration')));
+        } else if ($message === 'refresh-css-cache-error') {
+            $configHelper = ConfigHelper::getInstance();
+            $connectionKey = $_GET['connection'] ?? null;
+            $connection = $configHelper->getConnection($connectionKey);
+            $connectionName = '-';
+            if ($connection instanceof Connection) {
+                $connectionName = $connection->getName();
+            }
+
+            $error = '-';
+            $errorMessages = json_decode(base64_decode($_GET['error'] ?? ''));
+            if ($errorMessages) {
+                $error = implode(' ', $errorMessages);
+            }
+
+            echo sprintf(
+                '<div class="notice notice-error"><p><strong>%1$s</strong>: %2$s<br><strong>%3$s</strong>: %4$s<br><strong>%5$s</strong>: %6$s</p></div>',
+                esc_html(__('Error', 'mosparo-integration')),
+                esc_html(__('An error occurred while refreshing the CSS cache.', 'mosparo-integration')),
+                esc_html(__('Connection', 'mosparo-integration')),
+                esc_html($connectionName),
+                esc_html(__('Error message', 'mosparo-integration')),
+                esc_html($error)
+            );
         } else if ($message === 'module-settings-saved') {
             echo sprintf('<div class="notice notice-success"><p>%s</p></div>', esc_html(__('The module settings were successfully saved.', 'mosparo-integration')));
         }

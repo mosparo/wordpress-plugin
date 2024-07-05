@@ -59,13 +59,15 @@ class FrontendHelper
 
         $response = wp_remote_get($url, ['sslverify' => $sslVerify]);
         if ($response instanceof WP_Error) {
-            return;
+            return $response;
         }
 
         $fullCssUrl = sanitize_url(wp_remote_retrieve_body($response));
         if ($fullCssUrl != '') {
             set_transient($this->getCssUrlCacheTransientKey($connection), $fullCssUrl, 7 * 86400);
         }
+
+        return true;
     }
 
     public function registerResources(Connection $connection)
