@@ -4,7 +4,7 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.5.5
 Requires PHP: 7.4
-Stable tag: 1.10
+Stable tag: 1.10.0
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -84,7 +84,7 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 
 == Changelog ==
 
-= 1.10 =
+= 1.10.0 =
 *Release Date: 5th July 2024*
 
 * [Enhancement] Added a module to protect the WooCommerce account forms. Contributed by nmcodeeu (https://github.com/nmcodeeu).
