@@ -291,13 +291,10 @@ class FrontendHelper
         if (class_exists('JFB_Modules\Captcha\Abstract_Captcha\Base_Captcha_From_Options') && $field instanceof Base_Captcha_From_Options) {
             return [
                 'before' => '
-                    options.onGetFieldValue = function (el, value) {
-                        if (el.classList.contains("wp-editor-area")) {
+                    options.onBeforeGetFormData = function (formElement) {
+                        if (formElement.querySelectorAll(".wp-editor-area").length) {
                             window.tinyMCE.triggerSave();
-                            value = el.value;
                         }
-                    
-                        return value;
                     };
                     ',
                 'after' => '',
