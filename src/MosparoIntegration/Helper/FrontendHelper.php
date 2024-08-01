@@ -2,6 +2,7 @@
 
 namespace MosparoIntegration\Helper;
 
+use JFB_Modules\Captcha\Abstract_Captcha\Base_Captcha_From_Options;
 use MosparoIntegration\Entity\Connection;
 use MosparoIntegration\Module\ContactForm7\MosparoField as ContactForm7MosparoField;
 use MosparoIntegration\Module\ElementorForm\MosparoField as ElementorFormMosparoField;
@@ -283,6 +284,22 @@ class FrontendHelper
                         return;
                     }
                 ',
+                'after' => '',
+            ];
+        }
+
+        if (class_exists('JFB_Modules\Captcha\Abstract_Captcha\Base_Captcha_From_Options') && $field instanceof Base_Captcha_From_Options) {
+            return [
+                'before' => '
+                    options.onGetFieldValue = function (el, value) {
+                        if (el.classList.contains("wp-editor-area")) {
+                            window.tinyMCE.triggerSave();
+                            value = el.value;
+                        }
+                    
+                        return value;
+                    };
+                    ',
                 'after' => '',
             ];
         }

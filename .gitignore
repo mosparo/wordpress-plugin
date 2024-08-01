@@ -1,2 +1,4 @@
+assets/module/jetformbuilder/build/
+assets/module/jetformbuilder/node_modules/
 vendor-prefixed/
 vendor/
