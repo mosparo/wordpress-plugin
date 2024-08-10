@@ -11,6 +11,7 @@ use MosparoIntegration\Module\Formidable\FormidableModule;
 use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\JetFormBuilder\JetFormBuilderModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
+use MosparoIntegration\Module\MemberpressAccount\MemberpressAccountModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
 use MosparoIntegration\Module\Account\AccountModule;
 use MosparoIntegration\Module\WooCommerceAccount\WooCommerceAccountModule;
@@ -27,6 +28,7 @@ class ModuleHelper
         FormidableModule::class,
         GravityFormsModule::class,
         JetFormBuilderModule::class,
+        MemberpressAccountModule::class,
         NinjaFormsModule::class,
         WooCommerceAccountModule::class,
         WPFormsModule::class,

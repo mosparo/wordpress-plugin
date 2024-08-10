@@ -1,27 +1,26 @@
 <?php
 
-namespace MosparoIntegration\ModuleForm;
+namespace MosparoIntegration\Module\MemberpressAccount;
 
 use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\VerificationHelper;
-use WP_Error;
+use MosparoIntegration\ModuleForm\AbstractAccountForm;
 
 /**
- * Account login form for the WordPress and WooCommerce login forms.
+ * Account login form for the Memberpress login form.
  */
 class AccountLoginForm extends AbstractAccountForm
 {
-    public function verifyLoginForm($userOrError)
+    public function verifyLoginForm($errors)
     {
-        if (is_wp_error($userOrError) || !$this->canProcessRequest('woocommerce-login-nonce') || isset($_POST['mepr_is_login_page'])) {
-            return $userOrError;
+        if ($errors) {
+            return $errors;
         }
 
         $connection = ConfigHelper::getInstance()->getConnectionFor($this->module->getDefaultKey(), true);
         if ($connection === false) {
-            return new WP_Error('mosparo_integration_general_error',
-                __('A general error occurred: no available connection', 'mosparo-integration')
-            );
+            $errors[] = __('A general error occurred: no available connection', 'mosparo-integration');
+            return $errors;
         }
 
         $submitToken = trim(sanitize_text_field($_POST['_mosparo_submitToken'] ?? ''));
@@ -34,10 +33,8 @@ class AccountLoginForm extends AbstractAccountForm
         $verificationHelper = VerificationHelper::getInstance();
         $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
-            return new WP_Error(
-                'mosparo_integration_general_error',
-                sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage())
-            );
+            $errors = sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage());
+            return $errors;
         }
 
         // Confirm that all required fields were verified
@@ -45,12 +42,9 @@ class AccountLoginForm extends AbstractAccountForm
         $fieldDifference = array_diff(array_keys($formData), $verifiedFields);
 
         if (!$verificationResult->isSubmittable() || !empty($fieldDifference)) {
-            return new WP_Error(
-                'mosparo_integration_spam_error',
-                __('Verification failed which means the form contains spam.', 'mosparo-integration')
-            );
+            $errors = __('Verification failed which means the form contains spam.', 'mosparo-integration');
         }
 
-        return $userOrError;
+        return $errors;
     }
 }
