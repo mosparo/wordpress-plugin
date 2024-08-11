@@ -33,7 +33,7 @@ class AccountLoginForm extends AbstractAccountForm
         $verificationHelper = VerificationHelper::getInstance();
         $verificationResult = $verificationHelper->verifySubmission($connection, $submitToken, $validationToken, $formData);
         if ($verificationResult === null) {
-            $errors = sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage());
+            $errors[] = sprintf(__('A general error occurred: %s', 'mosparo-integration'), $verificationHelper->getLastException()->getMessage());
             return $errors;
         }
 
@@ -42,7 +42,7 @@ class AccountLoginForm extends AbstractAccountForm
         $fieldDifference = array_diff(array_keys($formData), $verifiedFields);
 
         if (!$verificationResult->isSubmittable() || !empty($fieldDifference)) {
-            $errors = __('Verification failed which means the form contains spam.', 'mosparo-integration');
+            $errors[] = __('Verification failed which means the form contains spam.', 'mosparo-integration');
         }
 
         return $errors;
