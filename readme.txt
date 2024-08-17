@@ -4,17 +4,30 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 6.5.5
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
 	 
 == Description ==
-If you want to protect your forms in WordPress with mosparo, this plugin will help you with this task. The mosparo Integration plugin can add the mosparo box to the WordPress comment and account forms (login, lost password and register) or the forms from the plugins Contact Form 7, Elementor Form, Everest Forms, Formidable, Gravity Forms, Ninja Forms, or WPForms. The Comments module is compatible with the WooCommerce reviews (mosparo Integration v1.8+).
-	 
+If you want to protect your forms in WordPress with mosparo, this plugin will help you with this task. After installing the plugin, you have to configure the connection to your mosparo installation and add the mosparo field to your form. The mosparo Integration plugin is compatible with the following plugins and forms:
+
+- Contact Form 7
+- Elementor Form
+- Everest Forms
+- Formidable
+- Gravity Forms
+- JetFormBuilder
+- Memberpress Account Forms (login, lost password)
+- Ninja Forms
+- WPForms
+- WooCommerce Account Forms (login, lost password, and registration)
+- WordPress Account Forms (login, lost password, and registration)
+- WordPress Comments (and WooCommerce Reviews)
+
 To use this plugin, you need an installation of mosparo so that the plugin can communicate with mosparo. Please find all information regarding mosparo on the website [mosparo.io](https://mosparo.io).
 
-You can use different projects for the different modules. This is required, for example, if you want to use mosparo for the account forms. There you want to enable the lockout security setting in mosparo. But this security setting may not be active for standard contact forms, so you must use two mosparo connections to two individual projects in mosparo.
+You can use different projects for the different modules. For example, this is useful for using mosparo for the account forms. There, you want to enable the lockout security setting in mosparo. However, this security setting may not be active for standard contact forms, so you must use two mosparo connections to two individual projects in mosparo.
 	 
 == Installation ==
 
@@ -77,12 +90,25 @@ The origin of a connection will select the connection for a module:
 
 == Upgrade Notice ==
 
+= 1.11.0 =
+
+**Formidable**
+Because of an error when editing a form, we had to change the name of the mosparo field in Formidable. After upgrading to v1.11.0, you must add the mosparo field to your form again.
+
 = 1.5 =
 
 **Everest Forms**
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.11.0 =
+*Release Date: 17th August 2024*
+
+* [Enhancement] Added a module to protect JetFormBuilder forms.
+* [Enhancement] Added a module to protect Memberpress account forms (Login and lost password).
+* [Change] Changed the internal name of the Formidable field type.
+* [Bugfix] Fixed a bug with the initialization of mosparo when adding the mosparo field to a form in the WordPress administration.
 
 = 1.10.0 =
 *Release Date: 5th July 2024*
