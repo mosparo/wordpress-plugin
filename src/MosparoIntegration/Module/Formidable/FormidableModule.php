@@ -33,7 +33,7 @@ class FormidableModule extends AbstractModule
 
     public function addFieldType($fields)
     {
-        $fields['mosparo'] = [
+        $fields['mosparo_field'] = [
             'name' => 'mosparo',
             'icon' => 'frm_icon_font frm_shield_check_icon',
         ];
@@ -43,7 +43,7 @@ class FormidableModule extends AbstractModule
 
     public function getFieldClass($class, $fieldType)
     {
-        if ($fieldType === 'mosparo') {
+        if ($fieldType === 'mosparo_field') {
             return MosparoField::class;
         }
 
@@ -109,7 +109,7 @@ class FormidableModule extends AbstractModule
             'hidden',
             'user_id',
             'captcha',
-            'mosparo',
+            'mosparo_field',
             'file',
             'scale',
             'star',
@@ -233,7 +233,7 @@ class FormidableModule extends AbstractModule
     protected function searchMosparoFieldInForm($postedFields)
     {
         foreach ($postedFields as $key => $field) {
-            if ($field->type === 'mosparo') {
+            if ($field->type === 'mosparo_field') {
                 return true;
             }
         }
