@@ -136,6 +136,13 @@ class FrontendHelper
                 }
                 
                 (function () {
+                    let scriptEl = null;
+                    if (typeof mosparo == "undefined") {
+                        scriptEl = document.createElement("script");
+                        scriptEl.setAttribute("src", "%s");
+                        document.body.appendChild(scriptEl);
+                    }
+                    
                     let initializeMosparo = function () {
                         let id = "mosparo-box-%s";
                         if (typeof mosparoInstances[id] !== "undefined") {
@@ -167,7 +174,11 @@ class FrontendHelper
                         mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
                     };
                     
-                    if (document.readyState !== "loading") {
+                    if (scriptEl !== null) {
+                        scriptEl.addEventListener("load", function () {
+                            initializeMosparo();
+                        });
+                    } else if (document.readyState !== "loading") {
                         initializeMosparo();
                     } else {
                         document.addEventListener("DOMContentLoaded", initializeMosparo);
@@ -178,6 +189,7 @@ class FrontendHelper
                 })();
             </script>',
             esc_attr($instanceId),
+            $this->getJavaScriptUrl($connection),
             esc_attr($instanceId),
             wp_json_encode($options),
             $additionalCode['before'],
