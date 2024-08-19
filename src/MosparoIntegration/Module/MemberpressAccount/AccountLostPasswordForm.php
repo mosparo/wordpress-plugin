@@ -48,4 +48,10 @@ class AccountLostPasswordForm extends AbstractAccountForm
         return $errors;
     }
 
+    public function displayMosparoField()
+    {
+        echo '<div class="mp-form-row mp-mosparo-row">';
+        parent::displayMosparoField();
+        echo '</div>';
+    }
 }
