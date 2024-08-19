@@ -30,7 +30,7 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
 
     public function get_title(): string
     {
-        return __('mosparo', 'jet-form-builder');
+        return __('mosparo', 'mosparo-integration');
     }
 
     public function verify( array $request )
