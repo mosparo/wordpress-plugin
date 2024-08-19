@@ -102,6 +102,14 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 
 == Changelog ==
 
+= 1.11.1 =
+*Release Date: 19th August 2024*
+
+* [Bugfix] Fixed the deployment issue for the JetFormBuilder module.
+* [Bugfix] Fixed typos regarding the name of the JetFormBuilder module.
+* [Bugfix] Fixed a wrong text domain in the JetFormBuilder.
+* [Bugfix] Added the correct container for the Memberpress mosparo field.
+
 = 1.11.0 =
 *Release Date: 17th August 2024*
 
