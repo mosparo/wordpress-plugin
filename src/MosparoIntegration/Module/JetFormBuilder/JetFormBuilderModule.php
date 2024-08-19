@@ -10,10 +10,10 @@ class JetFormBuilderModule extends AbstractModule
 
     public function __construct()
     {
-        $this->name = __('Jet Form Builder', 'mosparo-integration');
-        $this->description = __('Protects Jet Form Builder forms with mosparo.', 'mosparo-integration');
+        $this->name = __('JetFormBuilder', 'mosparo-integration');
+        $this->description = __('Protects JetFormBuilder forms with mosparo.', 'mosparo-integration');
         $this->dependencies = [
-            'jet-form-builder' => ['name' => __('Jet Form Builder', 'mosparo-integration'), 'url' => 'https://wordpress.org/plugins/jetformbuilder/']
+            'jet-form-builder' => ['name' => __('JetFormBuilder', 'mosparo-integration'), 'url' => 'https://wordpress.org/plugins/jetformbuilder/']
         ];
     }
 
