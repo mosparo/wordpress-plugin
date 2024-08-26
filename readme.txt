@@ -22,7 +22,7 @@ If you want to protect your forms in WordPress with mosparo, this plugin will he
 - Ninja Forms
 - WPForms
 - WooCommerce Account Forms (login, lost password, and registration)
-- WordPress Account Forms (login, lost password, and registration)
+- WordPress Account Forms (login, lost password, and registration) (also compatible with *Theme My Login*)
 - WordPress Comments (and WooCommerce Reviews)
 
 To use this plugin, you need an installation of mosparo so that the plugin can communicate with mosparo. Please find all information regarding mosparo on the website [mosparo.io](https://mosparo.io).
