@@ -6,7 +6,27 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
 {
     $html = '';
     switch ($field['type']) {
-        case "boolean":
+        case 'choice_multiple':
+            $choices = call_user_func($field['choices']);
+
+            $html .= '<fieldset>';
+            $html .= '<legend class="screen-reader-text"><span>' . $field['label'] . '</span></legend>';
+
+            foreach ($choices as $label => $value) {
+                $val = $configHelper->getTypedValue($field['value'][$value] ?? $field['defaultValue'], 'boolean');
+
+                $fieldId = $fieldKey . '_' . uniqid();
+                $html .= '<label for="' . esc_attr($fieldId) . '">';
+                $html .= '<input type="checkbox" class="" name="' . esc_attr($fieldKey) . '[' . $value . ']" id="' . esc_attr($fieldId) . '" ' . checked($val, true, false) . ' /> ';
+                $html .= esc_html($label);
+                $html .= '</label>';
+                $html .= '<br>';
+            }
+
+            $html .= '</fieldset>';
+
+            break;
+        case 'boolean':
             $checkboxHtml = '<input type="checkbox" class="" name="' . esc_attr($fieldKey) . '" id="' . esc_attr($fieldKey) . '" ' . checked($configHelper->getTypedValue($field['value'], $field['type']), true, false) . ' /> ';
 
             if (isset($field['description'])) {
@@ -19,9 +39,9 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
             }
 
             break;
-        case "number":
-        case "string":
-        case "text":
+        case 'number':
+        case 'string':
+        case 'text':
         default:
             $html .= '<input type="' . esc_attr($field['type']) . '" name="' . esc_attr($fieldKey) . '" id="' . esc_attr($fieldKey) . '" value="' . esc_attr($configHelper->getTypedValue($field['value'], $field['type'])) . '" /> ';
 

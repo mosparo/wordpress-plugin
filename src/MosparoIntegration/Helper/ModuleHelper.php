@@ -8,6 +8,7 @@ use MosparoIntegration\Module\ContactForm7\ContactForm7Module;
 use MosparoIntegration\Module\ElementorForm\ElementorFormModule;
 use MosparoIntegration\Module\EverestForms\EverestFormsModule;
 use MosparoIntegration\Module\Formidable\FormidableModule;
+use MosparoIntegration\Module\Forminator\ForminatorModule;
 use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\JetFormBuilder\JetFormBuilderModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
@@ -26,6 +27,7 @@ class ModuleHelper
         ElementorFormModule::class,
         EverestFormsModule::class,
         FormidableModule::class,
+        ForminatorModule::class,
         GravityFormsModule::class,
         JetFormBuilderModule::class,
         MemberpressAccountModule::class,

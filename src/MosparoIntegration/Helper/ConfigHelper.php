@@ -267,12 +267,16 @@ class ConfigHelper
     public function getTypedValue($value, $type = 'text')
     {
         switch ($type) {
-            case "boolean":
+            case 'choice_multiple':
+                return array_map(function ($val) {
+                    return $this->getTypedValue($val, 'boolean');
+                }, $value);
+            case 'boolean':
                 return filter_var($value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
-            case "number":
+            case 'number':
                 return filter_var($value, FILTER_VALIDATE_INT, ['options' => ['default' => 0]]);
-            case "string":
-            case "text":
+            case 'string':
+            case 'text':
             default:
                 break;
         }
@@ -336,7 +340,14 @@ class ConfigHelper
             $formKey = $module->getKey() . '_' . $key;
             $v = '';
 
-            if (isset($_POST[$formKey])) {
+            if ($setting['type'] === 'choice_multiple') {
+                $choices = call_user_func($setting['choices']);
+                $v = [];
+
+                foreach ($choices as $label => $value) {
+                    $v[$value] = $this->getTypedValue(sanitize_text_field($_POST[$formKey][$value] ?? false), 'boolean');
+                }
+            } else if (isset($_POST[$formKey])) {
                 $v = sanitize_text_field($_POST[$formKey]);
             }
 
