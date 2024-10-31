@@ -27,6 +27,7 @@ class ForminatorModule extends AbstractModule
                     'value' => [],
                     'defaultValue' => true,
                     'choices' => [$this, 'getChoices'],
+                    'noChoicesAvailable' => __('No forms available.', 'mosparo-integration'),
                 ]
             ],
             [
@@ -75,8 +76,7 @@ class ForminatorModule extends AbstractModule
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_forminator');
         if ($connection === false) {
-            $html = __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration') . $html;
-            return $html;
+            return __('No mosparo connection available. Please configure the connection in the mosparo settings.', 'mosparo-integration') . $html;
         }
 
         $options = [
@@ -85,11 +85,10 @@ class ForminatorModule extends AbstractModule
 
         $frontendHelper = FrontendHelper::getInstance();
 
-        $formRowStart = '<div class="forminator-row">';
-        $formRowEnd = '</div>';
-        $html = $formRowStart . $frontendHelper->generateField($connection, $options) . $formRowEnd . $html;
+        $formRowStart = '<div class="forminator-row"><div class="forminator-col forminator-col-12">';
+        $formRowEnd = '</div></div>';
 
-        return $html;
+        return $formRowStart . $frontendHelper->generateField($connection, $options) . $formRowEnd . $html;
     }
 
     public function validateForm($isSpam, $fieldData, $formId, $moduleSlug)

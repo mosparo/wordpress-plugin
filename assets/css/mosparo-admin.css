@@ -101,3 +101,7 @@ h1.mosparo-header {
         padding: 24px;
     }
 }
+
+.no-choices-available {
+    margin-top: 0 !important;
+}

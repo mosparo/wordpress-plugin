@@ -12,15 +12,19 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
             $html .= '<fieldset>';
             $html .= '<legend class="screen-reader-text"><span>' . $field['label'] . '</span></legend>';
 
-            foreach ($choices as $label => $value) {
-                $val = $configHelper->getTypedValue($field['value'][$value] ?? $field['defaultValue'], 'boolean');
+            if ($choices) {
+                foreach ($choices as $label => $value) {
+                    $val = $configHelper->getTypedValue($field['value'][$value] ?? $field['defaultValue'], 'boolean');
 
-                $fieldId = $fieldKey . '_' . uniqid();
-                $html .= '<label for="' . esc_attr($fieldId) . '">';
-                $html .= '<input type="checkbox" class="" name="' . esc_attr($fieldKey) . '[' . $value . ']" id="' . esc_attr($fieldId) . '" ' . checked($val, true, false) . ' /> ';
-                $html .= esc_html($label);
-                $html .= '</label>';
-                $html .= '<br>';
+                    $fieldId = $fieldKey . '_' . uniqid();
+                    $html .= '<label for="' . esc_attr($fieldId) . '">';
+                    $html .= '<input type="checkbox" class="" name="' . esc_attr($fieldKey) . '[' . $value . ']" id="' . esc_attr($fieldId) . '" ' . checked($val, true, false) . ' /> ';
+                    $html .= esc_html($label);
+                    $html .= '</label>';
+                    $html .= '<br>';
+                }
+            } else {
+                $html .= '<p class="description no-choices-available">' . ($field['noChoicesAvailable'] ?? __('No choices available.', 'mosparo-integration')) . '</p>';
             }
 
             $html .= '</fieldset>';
