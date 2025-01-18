@@ -47,7 +47,10 @@ class MosparoField extends GF_Field
         if ($frontendHelper->isGutenbergRequest()) {
             return $frontendHelper->displayDummy();
         } else {
-            $html = $frontendHelper->generateField($connection, ['designMode' => $this->is_form_editor()], $this);
+            $html = $frontendHelper->generateField($connection, [
+                'designMode' => $this->is_form_editor(),
+                'inputFieldSelector' => '.gfield:not([data-conditional-logic="hidden"]):not(.mosparo__ignored-field) [name]:not(.mosparo__ignored-field)',
+            ], $this);
 
             if ($this->is_form_editor()) {
                 return '<form class="gform-mosparo-form">' . $html . '</form>';
@@ -139,7 +142,7 @@ class MosparoField extends GF_Field
         ]);
 
         foreach ($form['fields'] as $field) {
-            if (in_array($field['type'], $ignoredTypes)) {
+            if (in_array($field['type'], $ignoredTypes) || strpos($field['cssClass'] ?? '', 'mosparo__ignored-field') !== false) {
                 continue;
             }
 
