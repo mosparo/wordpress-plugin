@@ -2,9 +2,9 @@
 Contributors: mosparo
 Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
-Tested up to: 6.6.2
+Tested up to: 6.7.1
 Requires PHP: 7.4
-Stable tag: 1.12.0
+Stable tag: 1.12.1
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -102,6 +102,11 @@ Because of an error when editing a form, we had to change the name of the mospar
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.12.1 =
+*Release Date: 18th January 2025*
+
+* [Bugfix] Gravity Forms: Fixed the selector and logic to handle conditionally hidden fields correctly.
 
 = 1.12.0 =
 *Release Date: 31st October 2024*
