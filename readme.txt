@@ -107,6 +107,7 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 *Release Date: 18th January 2025*
 
 * [Bugfix] Gravity Forms: Fixed the selector and logic to handle conditionally hidden fields correctly.
+* [Maintenance] Updated the backend dependencies
 
 = 1.12.0 =
 *Release Date: 31st October 2024*
