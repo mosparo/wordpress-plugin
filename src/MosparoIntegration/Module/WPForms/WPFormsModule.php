@@ -19,7 +19,7 @@ class WPFormsModule extends AbstractModule
 
     public function canInitialize()
     {
-        return defined('WPFORMS_VERSION');
+        return defined('WPFORMS_VERSION') && class_exists('WPForms_Field');
     }
 
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
