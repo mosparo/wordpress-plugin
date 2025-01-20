@@ -142,7 +142,11 @@ class MosparoField extends GF_Field
         ]);
 
         foreach ($form['fields'] as $field) {
-            if (in_array($field['type'], $ignoredTypes) || strpos($field['cssClass'] ?? '', 'mosparo__ignored-field') !== false) {
+            if (
+                in_array($field['type'], $ignoredTypes) ||
+                strpos($field['cssClass'] ?? '', 'mosparo__ignored-field') !== false ||
+                GFFormsModel::is_field_hidden($form, $field, [])
+            ) {
                 continue;
             }
 
