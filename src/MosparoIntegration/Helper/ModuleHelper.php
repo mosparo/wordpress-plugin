@@ -3,6 +3,8 @@
 namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Module\AbstractModule;
+use MosparoIntegration\Module\Account\AccountModule;
+use MosparoIntegration\Module\Divi\DiviModule;
 use MosparoIntegration\Module\Comments\CommentsModule;
 use MosparoIntegration\Module\ContactForm7\ContactForm7Module;
 use MosparoIntegration\Module\ElementorForm\ElementorFormModule;
@@ -11,10 +13,9 @@ use MosparoIntegration\Module\Formidable\FormidableModule;
 use MosparoIntegration\Module\Forminator\ForminatorModule;
 use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\JetFormBuilder\JetFormBuilderModule;
-use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
 use MosparoIntegration\Module\MemberpressAccount\MemberpressAccountModule;
+use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
-use MosparoIntegration\Module\Account\AccountModule;
 use MosparoIntegration\Module\WooCommerceAccount\WooCommerceAccountModule;
 
 class ModuleHelper
@@ -22,6 +23,7 @@ class ModuleHelper
     private static $instance;
     protected static $availableModules = [
         AccountModule::class,
+        DiviModule::class,
         CommentsModule::class,
         ContactForm7Module::class,
         ElementorFormModule::class,
