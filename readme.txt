@@ -2,9 +2,9 @@
 Contributors: mosparo
 Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
-Tested up to: 6.7.1
+Tested up to: 6.7.2
 Requires PHP: 7.4
-Stable tag: 1.12.2
+Stable tag: 1.13.0
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -13,6 +13,7 @@ The plugin adds the functionality to use mosparo in WordPress forms or forms fro
 If you want to protect your forms in WordPress with mosparo, this plugin will help you with this task. After installing the plugin, you have to configure the connection to your mosparo installation and add the mosparo field to your form. The mosparo Integration plugin is compatible with the following plugins and forms:
 
 - Contact Form 7
+- Divi Contact Forms (**not** Email Optin or Login forms)
 - Elementor Form
 - Everest Forms
 - Formidable
@@ -102,6 +103,11 @@ Because of an error when editing a form, we had to change the name of the mospar
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.13.0 =
+*Release Date: 16th February 2025*
+
+* [Enhancement] Added a module to protect Divi contact forms.
 
 = 1.12.2 =
 *Release Date: 20th January 2025*
