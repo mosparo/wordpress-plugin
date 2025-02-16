@@ -11,7 +11,7 @@ class DiviModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Divi', 'mosparo-integration');
-        $this->description = __('Protects Divi forms with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects Divi contact forms with mosparo.', 'mosparo-integration');
         $this->dependencies = [
             'divi' => ['name' => __('Divi', 'mosparo-integration'), 'url' => 'https://www.elegantthemes.com/modules/contact-form/']
         ];
