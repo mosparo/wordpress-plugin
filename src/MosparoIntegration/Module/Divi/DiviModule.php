@@ -19,7 +19,7 @@ class DiviModule extends AbstractModule
 
     public function canInitialize()
     {
-        return class_exists('ET_Builder_Plugin');
+        return defined('ET_CORE') && ET_CORE;
     }
 
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)

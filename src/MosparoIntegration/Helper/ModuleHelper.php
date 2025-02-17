@@ -84,14 +84,20 @@ class ModuleHelper
 
         foreach (self::getAvailableModules() as $moduleClass) {
             $module = new $moduleClass();
+
+            // We ignore already initialized modules. This is important for the second scan after setup theme.
+            if (isset($this->activeModules[$module->getKey()])) {
+                continue;
+            }
+
             if ($configHelper->isModuleActive($module->getKey())) {
                 $configHelper->loadModuleConfiguration($module);
 
                 if ($module->canInitialize()) {
                     $module->initializeModule($pluginDirectoryPath, $pluginDirectoryUrl);
-                }
 
-                $this->activeModules[$module->getKey()] = $module;
+                    $this->activeModules[$module->getKey()] = $module;
+                }
             }
         }
     }

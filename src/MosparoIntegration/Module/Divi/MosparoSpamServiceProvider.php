@@ -115,6 +115,13 @@ class MosparoSpamServiceProvider extends ET_Core_API_Spam_Provider
             $cssContent = str_replace('.et-db #et-boc .et-l .et_pb_contact_field *', '.et-db #et-boc .et-l .et_pb_contact_field *:not([class*="mosparo"]):not([id*="mosparo"])', $cssContent);
 
             wp_styles()->registered['divi-builder-dynamic-critical']->extra['after'][0] = $cssContent;
+        } else if (isset(wp_styles()->registered['divi-dynamic-critical']->extra['after'][0])) {
+            $cssContent = wp_styles()->registered['divi-dynamic-critical']->extra['after'][0];
+
+            $cssContent = str_replace('p.et_pb_contact_field{', 'p.et_pb_contact_field, div.et_pb_contact_field{', $cssContent);
+            $cssContent = str_replace('.et_pb_contact_field *', '.et_pb_contact_field *:not([class*="mosparo"]):not([id*="mosparo"])', $cssContent);
+
+            wp_styles()->registered['divi-dynamic-critical']->extra['after'][0] = $cssContent;
         }
     }
 

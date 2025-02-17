@@ -42,6 +42,14 @@ function mosparoIntegrationInitialize()
 }
 add_action('plugins_loaded', 'mosparoIntegrationInitialize', 1);
 
+function mosparoIntegrationInitializeLate()
+{
+    // This second round is to initialize the modules that depend on a Theme instead of a plugin.
+    $moduleHelper = ModuleHelper::getInstance();
+    $moduleHelper->initializeActiveModules(plugin_dir_path(__FILE__), plugin_dir_url(__FILE__));
+}
+add_action('after_setup_theme', 'mosparoIntegrationInitializeLate', 1000);
+
 function mosparoIntegrationInitializeTextDomain()
 {
     load_plugin_textdomain('mosparo-integration', false, dirname(plugin_basename(__FILE__)) . '/languages');
