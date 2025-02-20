@@ -296,7 +296,12 @@ class FrontendHelper
                         return;
                     }
                 ',
-                'after' => '',
+                'after' => sprintf('
+                    window.addEventListener("elementor/popup/hide", function (ev) {
+                        let id = "mosparo-box-%s";
+                        delete mosparoInstances[id];
+                    });
+                ', $instanceId),
             ];
         }
 
