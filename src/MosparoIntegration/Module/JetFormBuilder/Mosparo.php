@@ -47,10 +47,10 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($submitToken) || empty($validationToken)) {
-            $this->failed_validation = true;
-            $this->validation_message = __('Submit or validation token is empty.', 'mosparo-integration');
-
-            return;
+            throw new Spam_Exception(
+                'captcha_failed',
+                __('Submit or validation token is empty.', 'mosparo-integration')
+            );
         }
 
         // Remove the mosparo fields from the form data
