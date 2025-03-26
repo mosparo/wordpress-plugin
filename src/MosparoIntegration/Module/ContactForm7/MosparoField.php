@@ -183,6 +183,12 @@ class MosparoField
                 $value = $submission->get_posted_data($tag->name);
             }
 
+            // If a select field allows multiple values but is not filled out, we have to make sure that we send an
+            // array to mosparo, since otherwise, the comparison is a string against an array, which will always fail.
+            if (strpos($tag->type, 'select') === 0 && in_array('multiple', $tag->options) && !is_array($value)) {
+                $value = [$value];
+            }
+
             // Contact Form 7 trims the values. If the value contains a slash at the start or the end, mosparo will
             // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
             // value if the trimmed $_POST value is the same as the prepared Contact Form 7 value.
