@@ -189,7 +189,7 @@ class ForminatorModule extends AbstractModule
 
             if (is_array($value)) {
                 foreach ($value as $subKey => $subValue) {
-                    $formData[$fullKey . '-' . $subKey] = $subValue;
+                    $formData[$fullKey . '-' . $subKey] = $this->getOriginalValue($fullKey . '-' . $subKey, $subValue);
 
                     if ($field['field_array']['required'] ?? false) {
                         $requiredFields[] = $fullKey . '-' . $subKey;
@@ -200,7 +200,7 @@ class ForminatorModule extends AbstractModule
                     }
                 }
             } else {
-                $formData[$fullKey] = $value;
+                $formData[$fullKey] = $this->getOriginalValue($fullKey, $value);
 
                 if ($field['field_array']['required'] ?? false) {
                     $requiredFields[] = $fullKey;
@@ -250,5 +250,17 @@ class ForminatorModule extends AbstractModule
         }
 
         return $mosparoData;
+    }
+
+    protected function getOriginalValue($fullKey, $value)
+    {
+        // Forminator trims the values. If the value contains a space at the start or the end, mosparo will
+        // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
+        // value if the trimmed $_POST value is the same as the prepared Forminator value.
+        if (isset($_POST[$fullKey]) && $_POST[$fullKey] !== $value && trim($_POST[$fullKey]) === $value) {
+            $value = $_POST[$fullKey];
+        }
+
+        return $value;
     }
 }
