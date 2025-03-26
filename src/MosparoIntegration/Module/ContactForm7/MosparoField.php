@@ -189,7 +189,7 @@ class MosparoField
                 $value = [$value];
             }
 
-            // Contact Form 7 trims the values. If the value contains a slash at the start or the end, mosparo will
+            // Contact Form 7 trims the values. If the value contains a space at the start or the end, mosparo will
             // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
             // value if the trimmed $_POST value is the same as the prepared Contact Form 7 value.
             if (isset($formData[$tag->name]) && $formData[$tag->name] !== $value && trim($formData[$tag->name]) === $value) {
