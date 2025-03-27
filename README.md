@@ -88,4 +88,12 @@ The origin of a connection will select the connection for a module:
 ### Version 1.5
 
 #### Everest Forms
+
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
+
+### Version 1.11.0
+
+### Formidable
+
+Because of an error when editing a form, we had to change the name of the mosparo field in Formidable. After upgrading to v1.11.0, you must add the mosparo field to your form again.
+
