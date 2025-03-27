@@ -161,7 +161,7 @@ class MosparoField extends GF_Field
                     $subValue = $value[$subField['id']];
 
                     $fieldKey = 'input_' . $subField['id'];
-                    $formData[$fieldKey] = $subValue;
+                    $formData[$fieldKey] = $this->getOriginalValue($fieldKey, $subValue);
 
                     if ($field['isRequired']) {
                         $requiredFields[] = $fieldKey;
@@ -177,7 +177,7 @@ class MosparoField extends GF_Field
                 }
 
                 $fieldKey = 'input_' . $field['id'];
-                $formData[$fieldKey] = $value;
+                $formData[$fieldKey] = $this->getOriginalValue($fieldKey, $value);
 
                 if ($field['isRequired']) {
                     $requiredFields[] = $fieldKey;
@@ -203,5 +203,17 @@ class MosparoField extends GF_Field
         $formData = apply_filters('mosparo_integration_gravity_forms_form_data', $formData);
 
         return [ $formData, $requiredFields, $verifiableFields ];
+    }
+
+    protected function getOriginalValue($fullKey, $value)
+    {
+        // Gravity Forms trims the values. If the value contains a space at the start or the end, mosparo will
+        // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
+        // value if the trimmed $_POST value is the same as the prepared Gravity Forms value.
+        if (isset($_POST[$fullKey]) && $_POST[$fullKey] !== $value && trim($_POST[$fullKey]) === $value) {
+            $value = $_POST[$fullKey];
+        }
+
+        return $value;
     }
 }
