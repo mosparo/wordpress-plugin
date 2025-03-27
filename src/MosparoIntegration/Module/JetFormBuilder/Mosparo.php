@@ -176,6 +176,14 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
                 $verifiableFields = array_merge($verifiableFields, $innerVerifiableFields);
             } else {
                 $fieldKey = $name;
+
+                // JetFormBuilder trims the values. If the value contains a space at the start or the end, mosparo will
+                // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
+                // value if the trimmed $_POST value is the same as the prepared JetFormBuilder value.
+                if (isset($_POST[$fieldKey]) && $_POST[$fieldKey] !== $value && trim($_POST[$fieldKey]) === $value) {
+                    $value = $_POST[$fieldKey];
+                }
+
                 $formData[$fieldKey] = $value;
 
                 if ($parser->is_required) {
@@ -213,7 +221,16 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
                 }
 
                 $fieldKey = sprintf('%s[%s]', $rowKey, $subName);
-                $formData[$fieldKey] = $data[$subName] ?? null;
+                $subValue = $data[$subName] ?? null;
+
+                // JetFormBuilder trims the values. If the value contains a space at the start or the end, mosparo will
+                // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
+                // value if the trimmed $_POST value is the same as the prepared JetFormBuilder value.
+                if (isset($_POST[$name][$key][$subName]) && $_POST[$name][$key][$subName] !== $subValue && trim($_POST[$name][$key][$subName]) === $subValue) {
+                    $subValue = $_POST[$name][$key][$subName];
+                }
+
+                $formData[$fieldKey] = $subValue;
 
                 if ($parser->is_required) {
                     $requiredFields[] = $fieldKey;
