@@ -207,6 +207,8 @@ class MosparoField extends GF_Field
 
     protected function getOriginalValue($fullKey, $value)
     {
+        $fullKey = str_replace('.', '_', $fullKey);
+
         // Gravity Forms trims the values. If the value contains a space at the start or the end, mosparo will
         // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
         // value if the trimmed $_POST value is the same as the prepared Gravity Forms value.
