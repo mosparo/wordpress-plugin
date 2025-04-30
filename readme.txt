@@ -2,7 +2,7 @@
 Contributors: mosparo
 Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
-Tested up to: 6.7.2
+Tested up to: 6.8.1
 Requires PHP: 7.4
 Stable tag: 1.13.6
 License: MIT
