@@ -14,7 +14,7 @@
  * Author:            mosparo
  * Author URI:        https://mosparo.io/
  * License:           MIT
- * Version:           1.13.5
+ * Version:           1.13.6
  * Text Domain:       mosparo-integration
  * Domain Path:       /languages
  */
