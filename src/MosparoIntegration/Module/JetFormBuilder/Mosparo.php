@@ -146,7 +146,6 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
             'heading-field',
             'media-field',
             'progress-bar',
-            'range-field',
         ]);
         $verifiableFieldTypes = apply_filters('mosparo_integration_jet_form_builder_verifiable_field_types', [
             'text-field',
