@@ -121,74 +121,90 @@ class FrontendHelper
 
     public function generateField(Connection $connection, $options = [], $field = null)
     {
-        $this->registerResources($connection);
-
         $instanceId = uniqid();
 
-        $options = $this->getFrontendOptions($options, $connection);
-        $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
+        $script = $this->getScript($connection, $instanceId, $options, $field);
 
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
             <script>
-                if (typeof mosparoInstances == "undefined") {
-                    var mosparoInstances = [];
+                %s
+            </script>',
+            esc_attr($instanceId),
+            $script
+        );
+
+        return $html;
+    }
+
+    public function getScript(Connection $connection, $instanceId, $options = [], $field = null)
+    {
+        $this->registerResources($connection);
+
+        $options = $this->getFrontendOptions($options, $connection);
+        $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
+
+        return sprintf('
+            if (typeof mosparoInstances == "undefined") {
+                var mosparoInstances = [];
+            }
+            
+            (function () {
+                let scriptEl = null;
+                if (typeof mosparo == "undefined") {
+                    scriptEl = document.createElement("script");
+                    scriptEl.setAttribute("src", "%s");
+                    document.body.appendChild(scriptEl);
                 }
                 
-                (function () {
-                    let scriptEl = null;
-                    if (typeof mosparo == "undefined") {
-                        scriptEl = document.createElement("script");
-                        scriptEl.setAttribute("src", "%s");
-                        document.body.appendChild(scriptEl);
+                let initializeMosparo = function () {
+                    let id = "mosparo-box-%s";
+                    if (typeof mosparoInstances[id] !== "undefined") {
+                        return;
                     }
                     
-                    let initializeMosparo = function () {
-                        let id = "mosparo-box-%s";
-                        if (typeof mosparoInstances[id] !== "undefined") {
+                    let mosparoFieldEl = document.getElementById(id);
+                    if (!mosparoFieldEl) {
+                        return;
+                    }
+                    
+                    let formEl = null;
+                    let el = mosparoFieldEl;
+                    while ((el = el.parentNode) && el !== document) {
+                        if (el.matches("form")) {
+                            formEl = el;
+                            break;
+                        }
+                    }
+                
+                    let options = %s;
+                    let resetMosparoField = function () {
+                        if (!mosparoInstances[id]) {
                             return;
                         }
                         
-                        let mosparoFieldEl = document.getElementById(id);
-                        let el = mosparoFieldEl;
-                        let formEl = null;
-                        while ((el = el.parentNode) && el !== document) {
-                            if (el.matches("form")) {
-                                formEl = el;
-                                break;
-                            }
-                        }
-                    
-                        let options = %s;
-                        let resetMosparoField = function () {
-                            if (!mosparoInstances[id]) {
-                                return;
-                            }
-                            
-                            mosparoInstances[id].resetState();
-                            mosparoInstances[id].requestSubmitToken();
-                        };
-                        
-                        %s
-                        
-                        mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
+                        mosparoInstances[id].resetState();
+                        mosparoInstances[id].requestSubmitToken();
                     };
                     
-                    if (scriptEl !== null) {
-                        scriptEl.addEventListener("load", function () {
-                            initializeMosparo();
-                        });
-                    } else if (document.readyState !== "loading") {
-                        initializeMosparo();
-                    } else {
-                        document.addEventListener("DOMContentLoaded", initializeMosparo);
-                    }
-                    document.addEventListener("mosparo_integration_initialize_fields", initializeMosparo);
-                    
                     %s
-                })();
-            </script>',
-            esc_attr($instanceId),
+                    
+                    mosparoInstances[id] = new mosparo(id, "%s", "%s", "%s", options);
+                };
+                
+                if (scriptEl !== null) {
+                    scriptEl.addEventListener("load", function () {
+                        initializeMosparo();
+                    });
+                } else if (document.readyState !== "loading") {
+                    initializeMosparo();
+                } else {
+                    document.addEventListener("DOMContentLoaded", initializeMosparo);
+                }
+                document.addEventListener("mosparo_integration_initialize_fields", initializeMosparo);
+                
+                %s
+            })();',
             $this->getJavaScriptUrl($connection),
             esc_attr($instanceId),
             wp_json_encode($options),
@@ -198,8 +214,6 @@ class FrontendHelper
             esc_attr($connection->getPublicKey()),
             $additionalCode['after']
         );
-
-        return $html;
     }
 
     protected function prepareAdditionalJavaScriptCode($instanceId, $field)
@@ -315,6 +329,34 @@ class FrontendHelper
                     };
                     ',
                 'after' => '',
+            ];
+        }
+
+        if ($field === 'wsform') {
+            return [
+                'before' => '
+                    options.onGetFormData = function (formElement, formData) {
+                        let ignoredFields = [];
+                        for (let key of formData.ignoredFields) {
+                            if (key.indexOf("wsf_") === -1) {
+                                ignoredFields.push(key);
+                            }
+                        }
+                        
+                        formData.ignoredFields = ignoredFields;
+                        
+                        return formData;
+                    };
+                ',
+                'after' => sprintf('
+                    jQuery(document).on("wsf-rendered", function (event, formObject, formId, instanceId, eventFormEl, formCanvasEl) {
+                        let mosparoEl = jQuery("#mosparo-box-%s");
+                        let formEl = mosparoEl.parents("form");
+                        if (formEl.data("id") == formId) {
+                            initializeMosparo();
+                        }
+                    });                
+                ', $instanceId),
             ];
         }
 
