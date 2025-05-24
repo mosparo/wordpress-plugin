@@ -16,7 +16,7 @@ class WSFormModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('WS Form', 'mosparo-integration');
-        $this->description = __('Protects WS Form forms with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects WS Form forms with mosparo. Please use mosparo version 1.3.6 or newer for this module.', 'mosparo-integration');
         $this->dependencies = [
             'wsform' => ['name' => __('WS Form', 'mosparo-integration'), 'url' => 'https://wordpress.org/plugins/wsform-lite/']
         ];
