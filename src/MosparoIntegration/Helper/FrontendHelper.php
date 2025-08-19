@@ -245,6 +245,34 @@ class FrontendHelper
         }
 
         if (class_exists('GF_Field') && $field instanceof GF_Field) {
+            $afterCode = '';
+            if (is_admin()) {
+                $afterCode = sprintf('
+                    document.addEventListener("gform_field_added", function (event, form, field) {
+                        if (field["type"] === "mosparo") {
+                            initializeMosparo();
+                        }
+                    });
+                    
+                    if (typeof(gform) !== "undefined") {
+                        gform.addAction("gform_after_refresh_field_preview", function (fieldId) {
+                            let id = "mosparo-box-%s";
+                            let eventFieldId = %d;
+                            
+                            if (fieldId !== eventFieldId) {
+                                return;
+                            }
+                            
+                            delete mosparoInstances[id];
+                            
+                            initializeMosparo();
+                        });
+                    }',
+                    $instanceId,
+                    $field->id
+                );
+            }
+
             return [
                 'before' => '
                     options.doSubmitFormInvisible = function () {
@@ -257,25 +285,7 @@ class FrontendHelper
                         jQuery("#gform_ajax_spinner_" + formId).remove();
                     };
                     ',
-                'after' => sprintf('
-                    document.addEventListener("gform_field_added", function (event, form, field) {
-                        if (field["type"] === "mosparo") {
-                            initializeMosparo();
-                        }
-                    });
-                    
-                    gform.addAction("gform_after_refresh_field_preview", function (fieldId) {
-                        let id = "mosparo-box-%s";
-                        let eventFieldId = %d;
-                        
-                        if (fieldId !== eventFieldId) {
-                            return;
-                        }
-                        
-                        delete mosparoInstances[id];
-                        
-                        initializeMosparo();
-                    });', $instanceId, $field->id),
+                'after' => $afterCode,
             ];
         }
 
