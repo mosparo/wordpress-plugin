@@ -145,19 +145,19 @@ class FrontendHelper
         $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
 
         return sprintf('
-            if (typeof mosparoInstances == "undefined") {
+            if (typeof mosparoInstances === "undefined") {
                 var mosparoInstances = [];
             }
             
             (function () {
                 let scriptEl = null;
-                if (typeof mosparo == "undefined") {
+                if (typeof mosparo === "undefined") {
                     scriptEl = document.createElement("script");
                     scriptEl.setAttribute("src", "%s");
                     document.body.appendChild(scriptEl);
                 }
                 
-                let initializeMosparo = function () {
+                let initializeMosparo = function (ev) {
                     let id = "mosparo-box-%s";
                     if (typeof mosparoInstances[id] !== "undefined") {
                         return;
@@ -254,7 +254,7 @@ class FrontendHelper
                         }
                     });
                     
-                    if (typeof(gform) !== "undefined") {
+                    if (typeof gform !== "undefined") {
                         gform.addAction("gform_after_refresh_field_preview", function (fieldId) {
                             let id = "mosparo-box-%s";
                             let eventFieldId = %d;
@@ -275,6 +275,23 @@ class FrontendHelper
 
             return [
                 'before' => '
+                    // Remove the existing mosparo box if the initialization is executed again.
+                    // This can happen if the form is submitted by AJAX and a validation error occurred.
+                    if (mosparoFieldEl.querySelector(".mosparo__row") !== null) {
+                        mosparoFieldEl.querySelector(".mosparo__row").remove();
+                    }
+                    
+                    options.onGetFormData = function (formEl, formData) {
+                        // Remove the version_hash ignored field since it was not available
+                        // when the validation was executed.
+                        const vhIndex = formData.ignoredFields.indexOf("version_hash");
+                        if (vhIndex > -1) {
+                            formData.ignoredFields.splice(vhIndex, 1);    
+                        }
+                        
+                        return formData;
+                    };
+                    
                     options.doSubmitFormInvisible = function () {
                         formEl.submit();
                     };
@@ -284,8 +301,32 @@ class FrontendHelper
                         window["gf_submitting_" + formId] = false;
                         jQuery("#gform_ajax_spinner_" + formId).remove();
                     };
-                    ',
-                'after' => $afterCode,
+                ',
+                'after' => sprintf('
+                    document.addEventListener("gform/theme/scripts_loaded", (ev) => {
+                        gform.utils.addAsyncFilter("gform/submission/pre_submission", async (data) => {
+                            if (typeof data.form === "undefined" || parseInt(data.form.getAttribute("data-formid")) !== %d) {
+                                return data;
+                            }
+                            
+                            // Get the ID from the form directly, because if the form is included with AJAX, the mosparo
+                            // field receives a new ID everytime the form is submitted.
+                            const mosparoEl = data.form.querySelector(".mosparo__container");
+                            id = mosparoEl.getAttribute("id");
+                            
+                            if (typeof mosparoInstances[id] === "undefined") {
+                                return data;
+                            }
+                            
+                            if (!mosparoInstances[id].checkboxFieldElement.checked || !mosparoInstances[id].verifyCheckedFormData()) {
+                                data.abort = true;
+                                mosparoInstances[id].onSubmit(ev);
+                            }
+                            
+                            return data;
+                        });
+                    });
+                ', $field->formId) . $afterCode,
             ];
         }
 
