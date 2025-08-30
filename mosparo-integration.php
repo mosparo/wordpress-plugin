@@ -40,7 +40,7 @@ function mosparoIntegrationInitialize()
     $adminHelper = AdminHelper::getInstance();
     $adminHelper->initializeAdmin(__DIR__, plugin_dir_url(__FILE__), plugin_basename(__FILE__));
 }
-add_action('init', 'mosparoIntegrationInitialize', 1);
+add_action('after_setup_theme', 'mosparoIntegrationInitialize', -1000);
 
 function mosparoIntegrationInitializeLate()
 {
