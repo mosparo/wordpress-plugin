@@ -67,7 +67,7 @@ DEFAULT_HTML;
         if ($frontendHelper->isGutenbergRequest()) {
             return $frontendHelper->displayDummy();
         } else {
-            return $frontendHelper->generateField($connection);
+            return $frontendHelper->generateField($connection, [], $this);
         }
     }
 

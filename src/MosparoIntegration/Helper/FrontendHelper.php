@@ -6,6 +6,7 @@ use JFB_Modules\Captcha\Abstract_Captcha\Base_Captcha_From_Options;
 use MosparoIntegration\Entity\Connection;
 use MosparoIntegration\Module\ContactForm7\MosparoField as ContactForm7MosparoField;
 use MosparoIntegration\Module\ElementorForm\MosparoField as ElementorFormMosparoField;
+use MosparoIntegration\Module\Formidable\MosparoField as FormidableMosparoField;
 use MosparoIntegration\Module\WPForms\MosparoField as WpFormsMosparoField;
 use WP_Error;
 use GF_Field;
@@ -367,6 +368,19 @@ class FrontendHelper
                         delete mosparoInstances[id];
                     });
                 ', $instanceId),
+            ];
+        }
+
+        if (function_exists('load_formidable_forms') && $field instanceof FormidableMosparoField) {
+            return [
+                'before' => sprintf('
+                    jQuery(document).on("frmFormErrors", function (ev, formEl) {
+                        if (jQuery(formEl).find("#mosparo-box-%s").length) {
+                            resetMosparoField();
+                        }
+                    });
+                ', $instanceId),
+                'after' => '',
             ];
         }
 
