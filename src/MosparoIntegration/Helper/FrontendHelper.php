@@ -223,11 +223,27 @@ class FrontendHelper
             return [
                 'before' => '
                     if (typeof wpcf7 !== "undefined" && mosparoFieldEl.closest(".wpcf7")) {
+                        wpcf7.blocked = true;
+                        
+                        options.onCheckForm = function (result) {
+                            if (result) {
+                                wpcf7.blocked = false;
+                            }
+                        };
+                        
                         if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
                             options.requestSubmitTokenOnInit = false;
                         }
                         
-                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7spam", resetMosparoField);
+                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7invalid", function () {
+                            wpcf7.blocked = true;
+                            resetMosparoField();
+                        });
+                        
+                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7spam", function () {
+                            wpcf7.blocked = true;
+                            resetMosparoField();
+                        });
                     }
                 ',
                 'after' => '',
