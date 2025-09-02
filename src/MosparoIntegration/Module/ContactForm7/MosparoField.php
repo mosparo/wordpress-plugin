@@ -45,7 +45,7 @@ class MosparoField
 
     public function addFormTagGenerator()
     {
-        wpcf7_add_tag_generator('mosparo', 'mosparo', '', [$this, 'getTagGeneratorContent'], ['nameless' => 1]);
+        wpcf7_add_tag_generator('mosparo', 'mosparo', '', [$this, 'getTagGeneratorContent'], ['nameless' => 1, 'version' => 2]);
     }
 
     public function displayFormField()
