@@ -210,43 +210,47 @@ class MosparoField
         return [ $formData, $requiredFields, $verifiableFields ];
     }
 
-    public function getTagGeneratorContent($contactForm, $args = '')
+    public function getTagGeneratorContent()
     {
-        $args = wp_parse_args($args, []);
         ?>
+        <header class="description-box">
+            <h3><?php echo esc_html(__('mosparo form tag generator', 'mosparo-integration')); ?></h3>
+            <p>
+                <?php
+                    echo sprintf(
+                        __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-integration'),
+                        '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=mosparo-configuration')) . '" target="_blank">',
+                        '</a>'
+                    );
+                ?>
+            </p>
+        </header>
         <div class="control-box">
             <fieldset>
-                <legend>
-                    <?php echo sprintf(
-                            __('Adds a mosparo field to your form. Please configure the connection to mosparo in the %ssettings%s.', 'mosparo-integration'),
-                            '<a href="' . esc_url(get_admin_url(null, 'options-general.php?page=mosparo-configuration')) . '">',
-                            '</a>'
-                        );
-                    ?>
+                <legend id="tag-generator-panel-mosparo-type-legend">
+                    <?php echo esc_html(__('Field type', 'contact-form-7')); ?>
                 </legend>
+                <select data-tag-part="basetype" aria-labelledby="tag-generator-panel-mosparo-type-legend">
+                    <option value="mosparo">mosparo</option>
+                </select>
+            </fieldset>
 
-                <table class="form-table">
-                    <tbody>
-                        <tr>
-                            <th scope="row"><label for="<?php echo esc_attr($args['content'] . '-id'); ?>"><?php echo esc_html(__('Id attribute', 'contact-form-7')); ?></label></th>
-                            <td><input type="text" name="id" class="idvalue oneline option" id="<?php echo esc_attr($args['content'] . '-id'); ?>" /></td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><label for="<?php echo esc_attr($args['content'] . '-class'); ?>"><?php echo esc_html(__('Class attribute', 'contact-form-7')); ?></label></th>
-                            <td><input type="text" name="class" class="classvalue oneline option" id="<?php echo esc_attr($args['content'] . '-class'); ?>" /></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <fieldset>
+                <legend id="tag-generator-panel-mosparo-class-legend">
+                    <?php echo esc_html(__('Class attribute', 'contact-form-7')); ?>
+                </legend>
+                <input type="text" data-tag-part="option" data-tag-option="class:" aria-labelledby="tag-generator-panel-mosparo-id-legend" />
             </fieldset>
         </div>
 
-        <div class="insert-box">
-            <input type="text" name="mosparo" class="tag code" readonly="readonly" onfocus="this.select()" />
-
-            <div class="submitbox">
-                <input type="button" class="button button-primary insert-tag" value="<?php echo esc_attr(__('Insert Tag', 'contact-form-7')); ?>" />
+        <footer class="insert-box">
+            <div class="flex-container">
+                <input type="text" class="code" readonly="readonly" onfocus="this.select()" data-tag-part="tag" aria-label="<?php echo esc_html(__('The form-tag to be inserted into the form template', 'contact-form-7')); ?>">
+                <button type="button" class="button-primary" data-taggen="insert-tag">
+                    <?php echo esc_attr(__('Insert Tag', 'contact-form-7')); ?>
+                </button>
             </div>
-        </div>
+        </footer>
         <?php
     }
 
