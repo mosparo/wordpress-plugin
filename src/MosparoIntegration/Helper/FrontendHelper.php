@@ -222,11 +222,22 @@ class FrontendHelper
         if (function_exists('wpcf7_add_form_tag') && $field instanceof ContactForm7MosparoField) {
             return [
                 'before' => '
-                    if (typeof wpcf7 !== "undefined" && mosparoFieldEl.closest(".wpcf7")) {
-                        wpcf7.blocked = true;
-                        
+                    let wpcf7FormEl = null;
+                    let parentEl = mosparoFieldEl;
+                    while ((parentEl = parentEl.parentNode) && parentEl !== document) {
+                        if (parentEl.matches(".wpcf7-form")) {
+                            wpcf7FormEl = parentEl;
+                            break;
+                        }
+                    }
+                    
+                    if (typeof wpcf7 !== "undefined" && wpcf7FormEl !== null) {
+                        options.onSwitchToInvisible = function () {
+                            wpcf7.blocked = true;
+                            wpcf7FormEl.classList.add("wpcf7__mosparo__invisible");
+                        };
                         options.onCheckForm = function (result) {
-                            if (result) {
+                            if (result && mosparoInstances[id].invisible) {
                                 wpcf7.blocked = false;
                             }
                         };
@@ -235,14 +246,42 @@ class FrontendHelper
                             options.requestSubmitTokenOnInit = false;
                         }
                         
-                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7invalid", function () {
-                            wpcf7.blocked = true;
+                        wpcf7FormEl.addEventListener("wpcf7invalid", function () {
+                            if (mosparoInstances[id].invisible) {
+                                wpcf7.blocked = true;
+                            }
+                            
                             resetMosparoField();
                         });
                         
-                        mosparoFieldEl.closest(".wpcf7").addEventListener("wpcf7spam", function () {
-                            wpcf7.blocked = true;
+                        wpcf7FormEl.addEventListener("wpcf7spam", function () {
+                            if (mosparoInstances[id].invisible) {
+                                wpcf7.blocked = true;
+                            }
+                                
                             resetMosparoField();
+                        });
+                        
+                        // Add the required logic for other wpcf7 forms without mosparo in it.
+                        document.querySelectorAll(".wpcf7-form").forEach(function (form) {
+                            form.addEventListener("submit", function () {
+                                if (wpcf7.blocked && form.querySelectorAll(".mosparo__container").length === 0) {
+                                    // If this form does not contain a mosparo field, unblock the form and submit it again.
+                                    wpcf7.blocked = false; 
+                                    
+                                    if (form.querySelector(".wpcf7-submit")) {
+                                        form.querySelector(".wpcf7-submit").click();
+                                    } else {
+                                        form.submit();
+                                    }
+                                }
+                            });
+                            form.addEventListener("wpcf7submit", function () {
+                                if (document.querySelectorAll(".wpcf7__mosparo__invisible").length > 0) {
+                                    // If we have at least one form with the invisible mosparo mode, we need to block it again.
+                                    wpcf7.blocked = true;
+                                }
+                            });
                         });
                     }
                 ',
