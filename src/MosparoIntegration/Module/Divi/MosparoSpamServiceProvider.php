@@ -24,6 +24,8 @@ class MosparoSpamServiceProvider extends ET_Core_API_Spam_Provider
      */
     public $max_accounts = 1;
 
+    public $custom_fields = false;
+
     public function __construct($owner = 'ET_Core', $account_name = 'default', $api_key = '')
     {
         parent::__construct($owner, $account_name, $api_key);
