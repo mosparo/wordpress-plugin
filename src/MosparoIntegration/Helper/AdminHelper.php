@@ -331,7 +331,7 @@ class AdminHelper
         }
 
         $connection->setName(sanitize_text_field($_POST['name']));
-        $connection->setHost(sanitize_url($_POST['host']));
+        $connection->setHost(rtrim(sanitize_url($_POST['host']), '/'));
         $connection->setUuid(sanitize_key($_POST['uuid']));
         $connection->setPublicKey(sanitize_text_field($_POST['publicKey']));
 
