@@ -4,29 +4,18 @@ namespace MosparoIntegration\Module\NinjaForms;
 
 use MosparoIntegration\Helper\ConfigHelper;
 use MosparoIntegration\Helper\VerificationHelper;
-use NF_Abstracts_Action;
+use NinjaForms\Includes\Abstracts\SotAction;
+use NinjaForms\Includes\Traits\SotGetActionProperties;
+use NinjaForms\Includes\Interfaces\SotAction as InterfacesSotAction;
 
-class MosparoAction extends NF_Abstracts_Action
+class MosparoAction extends SotAction implements InterfacesSotAction
 {
-	/**
-	 * @var string
-	 */
-	protected $_name = 'mosparo';
+    use SotGetActionProperties;
 
 	/**
 	 * @var array
 	 */
 	protected $_tags = ['spam', 'filtering', 'mosparo'];
-
-	/**
-	 * @var string
-	 */
-	protected $_timing = 'early';
-
-	/**
-	 * @var int
-	 */
-	protected $_priority = 1;
 
 	/**
 	 * Constructor
@@ -35,7 +24,11 @@ class MosparoAction extends NF_Abstracts_Action
     {
 		parent::__construct();
 
-		$this->_nicename = esc_html__( 'mosparo', 'mosparo-integration');
+        $this->_name  = 'email';
+        $this->_nicename = 'mosparo';
+        $this->_timing = 'early';
+        $this->_priority = 1;
+        $this->_group = 'core';
 	}
 
 	/**
@@ -58,30 +51,30 @@ class MosparoAction extends NF_Abstracts_Action
 	 * @param array $data
 	 * @return array
 	 */
-	public function process($actionSettings, $formId, $nfData)
+	public function process(array $actionSettings, int $formId, array $data): array
     {
 		if (!$this->isModuleEnabled()) {
-			return $nfData;
+			return $data;
 		}
 
         // Stop the verification if the mosparo tag is not found in the form
-        if (!$this->searchMosparoFieldInForm($nfData)) {
-            return $nfData;
+        if (!$this->searchMosparoFieldInForm($data)) {
+            return $data;
         }
 
         $configHelper = ConfigHelper::getInstance();
         $connection = $configHelper->getConnectionFor('module_ninja-forms');
         if ($connection === false) {
-            return $nfData;
+            return $data;
         }
 
         // Find the validation data
-        [$tokens, $data, $requiredFields, $verifiableFields] = $this->getFormData($nfData);
+        [$tokens, $data, $requiredFields, $verifiableFields] = $this->getFormData($data);
 
         // If the tokens are not available, the submission cannot be valid.
         if (empty($tokens['submitToken']) || empty($tokens['validationToken'])) {
             $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-integration');
-            return $nfData;
+            return $data;
         }
 
         // Verify the submission
@@ -94,13 +87,13 @@ class MosparoAction extends NF_Abstracts_Action
             $verifiableFieldDifference = array_diff($verifiableFields, $verifiedFields);
 
             if ($verificationResult->isSubmittable() && empty($fieldDifference) && empty($verifiableFieldDifference)) {
-                return $nfData;
+                return $data;
             }
         }
 
-        $nfData['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-integration');
+        $data['errors']['form']['spam'] = __('Your submission is not valid.', 'mosparo-integration');
 
-		return $nfData;
+		return $data;
 	}
 
     /**

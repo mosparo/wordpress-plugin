@@ -50,6 +50,14 @@ function mosparoIntegrationInitializeLate()
 }
 add_action('after_setup_theme', 'mosparoIntegrationInitializeLate', 1000);
 
+function mosparoIntegrationInitializeVeryEarly()
+{
+    // This initialization round is mainly for Ninja Forms, which uses the action plugins_loaded to register the Ninja Forms actions
+    $moduleHelper = ModuleHelper::getInstance();
+    $moduleHelper->initializeActiveModulesVeryEarly();
+}
+add_action('plugins_loaded', 'mosparoIntegrationInitializeVeryEarly', -1000);
+
 function mosparoIntegrationInitializeTextDomain()
 {
     load_plugin_textdomain('mosparo-integration', false, dirname(plugin_basename(__FILE__)) . '/languages');

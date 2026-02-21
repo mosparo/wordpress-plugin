@@ -36,6 +36,20 @@ class NinjaFormsModule extends AbstractModule
      */
     public function initializeModule($pluginDirectoryPath, $pluginDirectoryUrl)
     {
+        add_filter('ninja_forms_field_template_file_paths', function ($paths) use ($pluginDirectoryPath) {
+            $paths[] = $pluginDirectoryPath . '/views/module/ninja-forms/';
+            return $paths;
+        });
+
+        add_action('ninja_forms_enqueue_scripts', function () use ($pluginDirectoryUrl) {
+            if (wp_script_is('nf-front-end', 'enqueued')) {
+                wp_enqueue_script('mosparo-field-validation', $pluginDirectoryUrl . 'assets/module/ninja-forms/js/mosparo.js', ['nf-front-end', 'jquery', 'backbone']);
+            }
+        }, 10000);
+    }
+
+    public static function registerEarlyHooks()
+    {
         add_filter('ninja_forms_register_fields', function ($fields) {
             $fields['mosparo'] = new MosparoField();
             return $fields;
@@ -44,15 +58,6 @@ class NinjaFormsModule extends AbstractModule
         add_filter('ninja_forms_register_actions', function ($actions) {
             $actions['mosparo'] = new MosparoAction();
             return $actions;
-        });
-
-        add_filter('ninja_forms_field_template_file_paths', function ($paths) use ($pluginDirectoryPath) {
-            $paths[] = $pluginDirectoryPath . '/views/module/ninja-forms/';
-            return $paths;
-        });
-
-        add_action('wp_enqueue_scripts', function () use ($pluginDirectoryUrl) {
-            wp_enqueue_script('mosparo-field-validation', $pluginDirectoryUrl . 'assets/module/ninja-forms/js/mosparo.js', ['nf-front-end', 'jquery', 'backbone']);
         });
     }
 }

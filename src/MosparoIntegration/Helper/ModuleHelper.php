@@ -104,6 +104,16 @@ class ModuleHelper
         }
     }
 
+
+    public function initializeActiveModulesVeryEarly()
+    {
+        $configHelper = ConfigHelper::getInstance();
+
+        if ($configHelper->isModuleActive('ninja-forms')) {
+            NinjaFormsModule::registerEarlyHooks();
+        }
+    }
+
     public function getModules(): array
     {
         $modules = [];
