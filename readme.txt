@@ -2,9 +2,9 @@
 Contributors: mosparo
 Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
-Tested up to: 6.8.1
+Tested up to: 6.9.1
 Requires PHP: 7.4
-Stable tag: 1.15.2
+Stable tag: 1.16.0
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -21,7 +21,7 @@ If you want to protect your forms in WordPress with mosparo, this plugin will he
 - Gravity Forms
 - JetFormBuilder
 - Memberpress Account Forms (login, lost password)
-- Ninja Forms
+- Ninja Forms (3.0+ and WordPress 6.7+)
 - WPForms
 - WooCommerce Account Forms (login, lost password, and registration)
 - WordPress Account Forms (login, lost password, and registration) (also compatible with *Theme My Login*)
@@ -103,6 +103,13 @@ Because of an error when editing a form, we had to change the name of the mospar
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.16.0 =
+*Release Date: 21st February 2026*
+
+* [Change] Upgraded the Ninja Forms action to the new structure.
+* [Bugfix] Fixed the initialization for the Ninja Forms action.
+* [Bugfix] Fixed the handling of quotation marks in values for the Contact Form 7, Divi, Forminator, Gravity Forms, JetFormBuilder, and WSForm integrations.
 
 = 1.15.2 =
 *Release Date: 8th October 2025*
