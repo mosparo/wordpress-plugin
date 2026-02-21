@@ -282,7 +282,7 @@ class WSFormModule extends AbstractModule
                     }
 
                     $fieldKey = 'field_' . $field->id;
-                    $fieldData = $sectionData[$fieldKey];
+                    $fieldData = $sectionData[$fieldKey] ?? null;
                     $value = $fieldData['value'] ?? null;
 
                     if ($sectionRepeatable) {
@@ -338,7 +338,7 @@ class WSFormModule extends AbstractModule
     {
         $formData = [];
         foreach ($wsFormSubmit->meta as $fieldKey => $fieldData) {
-            if ($fieldData['section_id'] == $sectionId) {
+            if (isset($fieldData['section_id']) && $fieldData['section_id'] == $sectionId) {
                 if ($sectionRepeatable) {
                     if ($fieldData['repeatable_index'] === false) {
                         continue;
@@ -378,6 +378,6 @@ class WSFormModule extends AbstractModule
             $value = $_POST[$fullKey];
         }
 
-        return $value;
+        return stripslashes_deep($value);
     }
 }

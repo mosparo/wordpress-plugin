@@ -257,10 +257,10 @@ class ForminatorModule extends AbstractModule
         // Forminator trims the values. If the value contains a space at the start or the end, mosparo will
         // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
         // value if the trimmed $_POST value is the same as the prepared Forminator value.
-        if (isset($_POST[$fullKey]) && $_POST[$fullKey] !== $value && trim($_POST[$fullKey]) === $value) {
+        if (isset($_POST[$fullKey]) && $_POST[$fullKey] !== $value && stripslashes(trim($_POST[$fullKey])) === $value) {
             $value = $_POST[$fullKey];
         }
 
-        return $value;
+        return stripslashes_deep($value);
     }
 }

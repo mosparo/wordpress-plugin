@@ -234,7 +234,7 @@ class MosparoSpamServiceProvider extends ET_Core_API_Spam_Provider
 
             $fullKey = $field['field_id'];
 
-            $formData[$fullKey] = $fieldData[$fullKey];
+            $formData[$fullKey] = stripslashes_deep($fieldData[$fullKey]);
 
             if (($field['required_mark'] ?? false) === 'required') {
                 $requiredFields[] = $fullKey;

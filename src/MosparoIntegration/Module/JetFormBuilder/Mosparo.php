@@ -179,11 +179,11 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
                 // JetFormBuilder trims the values. If the value contains a space at the start or the end, mosparo will
                 // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
                 // value if the trimmed $_POST value is the same as the prepared JetFormBuilder value.
-                if (isset($_POST[$fieldKey]) && $_POST[$fieldKey] !== $value && trim($_POST[$fieldKey]) === $value) {
+                if (isset($_POST[$fieldKey]) && $_POST[$fieldKey] !== $value && stripslashes(trim($_POST[$fieldKey])) === $value) {
                     $value = $_POST[$fieldKey];
                 }
 
-                $formData[$fieldKey] = $value;
+                $formData[$fieldKey] = stripslashes_deep($value);
 
                 if ($parser->is_required) {
                     $requiredFields[] = $fieldKey;
@@ -225,11 +225,11 @@ class Mosparo extends Base_Captcha_From_Options implements Captcha_Separate_Edit
                 // JetFormBuilder trims the values. If the value contains a space at the start or the end, mosparo will
                 // detect this as a manipulated field and blocks the submission. Because of this, we're using the $_POST
                 // value if the trimmed $_POST value is the same as the prepared JetFormBuilder value.
-                if (isset($_POST[$name][$key][$subName]) && $_POST[$name][$key][$subName] !== $subValue && trim($_POST[$name][$key][$subName]) === $subValue) {
+                if (isset($_POST[$name][$key][$subName]) && $_POST[$name][$key][$subName] !== $subValue && stripslashes(trim($_POST[$name][$key][$subName])) === $subValue) {
                     $subValue = $_POST[$name][$key][$subName];
                 }
 
-                $formData[$fieldKey] = $subValue;
+                $formData[$fieldKey] = stripslashes_deep($subValue);
 
                 if ($parser->is_required) {
                     $requiredFields[] = $fieldKey;
