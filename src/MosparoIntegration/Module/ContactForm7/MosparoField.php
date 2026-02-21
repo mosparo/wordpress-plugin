@@ -196,9 +196,7 @@ class MosparoField
                 $value = $formData[$tag->name];
             }
 
-            if ($value !== null) {
-                $formData[$tag->name] = stripslashes($value);
-            }
+            $formData[$tag->name] = stripslashes_deep($value);
 
             if (in_array($tag->type, $verifiableFieldTypes)) {
                 $verifiableFields[] = $tag->name;
