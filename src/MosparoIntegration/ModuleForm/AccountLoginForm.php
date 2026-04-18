@@ -13,7 +13,7 @@ class AccountLoginForm extends AbstractAccountForm
 {
     public function verifyLoginForm($userOrError)
     {
-        if (is_wp_error($userOrError) || !$this->canProcessRequest('woocommerce-login-nonce') || isset($_POST['mepr_is_login_page'])) {
+        if (is_wp_error($userOrError) || !$this->canProcessRequest('woocommerce-login-nonce') || isset($_POST['mepr_is_login_page']) || isset($_POST['um_request'])) {
             return $userOrError;
         }
 
