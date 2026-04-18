@@ -28,7 +28,7 @@ class AccountLoginForm extends AbstractAccountForm
         $validationToken = trim(sanitize_text_field($_POST['_mosparo_validationToken'] ?? ''));
 
         $formData = apply_filters('mosparo_integration_' . $this->module->getKey() . '_login_form_data', [
-            'log' => sanitize_user($_POST['log']),
+            'log' => sanitize_user($_POST['log'] ?? ''),
         ]);
 
         $verificationHelper = VerificationHelper::getInstance();
