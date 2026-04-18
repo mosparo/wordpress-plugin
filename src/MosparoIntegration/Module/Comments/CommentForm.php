@@ -10,6 +10,8 @@ class CommentForm
 {
     private static $instance;
 
+    protected array $verifiedSubmitTokens = [];
+
     public static function getInstance()
     {
         if (empty(self::$instance)) {
@@ -67,6 +69,15 @@ class CommentForm
         if (empty($submitToken) || empty($validationToken)) {
             return 'spam';
         }
+
+        // If the submit token was verified before, we do not do it again
+        // WordPress calls the filter `pre_comment_approved` twice when saving a comment.
+        // This leads to spam detection because the submit token was used before.
+        if (in_array($submitToken, $this->verifiedSubmitTokens)) {
+            return $approved;
+        }
+
+        $this->verifiedSubmitTokens[] = $submitToken;
 
         $formData = [
             'comment' => $commentData['comment_content'],
