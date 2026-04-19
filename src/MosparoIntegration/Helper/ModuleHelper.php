@@ -15,6 +15,7 @@ use MosparoIntegration\Module\GravityForms\GravityFormsModule;
 use MosparoIntegration\Module\JetFormBuilder\JetFormBuilderModule;
 use MosparoIntegration\Module\MemberpressAccount\MemberpressAccountModule;
 use MosparoIntegration\Module\NinjaForms\NinjaFormsModule;
+use MosparoIntegration\Module\UltimateMemberAccount\UltimateMemberAccountModule;
 use MosparoIntegration\Module\WPForms\WPFormsModule;
 use MosparoIntegration\Module\WSForm\WSFormModule;
 use MosparoIntegration\Module\WooCommerceAccount\WooCommerceAccountModule;
@@ -35,6 +36,7 @@ class ModuleHelper
         JetFormBuilderModule::class,
         MemberpressAccountModule::class,
         NinjaFormsModule::class,
+        UltimateMemberAccountModule::class,
         WooCommerceAccountModule::class,
         WPFormsModule::class,
         WSFormModule::class,

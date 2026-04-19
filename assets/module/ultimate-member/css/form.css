@@ -1,0 +1,9 @@
+.um-field-mosparo .mosparo__container,
+.um-field-mosparo .mosparo__container :before,
+.um-field-mosparo .mosparo__container :after {
+    box-sizing: border-box !important;
+}
+
+.um-password form:not(.mosparo__form-with-invisible-box) .um-field-mosparo {
+    margin-top: 30px;
+}

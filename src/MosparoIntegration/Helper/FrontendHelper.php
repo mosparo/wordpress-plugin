@@ -120,11 +120,11 @@ class FrontendHelper
         return (defined('REST_REQUEST') && REST_REQUEST && !empty($_REQUEST['context']) && 'edit' === sanitize_key($_REQUEST['context']));
     }
 
-    public function generateField(Connection $connection, $options = [], $field = null)
+    public function generateField(Connection $connection, $options = [], $field = null, $moduleKey = null)
     {
         $instanceId = uniqid();
 
-        $script = $this->getScript($connection, $instanceId, $options, $field);
+        $script = $this->getScript($connection, $instanceId, $options, $field, $moduleKey);
 
         $html = sprintf('
             <div id="mosparo-box-%s"></div>
@@ -138,12 +138,12 @@ class FrontendHelper
         return $html;
     }
 
-    public function getScript(Connection $connection, $instanceId, $options = [], $field = null)
+    public function getScript(Connection $connection, $instanceId, $options = [], $field = null, $moduleKey = null)
     {
         $this->registerResources($connection);
 
         $options = $this->getFrontendOptions($options, $connection);
-        $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field);
+        $additionalCode = $this->prepareAdditionalJavaScriptCode($instanceId, $field, $moduleKey);
 
         return sprintf('
             if (typeof mosparoInstances === "undefined") {
@@ -217,7 +217,7 @@ class FrontendHelper
         );
     }
 
-    protected function prepareAdditionalJavaScriptCode($instanceId, $field)
+    protected function prepareAdditionalJavaScriptCode($instanceId, $field, $moduleKey)
     {
         if (function_exists('wpcf7_add_form_tag') && $field instanceof ContactForm7MosparoField) {
             return [
@@ -448,6 +448,40 @@ class FrontendHelper
                         }
                     };
                     ',
+                'after' => '',
+            ];
+        }
+
+        if (class_exists('UM') && $moduleKey === 'ultimatememberaccount') {
+            return [
+                'before' => '
+                    var mosparoIsSubmitting = false;
+                    formEl.addEventListener("form-checked", function (ev) {
+                        mosparoIsSubmitting = false;
+                    });
+                    
+                    jQuery(formEl).submit(function (ev) {
+                        if (mosparoIsSubmitting) {
+                            ev.preventDefault();
+                            ev.stopImmediatePropagation();
+                            
+                            return false;
+                        }
+                        
+                        mosparoIsSubmitting = true;
+                        if (!jQuery(this).find(".mosparo__container input[type=\"checkbox\"]").is(":checked")) {
+                            formEl.removeEventListener("submit", mosparoInstances[id].onSubmit);
+                            
+                            ev.preventDefault();
+                            ev.stopImmediatePropagation();
+                            
+                            mosparoInstances[id].onSubmit(ev);
+                            jQuery(this).find("input[type=\"submit\"]").prop("disabled", false);
+                            
+                            return false;
+                        }
+                    });
+                ',
                 'after' => '',
             ];
         }

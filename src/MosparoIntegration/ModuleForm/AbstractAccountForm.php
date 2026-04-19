@@ -58,11 +58,16 @@ abstract class AbstractAccountForm
         }
 
         $frontendHelper = FrontendHelper::getInstance();
-        echo $frontendHelper->generateField($connection, [
-            // We have to ignore the password fields by name because showing the password will change the type to 'text'
-            // and the password is then sent to mosparo but will not be processed by the verification code, which results
-            // in a wrong spam detection.
-            'inputFieldSelector' => '[name]:not(.mosparo__ignored-field):not([name="pwd"]):not([name="password"])',
-        ]);
+        echo $frontendHelper->generateField(
+            $connection,
+            [
+                // We have to ignore the password fields by name because showing the password will change the type to 'text'
+                // and the password is then sent to mosparo but will not be processed by the verification code, which results
+                // in a wrong spam detection.
+                'inputFieldSelector' => '[name]:not(.mosparo__ignored-field):not([name="pwd"]):not([name="password"])',
+            ],
+            null,
+            $this->module->getKey() === 'ultimatememberaccount' ? 'ultimatememberaccount' : null
+        );
     }
 }
