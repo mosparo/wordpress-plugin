@@ -80,7 +80,7 @@ class ForminatorModule extends AbstractModule
         }
 
         $options = [
-            'inputFieldSelector' => '[name]:not(.mosparo__ignored-field):not(.forminator-calculation):not(.forminator-rating):not(.forminator-currency)'
+            'inputFieldSelector' => '.forminator-row:not(.forminator-hidden) [name]:not(.mosparo__ignored-field):not(.forminator-calculation):not(.forminator-rating):not(.forminator-currency)'
         ];
 
         $frontendHelper = FrontendHelper::getInstance();
