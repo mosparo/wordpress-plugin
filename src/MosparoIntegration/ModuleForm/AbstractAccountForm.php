@@ -64,7 +64,8 @@ abstract class AbstractAccountForm
                 // We have to ignore the password fields by name because showing the password will change the type to 'text'
                 // and the password is then sent to mosparo but will not be processed by the verification code, which results
                 // in a wrong spam detection.
-                'inputFieldSelector' => '[name]:not(.mosparo__ignored-field):not([name="pwd"]):not([name="password"])',
+                // Additionally, we ignore the class 'aio_special_field' since this is the honeypot field of the All-in-One Security plugin.
+                'inputFieldSelector' => '[name]:not(.mosparo__ignored-field):not([name="pwd"]):not([name="password"]):not(.aio_special_field)',
             ],
             null,
             $this->module->getKey() === 'ultimatememberaccount' ? 'ultimatememberaccount' : null
