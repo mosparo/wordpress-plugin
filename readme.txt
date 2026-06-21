@@ -4,7 +4,7 @@ Tags: mosparo, integration, spam-protection, forms, api-client
 Requires at least: 5.4
 Tested up to: 7.0.0
 Requires PHP: 7.4
-Stable tag: 1.17.2
+Stable tag: 1.18.0
 License: MIT
 
 The plugin adds the functionality to use mosparo in WordPress forms or forms from Contact Form 7, Everest Form, and other plugins.
@@ -12,6 +12,7 @@ The plugin adds the functionality to use mosparo in WordPress forms or forms fro
 == Description ==
 If you want to protect your forms in WordPress with mosparo, this plugin will help you with this task. After installing the plugin, you have to configure the connection to your mosparo installation and add the mosparo field to your form. The mosparo Integration plugin is compatible with the following plugins and forms:
 
+- bbPress (new topic and new reply forms)
 - Contact Form 7
 - Divi Contact Forms (**not** Email Optin or Login forms)
 - Elementor Form
@@ -25,7 +26,7 @@ If you want to protect your forms in WordPress with mosparo, this plugin will he
 - Ultimate Member Account Forms (login, lost password, and registration)
 - WPForms
 - WooCommerce Account Forms (login, lost password, and registration)
-- WordPress Account Forms (login, lost password, and registration) (also compatible with *Theme My Login*)
+- WordPress Account Forms (login, lost password, and registration) (also compatible with *bbPress* and *Theme My Login*)
 - WordPress Comments (and WooCommerce Reviews)
 
 To use this plugin, you need an installation of mosparo so that the plugin can communicate with mosparo. Please find all information regarding mosparo on the website [mosparo.io](https://mosparo.io).
@@ -104,6 +105,12 @@ Because of an error when editing a form, we had to change the name of the mospar
 Because of a missing event in the Everest Forms plugin, the invisible mode of mosparo can only work in the normal submission mode, not in the AJAX submission mode. We're waiting for an additional event in the Everest Forms plugin, which makes the mosparo plugin compatible again.
 
 == Changelog ==
+
+= 1.18.0 =
+*Release Date: 21st June 2026*
+
+* [Enhancement] Added a module to protect the bbPress new topic and new reply forms.
+* [Bugfix] Fixed the sorting method for the modules table.
 
 = 1.17.2 =
 *Release Date: 28th May 2026*
