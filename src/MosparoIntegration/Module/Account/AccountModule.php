@@ -15,7 +15,7 @@ class AccountModule extends AbstractModule
     public function __construct()
     {
         $this->name = __('Account', 'mosparo-integration');
-        $this->description = __('Protects the WordPress account forms like login, register and lost password with mosparo.', 'mosparo-integration');
+        $this->description = __('Protects WordPress account forms such as login, register, and lost password with mosparo. Also compatible with the bbPress and Theme My Login account forms.', 'mosparo-integration');
         $this->dependencies = [];
         $this->settings = new ModuleSettings(
             [
