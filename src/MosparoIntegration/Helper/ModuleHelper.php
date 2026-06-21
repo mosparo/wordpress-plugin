@@ -4,8 +4,9 @@ namespace MosparoIntegration\Helper;
 
 use MosparoIntegration\Module\AbstractModule;
 use MosparoIntegration\Module\Account\AccountModule;
-use MosparoIntegration\Module\Divi\DiviModule;
+use MosparoIntegration\Module\BbPress\BbPressModule;
 use MosparoIntegration\Module\Comments\CommentsModule;
+use MosparoIntegration\Module\Divi\DiviModule;
 use MosparoIntegration\Module\ContactForm7\ContactForm7Module;
 use MosparoIntegration\Module\ElementorForm\ElementorFormModule;
 use MosparoIntegration\Module\EverestForms\EverestFormsModule;
@@ -26,6 +27,7 @@ class ModuleHelper
     protected static $availableModules = [
         AccountModule::class,
         DiviModule::class,
+        BbPressModule::class,
         CommentsModule::class,
         ContactForm7Module::class,
         ElementorFormModule::class,
