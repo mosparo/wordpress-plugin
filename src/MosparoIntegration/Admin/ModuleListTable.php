@@ -125,7 +125,7 @@ class ModuleListTable extends WP_List_Table
             $valB = $itemB->getName();
         }
 
-        $result = strcmp($valA, $valB);
+        $result = strcmp(strtolower($valA), strtolower($valB));
         return ($order === 'asc') ? $result : -$result;
     }
 
