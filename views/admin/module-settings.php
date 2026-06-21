@@ -59,6 +59,11 @@ function mosparoModuleSettingsFieldInputHtml(ConfigHelper $configHelper, $fieldK
 
 function mosparoModuleSettingsDisplayRow(ConfigHelper $configHelper, $fieldKey, $field)
 {
+    if ($field['type'] === 'info') {
+        echo '<div class="notice notice-info">' . $field['description'] . '</div>';
+        return;
+    }
+
     $labelHtml = '<th><label for="' . esc_attr($fieldKey) . '">' . esc_html($field['label']) . '</label></th>';
     if ($field['type'] === 'boolean') {
         $labelHtml = '<th scope="row">' . esc_html($field['label']) . '</th>';
