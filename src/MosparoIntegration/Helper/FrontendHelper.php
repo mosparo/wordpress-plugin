@@ -345,6 +345,13 @@ class FrontendHelper
                             formData.ignoredFields.splice(vhIndex, 1);    
                         }
                         
+                        // Remove the gform_submission_speeds ignored field since it was not available
+                        // when the validation was executed.
+                        const gfSubSpeedIndex = formData.ignoredFields.indexOf("gform_submission_speeds");
+                        if (gfSubSpeedIndex > -1) {
+                            formData.ignoredFields.splice(gfSubSpeedIndex, 1);    
+                        }
+                        
                         return formData;
                     };
                     
