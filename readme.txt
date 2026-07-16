@@ -106,6 +106,11 @@ Because of a missing event in the Everest Forms plugin, the invisible mode of mo
 
 == Changelog ==
 
+= 1.18.1 =
+*Release Date: 16th July 2026*
+
+* [Bugfix] Gravity Forms: Added a fix to ignore a field that triggered a reset of the mosparo validation when the form was submitted.
+
 = 1.18.0 =
 *Release Date: 21st June 2026*
 
