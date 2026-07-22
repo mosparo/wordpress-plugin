@@ -153,14 +153,25 @@ class MosparoField extends GF_Field
             $value = GFFormsModel::get_field_value($field);
 
             if (is_array($field['inputs']) && $field['inputs']) {
-                foreach ($field['inputs'] as $subField) {
+                foreach ($field['inputs'] as $idx => $subField) {
                     if ($subField['isHidden'] ?? false) {
                         continue;
                     }
 
-                    $subValue = $value[$subField['id']];
+					$fieldKey = 'input_' . $subField['id'];
+					if ($field['type'] === 'email') {
+						$fieldKey = str_replace('.', '_', $fieldKey);
+					}
 
-                    $fieldKey = 'input_' . $subField['id'];
+					if (isset($value[$subField['id']])) {
+						$subValue = $value[$subField['id']];
+					} else if (isset($value[str_replace('.', '_', $subField['id'])])) {
+						$subValue = $value[str_replace('.', '_', $subField['id'])];
+						$fieldKey = str_replace('.', '_', $fieldKey);
+					} else if (isset($value[$idx])) {
+						$subValue = $value[$idx];
+					}
+
                     $formData[$fieldKey] = $this->getOriginalValue($fieldKey, $subValue);
 
                     if ($field['isRequired']) {
@@ -185,17 +196,6 @@ class MosparoField extends GF_Field
 
                 if (in_array($field['type'], $verifiableFieldTypes)) {
                     $verifiableFields[] = $fieldKey;
-                }
-
-                if ($field['type'] === 'email' && $field['emailConfirmEnabled'] ?? false) {
-                    $secondFieldKey = 'input_' . $field['id'] . '_2';
-                    $formData[$secondFieldKey] = $value;
-
-                    if ($field['isRequired']) {
-                        $requiredFields[] = $secondFieldKey;
-                    }
-
-                    $verifiableFields[] = $secondFieldKey;
                 }
             }
         }
