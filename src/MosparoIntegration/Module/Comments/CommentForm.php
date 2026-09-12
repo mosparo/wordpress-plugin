@@ -119,9 +119,9 @@ class CommentForm
 		// or if anything else is modified, mosparo will detect this as a manipulated field and blocks the submission.
 		// Because of this, we're using the $_POST value if the trimmed $_POST value is the same as the prepared comment value.
 		if (isset($_POST[$postKey]) && $_POST[$postKey] !== $value && trim($_POST[$postKey]) === $value) {
-			$value = wp_unslash($_POST[$postKey]);
+			$value = $_POST[$postKey];
 		}
 
-		return $value;
+		return wp_unslash($value);
 	}
 }
