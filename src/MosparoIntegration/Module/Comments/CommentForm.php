@@ -80,10 +80,10 @@ class CommentForm
         $this->verifiedSubmitTokens[] = $submitToken;
 
         $formData = [
-            'comment' => $commentData['comment_content'],
-            'author' => $commentData['comment_author'],
-            'email' => $commentData['comment_author_email'],
-            'url' => $commentData['comment_author_url']
+            'comment' => $this->getFormData('comment', 'comment_content', $commentData),
+            'author' => $this->getFormData('author', 'comment_author', $commentData),
+            'email' => $this->getFormData('email', 'comment_author_email', $commentData),
+            'url' => $this->getFormData('url', 'comment_author_url', $commentData),
         ];
 
         // Add the rating field from the WooCommerce reviews to the form data
@@ -110,4 +110,18 @@ class CommentForm
 
         return $approved;
     }
+
+	protected function getFormData(string $postKey, string $commentDataKey, array $commentData)
+	{
+		$value = $commentData[$commentDataKey];
+
+		// The comment functionality trims and prepares the value. If the value contains a space at the start or the end,
+		// or if anything else is modified, mosparo will detect this as a manipulated field and blocks the submission.
+		// Because of this, we're using the $_POST value if the trimmed $_POST value is the same as the prepared comment value.
+		if (isset($_POST[$postKey]) && $_POST[$postKey] !== $value && trim($_POST[$postKey]) === $value) {
+			$value = wp_unslash($_POST[$postKey]);
+		}
+
+		return $value;
+	}
 }
