@@ -50,7 +50,7 @@ class CommentForm
 
     public function verifyComment($approved, $commentData)
     {
-        // Skip the mosparo verification for logged in users
+        // Skip the mosparo verification for logged-in users
         $user = wp_get_current_user();
         if (isset($commentData['user_ID']) && $user->exists() && $user->ID == $commentData['user_ID']) {
             return $approved;
