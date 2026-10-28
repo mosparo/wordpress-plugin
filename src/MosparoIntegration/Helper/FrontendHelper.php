@@ -231,58 +231,34 @@ class FrontendHelper
                         }
                     }
                     
+                    // If Contact Form 7 isn\'t initialized yet, we need to do another round and wait for it.
+                    if ((typeof wpcf7 === "undefined" || typeof wpcf7.submit !== "function") && wpcf7FormEl !== null) {
+                        setTimeout(initializeMosparo, 100);
+                        return;
+                    }
+                    
                     if (typeof wpcf7 !== "undefined" && wpcf7FormEl !== null) {
-                        options.onSwitchToInvisible = function () {
-                            wpcf7.blocked = true;
-                            wpcf7FormEl.classList.add("wpcf7__mosparo__invisible");
-                        };
-                        options.onCheckForm = function (result) {
-                            if (result && mosparoInstances[id].invisible) {
-                                wpcf7.blocked = false;
+                        // Contact Form 7 handles the submit event before mosparo does. Because of that, we wrap
+                        // wpcf7.submit and stop the submission if the invisible mosparo did not check the form yet.
+                        // mosparo will check the form and submit it again afterwards.
+                        let originalSubmit = wpcf7.submit;
+                        wpcf7.submit = function (form) {
+                            let mosparoInstance = mosparoInstances[id];
+                            if (form === wpcf7FormEl && mosparoInstance && mosparoInstance.invisible) {
+                                if (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData()) {
+                                    return;
+                                }
                             }
+
+                            return originalSubmit.apply(this, arguments);
                         };
                         
                         if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
                             options.requestSubmitTokenOnInit = false;
                         }
                         
-                        wpcf7FormEl.addEventListener("wpcf7invalid", function () {
-                            if (mosparoInstances[id].invisible) {
-                                wpcf7.blocked = true;
-                            }
-                            
-                            resetMosparoField();
-                        });
-                        
-                        wpcf7FormEl.addEventListener("wpcf7spam", function () {
-                            if (mosparoInstances[id].invisible) {
-                                wpcf7.blocked = true;
-                            }
-                                
-                            resetMosparoField();
-                        });
-                        
-                        // Add the required logic for other wpcf7 forms without mosparo in it.
-                        document.querySelectorAll(".wpcf7-form").forEach(function (form) {
-                            form.addEventListener("submit", function () {
-                                if (wpcf7.blocked && form.querySelectorAll(".mosparo__container").length === 0) {
-                                    // If this form does not contain a mosparo field, unblock the form and submit it again.
-                                    wpcf7.blocked = false; 
-                                    
-                                    if (form.querySelector(".wpcf7-submit")) {
-                                        form.querySelector(".wpcf7-submit").click();
-                                    } else {
-                                        form.submit();
-                                    }
-                                }
-                            });
-                            form.addEventListener("wpcf7submit", function () {
-                                if (document.querySelectorAll(".wpcf7__mosparo__invisible").length > 0) {
-                                    // If we have at least one form with the invisible mosparo mode, we need to block it again.
-                                    wpcf7.blocked = true;
-                                }
-                            });
-                        });
+                        wpcf7FormEl.addEventListener("wpcf7invalid", resetMosparoField);
+                        wpcf7FormEl.addEventListener("wpcf7spam", resetMosparoField);
                     }
                 ',
                 'after' => '',
