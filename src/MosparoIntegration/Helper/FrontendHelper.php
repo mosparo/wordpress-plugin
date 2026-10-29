@@ -231,34 +231,42 @@ class FrontendHelper
                         }
                     }
                     
-                    // If Contact Form 7 isn\'t initialized yet, we need to do another round and wait for it.
-                    if ((typeof wpcf7 === "undefined" || typeof wpcf7.submit !== "function") && wpcf7FormEl !== null) {
-                        setTimeout(initializeMosparo, 100);
-                        return;
-                    }
-                    
-                    if (typeof wpcf7 !== "undefined" && wpcf7FormEl !== null) {
-                        // Contact Form 7 handles the submit event before mosparo does. Because of that, we wrap
-                        // wpcf7.submit and stop the submission if the invisible mosparo did not check the form yet.
-                        // mosparo will check the form and submit it again afterwards.
-                        let originalSubmit = wpcf7.submit;
-                        wpcf7.submit = function (form) {
-                            let mosparoInstance = mosparoInstances[id];
-                            if (form === wpcf7FormEl && mosparoInstance && mosparoInstance.invisible) {
-                                if (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData()) {
-                                    return;
-                                }
-                            }
-
-                            return originalSubmit.apply(this, arguments);
-                        };
-                        
-                        if (typeof wpcf7.cached !== "undefined" && wpcf7.cached) {
+                    if (wpcf7FormEl !== null) {
+                        // If the page is cached, Contact Form 7 resets the form on the window load event, which
+                        // lets mosparo request the submit token. If the load event already happened, the reset
+                        // is already done and mosparo has to request the submit token during the initialization.
+                        if (typeof wpcf7 !== "undefined" && wpcf7.cached && document.readyState !== "complete") {
                             options.requestSubmitTokenOnInit = false;
                         }
-                        
+
                         wpcf7FormEl.addEventListener("wpcf7invalid", resetMosparoField);
                         wpcf7FormEl.addEventListener("wpcf7spam", resetMosparoField);
+
+                        // If Contact Form 7 isn\'t initialized yet, we wait for it. mosparo itself is initialized
+                        // immediately, so that the reset event listener is registered in time.
+                        let wrapWpcf7Submit = function () {
+                            if (typeof wpcf7 === "undefined" || typeof wpcf7.submit !== "function") {
+                                setTimeout(wrapWpcf7Submit, 100);
+                                return;
+                            }
+
+                            // Contact Form 7 handles the submit event before mosparo does. Because of that, we wrap
+                            // wpcf7.submit and stop the submission if the invisible mosparo did not check the form yet.
+                            // mosparo will check the form and submit it again afterwards.
+                            let originalSubmit = wpcf7.submit;
+                            wpcf7.submit = function (form) {
+                                let mosparoInstance = mosparoInstances[id];
+                                if (form === wpcf7FormEl && mosparoInstance && mosparoInstance.invisible) {
+                                    if (!mosparoInstance.checkboxFieldElement.checked || !mosparoInstance.verifyCheckedFormData()) {
+                                        return;
+                                    }
+                                }
+
+                                return originalSubmit.apply(this, arguments);
+                            };
+                        };
+                        
+                        wrapWpcf7Submit();
                     }
                 ',
                 'after' => '',
